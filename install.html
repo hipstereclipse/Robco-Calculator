@@ -697,7 +697,7 @@
         addLog("Selected target: " + targetLabel.textContent, "ok");
       } catch (error) {
         if (error.name !== "AbortError") {
-          addLog(error.message, "error");
+          addLog(describeError(error), "error");
         }
       } finally {
         updateInstallState();
@@ -717,11 +717,6 @@
         guardTargetDirectory(targetDirectory);
         await ensureWritable(targetDirectory);
 
-        if (cleanInstall.checked) {
-          addLog("Scanning microSD for a previous install...");
-          await removeOldInstall(targetDirectory);
-        }
-
         if (!appInfo) {
           try {
             await loadManifest();
@@ -730,21 +725,42 @@
           }
         }
 
+        // 1) Download everything into memory first. If a download fails we
+        //    abort here, before touching the card -- so a network error can
+        //    never leave a half-wiped install.
+        const downloaded = [];
         for (let index = 0; index < payloadFiles.length; index += 1) {
           const path = payloadFiles[index];
           addLog("Downloading " + path + "...");
-          const bytes = await downloadFile(path);
-          setProgress(((index + 0.45) / payloadFiles.length) * 100);
-          await writeFile(targetDirectory, path, bytes);
-          setProgress(((index + 1) / payloadFiles.length) * 100);
-          addLog("Installed " + path + " (" + bytes.byteLength + " bytes).", "ok");
+          downloaded.push({ path: path, bytes: await downloadFile(path) });
+          setProgress(((index + 1) / payloadFiles.length) * 50);
+        }
+
+        // 2) Purge any previous install. Best-effort only: writing below
+        //    overwrites every file anyway, so a purge problem must never
+        //    abort the install.
+        if (cleanInstall.checked) {
+          addLog("Scanning microSD for a previous install...");
+          try {
+            await removeOldInstall(targetDirectory);
+          } catch (error) {
+            addLog("Purge skipped: " + describeError(error), "warn");
+          }
+        }
+
+        // 3) Write the fresh copy from memory.
+        for (let index = 0; index < downloaded.length; index += 1) {
+          const item = downloaded[index];
+          await writeFile(targetDirectory, item.path, item.bytes);
+          setProgress(50 + ((index + 1) / downloaded.length) * 50);
+          addLog("Installed " + item.path + " (" + item.bytes.byteLength + " bytes).", "ok");
         }
 
         installStatus.textContent = "Install complete";
         addLog("Done. Restart or rescan the Pip launcher.", "ok");
       } catch (error) {
         installStatus.textContent = "Install failed";
-        addLog(error.message, "error");
+        addLog(describeError(error), "error");
       } finally {
         setBusy(false);
         updateInstallState();
@@ -882,6 +898,14 @@
 
     function setProgress(value) {
       progressBar.style.width = Math.max(0, Math.min(100, value)) + "%";
+    }
+
+    function describeError(error) {
+      if (!error) {
+        return "Unknown error";
+      }
+      const name = error.name ? error.name + ": " : "";
+      return name + (error.message || String(error));
     }
 
     function addLog(message, type) {
