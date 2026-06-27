@@ -87,6 +87,18 @@ const Pip = {
   setPalette() {},
 };
 
+// Resolve a path the app asks the runtime to read (mirrors the device's
+// Storage/fs read used by PIPCALC.JS's lazy module loader). The app tries
+// bare names and APPS/ prefixes; map any of them back to a repo file.
+function loadProjectFile(p) {
+  const candidates = [p, String(p).replace(/^\/+/, ""), path.join("APPS", path.basename(p))];
+  for (const c of candidates) {
+    const abs = path.join(root, c);
+    if (fs.existsSync(abs)) return fs.readFileSync(abs, "utf8");
+  }
+  return undefined;
+}
+
 const context = {
   console,
   h,
@@ -95,6 +107,11 @@ const context = {
   Uint16Array,
   isNaN,
   isFinite,
+  require(name) {
+    if (name === "Storage") return { read: loadProjectFile };
+    if (name === "fs") return { readFileSync: loadProjectFile };
+    throw new Error("Cannot require module: " + name);
+  },
 };
 
 const factory = vm.runInNewContext(source, context, { filename: appPath });

@@ -2,7 +2,7 @@
   "id": "pipcalc",
   "name": "Engineer's Calc",
   "version": "3.30",
-  "files": "APPS/PIPCALC.JS,APPINFO/CALC.info",
+  "files": "APPS/PIPCALC.JS,APPS/PCONV.JS,APPS/PCONST.JS,APPS/PREF.JS,APPS/PCIRC.JS,APPS/PVAC.JS,APPINFO/CALC.info",
   "src": "APPS/PIPCALC.JS",
   "icon": "APPINFO/HOLO.IMG"
 }
