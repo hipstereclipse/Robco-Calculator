@@ -1,11 +1,11 @@
 {
   "generatedFrom": "APPS/PIPCALC.JS",
-  "generatedAt": "2026-06-27T13:51:02.713Z",
+  "generatedAt": "2026-06-27T14:23:35.797Z",
   "screens": [
     {
       "name": "01-calc-result",
       "title": "CALC",
-      "description": "Scientific calculator keypad with a completed expression.",
+      "description": "Framed RobCo keypad with a completed expression.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -13,8 +13,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "CALC",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -24,6 +96,26 @@
         },
         {
           "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CALC",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "RAD",
           "x": 462,
           "y": 6,
@@ -33,20 +125,138 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 27,
+          "x1": 464,
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawRect",
+          "x0": 16,
+          "y0": 32,
+          "x1": 464,
+          "y1": 78,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 40,
+          "x1": 16,
+          "y1": 32,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 32,
+          "x1": 24,
+          "y1": 32,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 456,
+          "y0": 32,
+          "x1": 464,
+          "y1": 32,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 464,
+          "y0": 32,
+          "x1": 464,
+          "y1": 40,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 70,
+          "x1": 16,
+          "y1": 78,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 78,
+          "x1": 24,
+          "y1": 78,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 456,
+          "y0": 78,
+          "x1": 464,
+          "y1": 78,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 464,
+          "y0": 70,
+          "x1": 464,
+          "y1": 78,
+          "color": 1
+        },
+        {
+          "type": "text",
+          "text": "EVALUATOR",
+          "x": 26,
+          "y": 36,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "EXPR",
+          "x": 28,
+          "y": 36,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "text",
           "text": "14",
-          "x": 462,
-          "y": 34,
+          "x": 452,
+          "y": 36,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 28,
+          "y0": 56,
+          "x1": 452,
+          "y1": 56,
+          "color": 1
+        },
+        {
+          "type": "text",
+          "text": "LIVE",
+          "x": 28,
+          "y": 58,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "text",
           "text": "= 14",
-          "x": 462,
-          "y": 60,
+          "x": 452,
+          "y": 58,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -55,16 +265,88 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 80,
+          "y0": 84,
           "x1": 464,
-          "y1": 80,
-          "color": 3
+          "y1": 84,
+          "color": 1
+        },
+        {
+          "type": "drawRect",
+          "x0": 16,
+          "y0": 84,
+          "x1": 464,
+          "y1": 282,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 92,
+          "x1": 16,
+          "y1": 84,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 84,
+          "x1": 24,
+          "y1": 84,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 456,
+          "y0": 84,
+          "x1": 464,
+          "y1": 84,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 464,
+          "y0": 84,
+          "x1": 464,
+          "y1": 92,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 274,
+          "x1": 16,
+          "y1": 282,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 282,
+          "x1": 24,
+          "y1": 282,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 456,
+          "y0": 282,
+          "x1": 464,
+          "y1": 282,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 464,
+          "y0": 274,
+          "x1": 464,
+          "y1": 282,
+          "color": 1
         },
         {
           "type": "text",
           "text": "2nd",
-          "x": 50,
-          "y": 98,
+          "x": 53.333333333333336,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -73,8 +355,8 @@
         {
           "type": "text",
           "text": "MODE",
-          "x": 126,
-          "y": 98,
+          "x": 128,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -83,8 +365,8 @@
         {
           "type": "text",
           "text": "RAD",
-          "x": 202,
-          "y": 98,
+          "x": 202.66666666666669,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -93,8 +375,8 @@
         {
           "type": "text",
           "text": "AC",
-          "x": 278,
-          "y": 98,
+          "x": 277.3333333333333,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -103,8 +385,8 @@
         {
           "type": "text",
           "text": "DEL",
-          "x": 354,
-          "y": 98,
+          "x": 352,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -113,8 +395,8 @@
         {
           "type": "text",
           "text": ">f",
-          "x": 430,
-          "y": 98,
+          "x": 426.6666666666667,
+          "y": 101,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -123,8 +405,8 @@
         {
           "type": "text",
           "text": "sin",
-          "x": 50,
-          "y": 122,
+          "x": 53.333333333333336,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -133,8 +415,8 @@
         {
           "type": "text",
           "text": "cos",
-          "x": 126,
-          "y": 122,
+          "x": 128,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -143,8 +425,8 @@
         {
           "type": "text",
           "text": "tan",
-          "x": 202,
-          "y": 122,
+          "x": 202.66666666666669,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -153,8 +435,8 @@
         {
           "type": "text",
           "text": "asin",
-          "x": 278,
-          "y": 122,
+          "x": 277.3333333333333,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -163,8 +445,8 @@
         {
           "type": "text",
           "text": "acos",
-          "x": 354,
-          "y": 122,
+          "x": 352,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -173,8 +455,8 @@
         {
           "type": "text",
           "text": "atan",
-          "x": 430,
-          "y": 122,
+          "x": 426.6666666666667,
+          "y": 125,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -183,8 +465,8 @@
         {
           "type": "text",
           "text": "sinh",
-          "x": 50,
-          "y": 146,
+          "x": 53.333333333333336,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -193,8 +475,8 @@
         {
           "type": "text",
           "text": "cosh",
-          "x": 126,
-          "y": 146,
+          "x": 128,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -203,8 +485,8 @@
         {
           "type": "text",
           "text": "tanh",
-          "x": 202,
-          "y": 146,
+          "x": 202.66666666666669,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -213,8 +495,8 @@
         {
           "type": "text",
           "text": "ln",
-          "x": 278,
-          "y": 146,
+          "x": 277.3333333333333,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -223,8 +505,8 @@
         {
           "type": "text",
           "text": "log",
-          "x": 354,
-          "y": 146,
+          "x": 352,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -233,8 +515,8 @@
         {
           "type": "text",
           "text": "exp",
-          "x": 430,
-          "y": 146,
+          "x": 426.6666666666667,
+          "y": 149,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -243,8 +525,8 @@
         {
           "type": "text",
           "text": "sqrt",
-          "x": 50,
-          "y": 170,
+          "x": 53.333333333333336,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -253,8 +535,8 @@
         {
           "type": "text",
           "text": "cbrt",
-          "x": 126,
-          "y": 170,
+          "x": 128,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -263,8 +545,8 @@
         {
           "type": "text",
           "text": "abs",
-          "x": 202,
-          "y": 170,
+          "x": 202.66666666666669,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -273,8 +555,8 @@
         {
           "type": "text",
           "text": "pi",
-          "x": 278,
-          "y": 170,
+          "x": 277.3333333333333,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -283,8 +565,8 @@
         {
           "type": "text",
           "text": "e",
-          "x": 354,
-          "y": 170,
+          "x": 352,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -293,8 +575,8 @@
         {
           "type": "text",
           "text": "x",
-          "x": 430,
-          "y": 170,
+          "x": 426.6666666666667,
+          "y": 173,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -303,8 +585,8 @@
         {
           "type": "text",
           "text": "7",
-          "x": 50,
-          "y": 194,
+          "x": 53.333333333333336,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -313,8 +595,8 @@
         {
           "type": "text",
           "text": "8",
-          "x": 126,
-          "y": 194,
+          "x": 128,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -323,8 +605,8 @@
         {
           "type": "text",
           "text": "9",
-          "x": 202,
-          "y": 194,
+          "x": 202.66666666666669,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -333,8 +615,8 @@
         {
           "type": "text",
           "text": "(",
-          "x": 278,
-          "y": 194,
+          "x": 277.3333333333333,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -343,8 +625,8 @@
         {
           "type": "text",
           "text": ")",
-          "x": 354,
-          "y": 194,
+          "x": 352,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -353,8 +635,8 @@
         {
           "type": "text",
           "text": "^",
-          "x": 430,
-          "y": 194,
+          "x": 426.6666666666667,
+          "y": 197,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -363,8 +645,8 @@
         {
           "type": "text",
           "text": "4",
-          "x": 50,
-          "y": 218,
+          "x": 53.333333333333336,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -373,8 +655,8 @@
         {
           "type": "text",
           "text": "5",
-          "x": 126,
-          "y": 218,
+          "x": 128,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -383,8 +665,8 @@
         {
           "type": "text",
           "text": "6",
-          "x": 202,
-          "y": 218,
+          "x": 202.66666666666669,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -393,8 +675,8 @@
         {
           "type": "text",
           "text": "!",
-          "x": 278,
-          "y": 218,
+          "x": 277.3333333333333,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -403,8 +685,8 @@
         {
           "type": "text",
           "text": "/",
-          "x": 354,
-          "y": 218,
+          "x": 352,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -413,8 +695,8 @@
         {
           "type": "text",
           "text": "*",
-          "x": 430,
-          "y": 218,
+          "x": 426.6666666666667,
+          "y": 221,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -423,8 +705,8 @@
         {
           "type": "text",
           "text": "1",
-          "x": 50,
-          "y": 242,
+          "x": 53.333333333333336,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -433,8 +715,8 @@
         {
           "type": "text",
           "text": "2",
-          "x": 126,
-          "y": 242,
+          "x": 128,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -443,8 +725,8 @@
         {
           "type": "text",
           "text": "3",
-          "x": 202,
-          "y": 242,
+          "x": 202.66666666666669,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -453,8 +735,8 @@
         {
           "type": "text",
           "text": "+",
-          "x": 278,
-          "y": 242,
+          "x": 277.3333333333333,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -463,8 +745,8 @@
         {
           "type": "text",
           "text": "-",
-          "x": 354,
-          "y": 242,
+          "x": 352,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -473,8 +755,8 @@
         {
           "type": "text",
           "text": "EE",
-          "x": 430,
-          "y": 242,
+          "x": 426.6666666666667,
+          "y": 245,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -483,8 +765,8 @@
         {
           "type": "text",
           "text": "0",
-          "x": 50,
-          "y": 266,
+          "x": 53.333333333333336,
+          "y": 269,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -493,8 +775,8 @@
         {
           "type": "text",
           "text": ".",
-          "x": 126,
-          "y": 266,
+          "x": 128,
+          "y": 269,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -502,17 +784,17 @@
         },
         {
           "type": "fillRect",
-          "x0": 165,
-          "y0": 255,
-          "x1": 239,
+          "x0": 167.33333333333334,
+          "y0": 259,
+          "x1": 236,
           "y1": 277,
           "color": 3
         },
         {
           "type": "text",
           "text": "=",
-          "x": 202,
-          "y": 266,
+          "x": 202.66666666666669,
+          "y": 269,
           "color": 0,
           "alignX": 0,
           "alignY": 0,
@@ -521,8 +803,8 @@
         {
           "type": "text",
           "text": "Ans",
-          "x": 278,
-          "y": 266,
+          "x": 277.3333333333333,
+          "y": 269,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -531,8 +813,8 @@
         {
           "type": "text",
           "text": "MR",
-          "x": 354,
-          "y": 266,
+          "x": 352,
+          "y": 269,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -541,8 +823,8 @@
         {
           "type": "text",
           "text": "M+",
-          "x": 430,
-          "y": 266,
+          "x": 426.6666666666667,
+          "y": 269,
           "color": 3,
           "alignX": 0,
           "alignY": 0,
@@ -551,19 +833,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:MOVE  PRESS:ENTER",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -571,7 +853,7 @@
     {
       "name": "02-graph",
       "title": "GRAPH",
-      "description": "Plots the shared f(x), defaulting to sin(x).",
+      "description": "Pip-OS trace grid plotting the shared f(x).",
       "width": 480,
       "height": 320,
       "ops": [
@@ -579,8 +861,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "GRAPH",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -589,19 +943,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "GRAPH",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "TRACE",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -610,7 +1002,7 @@
           "type": "text",
           "text": "GRAPH",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -642,7 +1034,79 @@
           "y0": 88,
           "x1": 468,
           "y1": 252,
-          "color": 3
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 96,
+          "x1": 44,
+          "y1": 88,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 88,
+          "x1": 52,
+          "y1": 88,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 460,
+          "y0": 88,
+          "x1": 468,
+          "y1": 88,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 468,
+          "y0": 88,
+          "x1": 468,
+          "y1": 96,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 244,
+          "x1": 44,
+          "y1": 252,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 252,
+          "x1": 52,
+          "y1": 252,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 460,
+          "y0": 252,
+          "x1": 468,
+          "y1": 252,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 468,
+          "y0": 244,
+          "x1": 468,
+          "y1": 252,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 150,
+          "y0": 88,
+          "x1": 150,
+          "y1": 252,
+          "color": 1
         },
         {
           "type": "drawLine",
@@ -650,7 +1114,23 @@
           "y0": 88,
           "x1": 256,
           "y1": 252,
-          "color": 3
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 362,
+          "y0": 88,
+          "x1": 362,
+          "y1": 252,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 129,
+          "x1": 468,
+          "y1": 129,
+          "color": 1
         },
         {
           "type": "drawLine",
@@ -658,7 +1138,31 @@
           "y0": 170,
           "x1": 468,
           "y1": 170,
-          "color": 3
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 211,
+          "x1": 468,
+          "y1": 211,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 256,
+          "y0": 88,
+          "x1": 256,
+          "y1": 252,
+          "color": 2
+        },
+        {
+          "type": "drawLine",
+          "x0": 44,
+          "y0": 170,
+          "x1": 468,
+          "y1": 170,
+          "color": 2
         },
         {
           "type": "fillRect",
@@ -4083,19 +4587,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:SEL  THUMB:ADJ  PRESS:EDIT/AUTO",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -4103,7 +4607,7 @@
     {
       "name": "03-calculus",
       "title": "CALCULUS",
-      "description": "Clear value, slope, area, root, and extrema readouts.",
+      "description": "Dim terminal controls for slope, area, root, and extrema.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -4111,8 +4615,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "CALCULUS",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -4121,19 +4697,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CALCULUS",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "NUM",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4142,7 +4756,7 @@
           "type": "text",
           "text": "CALCULUS",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4150,16 +4764,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 56,
-          "x1": 464,
-          "y1": 80,
+          "x0": 24,
+          "y0": 57,
+          "x1": 456,
+          "y1": 79,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 58,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "f(x)",
-          "x": 26,
+          "x": 46,
           "y": 58,
           "color": 0,
           "alignX": -1,
@@ -4169,7 +4793,7 @@
         {
           "type": "text",
           "text": "sin(x)",
-          "x": 454,
+          "x": 452,
           "y": 58,
           "color": 0,
           "alignX": 1,
@@ -4179,9 +4803,9 @@
         {
           "type": "text",
           "text": "TASK",
-          "x": 26,
+          "x": 36,
           "y": 84,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4189,7 +4813,7 @@
         {
           "type": "text",
           "text": "VALUE/SLOPE",
-          "x": 454,
+          "x": 452,
           "y": 84,
           "color": 3,
           "alignX": 1,
@@ -4199,9 +4823,9 @@
         {
           "type": "text",
           "text": "X POINT",
-          "x": 26,
+          "x": 36,
           "y": 110,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4209,7 +4833,7 @@
         {
           "type": "text",
           "text": "0",
-          "x": 454,
+          "x": 452,
           "y": 110,
           "color": 3,
           "alignX": 1,
@@ -4219,9 +4843,9 @@
         {
           "type": "text",
           "text": "COMPARE B",
-          "x": 26,
+          "x": 36,
           "y": 136,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4229,7 +4853,7 @@
         {
           "type": "text",
           "text": "1",
-          "x": 454,
+          "x": 452,
           "y": 136,
           "color": 3,
           "alignX": 1,
@@ -4242,7 +4866,7 @@
           "y0": 164,
           "x1": 464,
           "y1": 164,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
@@ -4259,7 +4883,7 @@
           "text": "f(A)",
           "x": 36,
           "y": 198,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4267,7 +4891,7 @@
         {
           "type": "text",
           "text": "0",
-          "x": 454,
+          "x": 452,
           "y": 198,
           "color": 3,
           "alignX": 1,
@@ -4279,7 +4903,7 @@
           "text": "d/dx",
           "x": 36,
           "y": 222,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4287,7 +4911,7 @@
         {
           "type": "text",
           "text": "1",
-          "x": 454,
+          "x": 452,
           "y": 222,
           "color": 3,
           "alignX": 1,
@@ -4299,7 +4923,7 @@
           "text": "f(B)",
           "x": 36,
           "y": 246,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4307,7 +4931,7 @@
         {
           "type": "text",
           "text": "0.84147098",
-          "x": 454,
+          "x": 452,
           "y": 246,
           "color": 3,
           "alignX": 1,
@@ -4319,7 +4943,7 @@
           "text": "secant",
           "x": 36,
           "y": 270,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4327,7 +4951,7 @@
         {
           "type": "text",
           "text": "0.84147098",
-          "x": 454,
+          "x": 452,
           "y": 270,
           "color": 3,
           "alignX": 1,
@@ -4337,19 +4961,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:SET  PRESS:EDIT",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -4357,7 +4981,7 @@
     {
       "name": "04-circuit",
       "title": "CIRC",
-      "description": "Loaded divider plus electronics helpers.",
+      "description": "Workbench readouts inside the Pip-Boy status frame.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -4365,8 +4989,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "CIRCUIT",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -4375,19 +5071,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CIRCUIT",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "WORK",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4396,7 +5130,7 @@
           "type": "text",
           "text": "CIRC",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4404,16 +5138,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 58,
-          "x1": 464,
-          "y1": 82,
+          "x0": 24,
+          "y0": 59,
+          "x1": 456,
+          "y1": 81,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 60,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "WORKBENCH",
-          "x": 26,
+          "x": 46,
           "y": 60,
           "color": 0,
           "alignX": -1,
@@ -4423,7 +5167,7 @@
         {
           "type": "text",
           "text": "DIVIDER LOAD",
-          "x": 454,
+          "x": 452,
           "y": 60,
           "color": 0,
           "alignX": 1,
@@ -4433,9 +5177,9 @@
         {
           "type": "text",
           "text": "Vin",
-          "x": 26,
+          "x": 36,
           "y": 88,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4443,7 +5187,7 @@
         {
           "type": "text",
           "text": "5 V",
-          "x": 454,
+          "x": 452,
           "y": 88,
           "color": 3,
           "alignX": 1,
@@ -4453,9 +5197,9 @@
         {
           "type": "text",
           "text": "Rtop",
-          "x": 26,
+          "x": 36,
           "y": 112,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4463,7 +5207,7 @@
         {
           "type": "text",
           "text": "10000 ohm",
-          "x": 454,
+          "x": 452,
           "y": 112,
           "color": 3,
           "alignX": 1,
@@ -4473,9 +5217,9 @@
         {
           "type": "text",
           "text": "Rbot",
-          "x": 26,
+          "x": 36,
           "y": 136,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4483,7 +5227,7 @@
         {
           "type": "text",
           "text": "10000 ohm",
-          "x": 454,
+          "x": 452,
           "y": 136,
           "color": 3,
           "alignX": 1,
@@ -4493,9 +5237,9 @@
         {
           "type": "text",
           "text": "Load",
-          "x": 26,
+          "x": 36,
           "y": 160,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4503,7 +5247,7 @@
         {
           "type": "text",
           "text": "100000 ohm",
-          "x": 454,
+          "x": 452,
           "y": 160,
           "color": 3,
           "alignX": 1,
@@ -4516,13 +5260,13 @@
           "y0": 184,
           "x1": 464,
           "y1": 184,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
           "text": "READOUT",
           "x": 26,
-          "y": 188,
+          "y": 192,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4611,19 +5355,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:SET  PRESS:ANS",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -4631,7 +5375,7 @@
     {
       "name": "05-converter",
       "title": "CONV",
-      "description": "Metric, imperial, radiation, and cooking conversions.",
+      "description": "Unit conversion panel with readout staging.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -4639,8 +5383,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "CONVERT",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -4649,19 +5465,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CONVERT",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "UNIT",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4670,7 +5524,7 @@
           "type": "text",
           "text": "CONV",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4678,16 +5532,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 56,
-          "x1": 464,
-          "y1": 80,
+          "x0": 24,
+          "y0": 57,
+          "x1": 456,
+          "y1": 79,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 58,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "CATEGORY",
-          "x": 26,
+          "x": 46,
           "y": 58,
           "color": 0,
           "alignX": -1,
@@ -4697,7 +5561,7 @@
         {
           "type": "text",
           "text": "COOK VOL",
-          "x": 454,
+          "x": 452,
           "y": 58,
           "color": 0,
           "alignX": 1,
@@ -4707,9 +5571,9 @@
         {
           "type": "text",
           "text": "FROM",
-          "x": 26,
+          "x": 36,
           "y": 84,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4717,7 +5581,7 @@
         {
           "type": "text",
           "text": "mL",
-          "x": 454,
+          "x": 452,
           "y": 84,
           "color": 3,
           "alignX": 1,
@@ -4727,9 +5591,9 @@
         {
           "type": "text",
           "text": "TO",
-          "x": 26,
+          "x": 36,
           "y": 110,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4737,7 +5601,7 @@
         {
           "type": "text",
           "text": "cupLbl",
-          "x": 454,
+          "x": 452,
           "y": 110,
           "color": 3,
           "alignX": 1,
@@ -4747,9 +5611,9 @@
         {
           "type": "text",
           "text": "VALUE",
-          "x": 26,
+          "x": 36,
           "y": 136,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4757,7 +5621,7 @@
         {
           "type": "text",
           "text": "240",
-          "x": 454,
+          "x": 452,
           "y": 136,
           "color": 3,
           "alignX": 1,
@@ -4770,13 +5634,13 @@
           "y0": 164,
           "x1": 464,
           "y1": 164,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
-          "text": "RAW =",
-          "x": 36,
-          "y": 174,
+          "text": "OUTPUT",
+          "x": 26,
+          "y": 172,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4784,9 +5648,19 @@
         },
         {
           "type": "text",
+          "text": "RAW =",
+          "x": 36,
+          "y": 192,
+          "color": 2,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "1.000000000000 cupLbl",
-          "x": 454,
-          "y": 174,
+          "x": 452,
+          "y": 192,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4796,8 +5670,8 @@
           "type": "text",
           "text": "ALSO =",
           "x": 26,
-          "y": 206,
-          "color": 3,
+          "y": 218,
+          "color": 1,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4806,8 +5680,8 @@
           "type": "text",
           "text": "SCI",
           "x": 36,
-          "y": 230,
-          "color": 3,
+          "y": 240,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4815,8 +5689,8 @@
         {
           "type": "text",
           "text": "1e0 cupLbl",
-          "x": 454,
-          "y": 230,
+          "x": 452,
+          "y": 240,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4826,8 +5700,8 @@
           "type": "text",
           "text": "ENG",
           "x": 36,
-          "y": 254,
-          "color": 3,
+          "y": 264,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4835,8 +5709,8 @@
         {
           "type": "text",
           "text": "1e0 cupLbl",
-          "x": 454,
-          "y": 254,
+          "x": 452,
+          "y": 264,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4845,19 +5719,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:SET  PRESS:ANS",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -4865,7 +5739,7 @@
     {
       "name": "06-constants",
       "title": "CONST",
-      "description": "Math, physics, unit, space, and kitchen constants.",
+      "description": "Indexed constants in the RobCo data-bank style.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -4873,8 +5747,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "CONSTANTS",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -4883,19 +5829,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CONSTANTS",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "DATA",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4904,7 +5888,7 @@
           "type": "text",
           "text": "CONST",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4912,16 +5896,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 56,
-          "x1": 464,
-          "y1": 80,
+          "x0": 24,
+          "y0": 57,
+          "x1": 456,
+          "y1": 79,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 58,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "GROUP",
-          "x": 26,
+          "x": 46,
           "y": 58,
           "color": 0,
           "alignX": -1,
@@ -4931,7 +5925,7 @@
         {
           "type": "text",
           "text": "ALL",
-          "x": 454,
+          "x": 452,
           "y": 58,
           "color": 0,
           "alignX": 1,
@@ -4941,9 +5935,9 @@
         {
           "type": "text",
           "text": "FIND",
-          "x": 26,
+          "x": 36,
           "y": 82,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4951,7 +5945,7 @@
         {
           "type": "text",
           "text": "ALL",
-          "x": 454,
+          "x": 452,
           "y": 82,
           "color": 3,
           "alignX": 1,
@@ -4964,7 +5958,7 @@
           "y0": 112,
           "x1": 464,
           "y1": 112,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
@@ -5012,7 +6006,7 @@
           "y0": 178,
           "x1": 464,
           "y1": 178,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
@@ -5097,19 +6091,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:FIND  PRESS:INS",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -5117,7 +6111,7 @@
     {
       "name": "07-rules",
       "title": "REF",
-      "description": "Formula cards, series, calculus rules, and 3D projection views.",
+      "description": "Formula cards with 3D projection views.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -5125,8 +6119,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "RULES",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -5135,19 +6201,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "RULES",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "REF",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5156,7 +6260,7 @@
           "type": "text",
           "text": "REF",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -5165,9 +6269,9 @@
         {
           "type": "text",
           "text": "TOPIC",
-          "x": 26,
+          "x": 36,
           "y": 58,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5175,7 +6279,7 @@
         {
           "type": "text",
           "text": "GEOM3D",
-          "x": 454,
+          "x": 452,
           "y": 58,
           "color": 3,
           "alignX": 1,
@@ -5184,16 +6288,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 80,
-          "x1": 464,
-          "y1": 104,
+          "x0": 24,
+          "y0": 81,
+          "x1": 456,
+          "y1": 103,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 82,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "CARD",
-          "x": 26,
+          "x": 46,
           "y": 82,
           "color": 0,
           "alignX": -1,
@@ -5203,7 +6317,7 @@
         {
           "type": "text",
           "text": "CYLINDER",
-          "x": 454,
+          "x": 452,
           "y": 82,
           "color": 0,
           "alignX": 1,
@@ -5216,7 +6330,7 @@
           "y0": 112,
           "x1": 464,
           "y1": 112,
-          "color": 3
+          "color": 1
         },
         {
           "type": "text",
@@ -5241,886 +6355,556 @@
         {
           "type": "text",
           "text": "ISO",
-          "x": 26,
-          "y": 144,
+          "x": 22,
+          "y": 172,
           "color": 3,
           "alignX": -1,
-          "alignY": -1,
+          "alignY": 0,
           "font": "Monofonto23"
         },
         {
           "type": "drawLine",
-          "x0": 122,
+          "x0": 136,
           "y0": 158,
-          "x1": 121.38512897290337,
-          "y1": 159.56072257612902,
+          "x1": 135.53884672967752,
+          "y1": 158.97545161008065,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 121.38512897290337,
-          "y0": 159.56072257612902,
-          "x1": 119.56414504036118,
-          "y1": 161.06146745892073,
+          "x0": 135.53884672967752,
+          "y0": 158.97545161008065,
+          "x1": 134.17310878027087,
+          "y1": 159.91341716182544,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 119.56414504036118,
-          "y0": 161.06146745892073,
-          "x1": 116.60702759368145,
-          "y1": 162.4445618641568,
+          "x0": 134.17310878027087,
+          "y0": 159.91341716182544,
+          "x1": 131.95527069526108,
+          "y1": 160.777851165098,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 116.60702759368145,
-          "y0": 162.4445618641568,
-          "x1": 112.62741699796952,
-          "y1": 163.65685424949237,
+          "x0": 131.95527069526108,
+          "y0": 160.777851165098,
+          "x1": 128.97056274847714,
+          "y1": 161.53553390593274,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 112.62741699796952,
-          "y0": 163.65685424949237,
-          "x1": 107.77824745662727,
-          "y1": 164.65175689842036,
+          "x0": 128.97056274847714,
+          "y0": 161.53553390593274,
+          "x1": 125.33368559247046,
+          "y1": 162.15734806151272,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 107.77824745662727,
-          "y0": 164.65175689842036,
-          "x1": 102.24586983568287,
-          "y1": 165.3910362600903,
+          "x0": 125.33368559247046,
+          "y0": 162.15734806151272,
+          "x1": 121.18440237676215,
+          "y1": 162.61939766255642,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 102.24586983568287,
-          "y0": 165.3910362600903,
-          "x1": 96.24289030451611,
-          "y1": 165.84628224322586,
+          "x0": 121.18440237676215,
+          "y0": 162.61939766255642,
+          "x1": 116.68216772838709,
+          "y1": 162.90392640201614,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 96.24289030451611,
-          "y0": 165.84628224322586,
-          "x1": 90,
-          "y1": 166,
+          "x0": 116.68216772838709,
+          "y0": 162.90392640201614,
+          "x1": 112,
+          "y1": 163,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 90,
-          "y0": 166,
-          "x1": 83.7571096954839,
-          "y1": 165.84628224322586,
+          "x0": 112,
+          "y0": 163,
+          "x1": 107.31783227161293,
+          "y1": 162.90392640201614,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 83.7571096954839,
-          "y0": 165.84628224322586,
-          "x1": 77.75413016431713,
-          "y1": 165.3910362600903,
+          "x0": 107.31783227161293,
+          "y0": 162.90392640201614,
+          "x1": 102.81559762323785,
+          "y1": 162.61939766255642,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 77.75413016431713,
-          "y0": 165.3910362600903,
-          "x1": 72.22175254337273,
-          "y1": 164.65175689842036,
+          "x0": 102.81559762323785,
+          "y0": 162.61939766255642,
+          "x1": 98.66631440752955,
+          "y1": 162.15734806151272,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 72.22175254337273,
-          "y0": 164.65175689842036,
-          "x1": 67.37258300203048,
-          "y1": 163.65685424949237,
+          "x0": 98.66631440752955,
+          "y0": 162.15734806151272,
+          "x1": 95.02943725152286,
+          "y1": 161.53553390593274,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 67.37258300203048,
-          "y0": 163.65685424949237,
-          "x1": 63.39297240631855,
-          "y1": 162.4445618641568,
+          "x0": 95.02943725152286,
+          "y0": 161.53553390593274,
+          "x1": 92.04472930473891,
+          "y1": 160.777851165098,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 63.39297240631855,
-          "y0": 162.4445618641568,
-          "x1": 60.435854959638824,
-          "y1": 161.06146745892073,
+          "x0": 92.04472930473891,
+          "y0": 160.777851165098,
+          "x1": 89.82689121972912,
+          "y1": 159.91341716182544,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 60.435854959638824,
-          "y0": 161.06146745892073,
-          "x1": 58.614871027096626,
-          "y1": 159.56072257612902,
+          "x0": 89.82689121972912,
+          "y0": 159.91341716182544,
+          "x1": 88.46115327032247,
+          "y1": 158.97545161008065,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58.614871027096626,
-          "y0": 159.56072257612902,
-          "x1": 58,
+          "x0": 88.46115327032247,
+          "y0": 158.97545161008065,
+          "x1": 88,
           "y1": 158,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58,
+          "x0": 88,
           "y0": 158,
-          "x1": 58.614871027096626,
-          "y1": 156.43927742387098,
+          "x1": 88.46115327032247,
+          "y1": 157.02454838991935,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58.614871027096626,
-          "y0": 156.43927742387098,
-          "x1": 60.43585495963882,
-          "y1": 154.93853254107927,
+          "x0": 88.46115327032247,
+          "y0": 157.02454838991935,
+          "x1": 89.82689121972912,
+          "y1": 156.08658283817456,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 60.43585495963882,
-          "y0": 154.93853254107927,
-          "x1": 63.39297240631855,
-          "y1": 153.5554381358432,
+          "x0": 89.82689121972912,
+          "y0": 156.08658283817456,
+          "x1": 92.04472930473891,
+          "y1": 155.222148834902,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 63.39297240631855,
-          "y0": 153.5554381358432,
-          "x1": 67.37258300203047,
-          "y1": 152.34314575050763,
+          "x0": 92.04472930473891,
+          "y0": 155.222148834902,
+          "x1": 95.02943725152286,
+          "y1": 154.46446609406726,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 67.37258300203047,
-          "y0": 152.34314575050763,
-          "x1": 72.22175254337273,
-          "y1": 151.34824310157964,
+          "x0": 95.02943725152286,
+          "y0": 154.46446609406726,
+          "x1": 98.66631440752954,
+          "y1": 153.84265193848728,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 72.22175254337273,
-          "y0": 151.34824310157964,
-          "x1": 77.7541301643171,
-          "y1": 150.6089637399097,
+          "x0": 98.66631440752954,
+          "y0": 153.84265193848728,
+          "x1": 102.81559762323784,
+          "y1": 153.38060233744358,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 77.7541301643171,
-          "y0": 150.6089637399097,
-          "x1": 83.75710969548388,
-          "y1": 150.15371775677417,
+          "x0": 102.81559762323784,
+          "y0": 153.38060233744358,
+          "x1": 107.31783227161291,
+          "y1": 153.09607359798386,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 83.75710969548388,
-          "y0": 150.15371775677417,
-          "x1": 90,
-          "y1": 150,
+          "x0": 107.31783227161291,
+          "y0": 153.09607359798386,
+          "x1": 112,
+          "y1": 153,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 90,
-          "y0": 150,
-          "x1": 96.24289030451611,
-          "y1": 150.15371775677414,
+          "x0": 112,
+          "y0": 153,
+          "x1": 116.68216772838709,
+          "y1": 153.09607359798386,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 96.24289030451611,
-          "y0": 150.15371775677414,
-          "x1": 102.24586983568288,
-          "y1": 150.6089637399097,
+          "x0": 116.68216772838709,
+          "y0": 153.09607359798386,
+          "x1": 121.18440237676216,
+          "y1": 153.38060233744358,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 102.24586983568288,
-          "y0": 150.6089637399097,
-          "x1": 107.77824745662726,
-          "y1": 151.34824310157964,
+          "x0": 121.18440237676216,
+          "y0": 153.38060233744358,
+          "x1": 125.33368559247045,
+          "y1": 153.84265193848728,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 107.77824745662726,
-          "y0": 151.34824310157964,
-          "x1": 112.62741699796952,
-          "y1": 152.34314575050763,
+          "x0": 125.33368559247045,
+          "y0": 153.84265193848728,
+          "x1": 128.97056274847714,
+          "y1": 154.46446609406726,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 112.62741699796952,
-          "y0": 152.34314575050763,
-          "x1": 116.60702759368145,
-          "y1": 153.5554381358432,
+          "x0": 128.97056274847714,
+          "y0": 154.46446609406726,
+          "x1": 131.95527069526108,
+          "y1": 155.222148834902,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 116.60702759368145,
-          "y0": 153.5554381358432,
-          "x1": 119.56414504036117,
-          "y1": 154.93853254107927,
+          "x0": 131.95527069526108,
+          "y0": 155.222148834902,
+          "x1": 134.17310878027087,
+          "y1": 156.08658283817454,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 119.56414504036117,
-          "y0": 154.93853254107927,
-          "x1": 121.38512897290337,
-          "y1": 156.43927742387098,
+          "x0": 134.17310878027087,
+          "y0": 156.08658283817454,
+          "x1": 135.53884672967752,
+          "y1": 157.02454838991935,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 121.38512897290337,
-          "y0": 156.43927742387098,
-          "x1": 122,
+          "x0": 135.53884672967752,
+          "y0": 157.02454838991935,
+          "x1": 136,
           "y1": 158,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 122,
-          "y0": 198,
-          "x1": 121.38512897290337,
-          "y1": 199.56072257612902,
+          "x0": 136,
+          "y0": 186,
+          "x1": 135.53884672967752,
+          "y1": 186.97545161008065,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 121.38512897290337,
-          "y0": 199.56072257612902,
-          "x1": 119.56414504036118,
-          "y1": 201.06146745892073,
+          "x0": 135.53884672967752,
+          "y0": 186.97545161008065,
+          "x1": 134.17310878027087,
+          "y1": 187.91341716182544,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 119.56414504036118,
-          "y0": 201.06146745892073,
-          "x1": 116.60702759368145,
-          "y1": 202.4445618641568,
+          "x0": 134.17310878027087,
+          "y0": 187.91341716182544,
+          "x1": 131.95527069526108,
+          "y1": 188.777851165098,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 116.60702759368145,
-          "y0": 202.4445618641568,
-          "x1": 112.62741699796952,
-          "y1": 203.65685424949237,
+          "x0": 131.95527069526108,
+          "y0": 188.777851165098,
+          "x1": 128.97056274847714,
+          "y1": 189.53553390593274,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 112.62741699796952,
-          "y0": 203.65685424949237,
-          "x1": 107.77824745662727,
-          "y1": 204.65175689842036,
+          "x0": 128.97056274847714,
+          "y0": 189.53553390593274,
+          "x1": 125.33368559247046,
+          "y1": 190.15734806151272,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 107.77824745662727,
-          "y0": 204.65175689842036,
-          "x1": 102.24586983568287,
-          "y1": 205.3910362600903,
+          "x0": 125.33368559247046,
+          "y0": 190.15734806151272,
+          "x1": 121.18440237676215,
+          "y1": 190.61939766255642,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 102.24586983568287,
-          "y0": 205.3910362600903,
-          "x1": 96.24289030451611,
-          "y1": 205.84628224322586,
+          "x0": 121.18440237676215,
+          "y0": 190.61939766255642,
+          "x1": 116.68216772838709,
+          "y1": 190.90392640201614,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 96.24289030451611,
-          "y0": 205.84628224322586,
-          "x1": 90,
-          "y1": 206,
+          "x0": 116.68216772838709,
+          "y0": 190.90392640201614,
+          "x1": 112,
+          "y1": 191,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 90,
-          "y0": 206,
-          "x1": 83.7571096954839,
-          "y1": 205.84628224322586,
+          "x0": 112,
+          "y0": 191,
+          "x1": 107.31783227161293,
+          "y1": 190.90392640201614,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 83.7571096954839,
-          "y0": 205.84628224322586,
-          "x1": 77.75413016431713,
-          "y1": 205.3910362600903,
+          "x0": 107.31783227161293,
+          "y0": 190.90392640201614,
+          "x1": 102.81559762323785,
+          "y1": 190.61939766255642,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 77.75413016431713,
-          "y0": 205.3910362600903,
-          "x1": 72.22175254337273,
-          "y1": 204.65175689842036,
+          "x0": 102.81559762323785,
+          "y0": 190.61939766255642,
+          "x1": 98.66631440752955,
+          "y1": 190.15734806151272,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 72.22175254337273,
-          "y0": 204.65175689842036,
-          "x1": 67.37258300203048,
-          "y1": 203.65685424949237,
+          "x0": 98.66631440752955,
+          "y0": 190.15734806151272,
+          "x1": 95.02943725152286,
+          "y1": 189.53553390593274,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 67.37258300203048,
-          "y0": 203.65685424949237,
-          "x1": 63.39297240631855,
-          "y1": 202.4445618641568,
+          "x0": 95.02943725152286,
+          "y0": 189.53553390593274,
+          "x1": 92.04472930473891,
+          "y1": 188.777851165098,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 63.39297240631855,
-          "y0": 202.4445618641568,
-          "x1": 60.435854959638824,
-          "y1": 201.06146745892073,
+          "x0": 92.04472930473891,
+          "y0": 188.777851165098,
+          "x1": 89.82689121972912,
+          "y1": 187.91341716182544,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 60.435854959638824,
-          "y0": 201.06146745892073,
-          "x1": 58.614871027096626,
-          "y1": 199.56072257612902,
+          "x0": 89.82689121972912,
+          "y0": 187.91341716182544,
+          "x1": 88.46115327032247,
+          "y1": 186.97545161008065,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58.614871027096626,
-          "y0": 199.56072257612902,
-          "x1": 58,
-          "y1": 198,
+          "x0": 88.46115327032247,
+          "y0": 186.97545161008065,
+          "x1": 88,
+          "y1": 186,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58,
-          "y0": 198,
-          "x1": 58.614871027096626,
-          "y1": 196.43927742387098,
+          "x0": 88,
+          "y0": 186,
+          "x1": 88.46115327032247,
+          "y1": 185.02454838991935,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58.614871027096626,
-          "y0": 196.43927742387098,
-          "x1": 60.43585495963882,
-          "y1": 194.93853254107927,
+          "x0": 88.46115327032247,
+          "y0": 185.02454838991935,
+          "x1": 89.82689121972912,
+          "y1": 184.08658283817456,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 60.43585495963882,
-          "y0": 194.93853254107927,
-          "x1": 63.39297240631855,
-          "y1": 193.5554381358432,
+          "x0": 89.82689121972912,
+          "y0": 184.08658283817456,
+          "x1": 92.04472930473891,
+          "y1": 183.222148834902,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 63.39297240631855,
-          "y0": 193.5554381358432,
-          "x1": 67.37258300203047,
-          "y1": 192.34314575050763,
+          "x0": 92.04472930473891,
+          "y0": 183.222148834902,
+          "x1": 95.02943725152286,
+          "y1": 182.46446609406726,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 67.37258300203047,
-          "y0": 192.34314575050763,
-          "x1": 72.22175254337273,
-          "y1": 191.34824310157964,
+          "x0": 95.02943725152286,
+          "y0": 182.46446609406726,
+          "x1": 98.66631440752954,
+          "y1": 181.84265193848728,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 72.22175254337273,
-          "y0": 191.34824310157964,
-          "x1": 77.7541301643171,
-          "y1": 190.6089637399097,
+          "x0": 98.66631440752954,
+          "y0": 181.84265193848728,
+          "x1": 102.81559762323784,
+          "y1": 181.38060233744358,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 77.7541301643171,
-          "y0": 190.6089637399097,
-          "x1": 83.75710969548388,
-          "y1": 190.15371775677417,
+          "x0": 102.81559762323784,
+          "y0": 181.38060233744358,
+          "x1": 107.31783227161291,
+          "y1": 181.09607359798386,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 83.75710969548388,
-          "y0": 190.15371775677417,
-          "x1": 90,
-          "y1": 190,
+          "x0": 107.31783227161291,
+          "y0": 181.09607359798386,
+          "x1": 112,
+          "y1": 181,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 90,
-          "y0": 190,
-          "x1": 96.24289030451611,
-          "y1": 190.15371775677414,
+          "x0": 112,
+          "y0": 181,
+          "x1": 116.68216772838709,
+          "y1": 181.09607359798386,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 96.24289030451611,
-          "y0": 190.15371775677414,
-          "x1": 102.24586983568288,
-          "y1": 190.6089637399097,
+          "x0": 116.68216772838709,
+          "y0": 181.09607359798386,
+          "x1": 121.18440237676216,
+          "y1": 181.38060233744358,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 102.24586983568288,
-          "y0": 190.6089637399097,
-          "x1": 107.77824745662726,
-          "y1": 191.34824310157964,
+          "x0": 121.18440237676216,
+          "y0": 181.38060233744358,
+          "x1": 125.33368559247045,
+          "y1": 181.84265193848728,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 107.77824745662726,
-          "y0": 191.34824310157964,
-          "x1": 112.62741699796952,
-          "y1": 192.34314575050763,
+          "x0": 125.33368559247045,
+          "y0": 181.84265193848728,
+          "x1": 128.97056274847714,
+          "y1": 182.46446609406726,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 112.62741699796952,
-          "y0": 192.34314575050763,
-          "x1": 116.60702759368145,
-          "y1": 193.5554381358432,
+          "x0": 128.97056274847714,
+          "y0": 182.46446609406726,
+          "x1": 131.95527069526108,
+          "y1": 183.222148834902,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 116.60702759368145,
-          "y0": 193.5554381358432,
-          "x1": 119.56414504036117,
-          "y1": 194.93853254107927,
+          "x0": 131.95527069526108,
+          "y0": 183.222148834902,
+          "x1": 134.17310878027087,
+          "y1": 184.08658283817454,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 119.56414504036117,
-          "y0": 194.93853254107927,
-          "x1": 121.38512897290337,
-          "y1": 196.43927742387098,
+          "x0": 134.17310878027087,
+          "y0": 184.08658283817454,
+          "x1": 135.53884672967752,
+          "y1": 185.02454838991935,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 121.38512897290337,
-          "y0": 196.43927742387098,
-          "x1": 122,
-          "y1": 198,
+          "x0": 135.53884672967752,
+          "y0": 185.02454838991935,
+          "x1": 136,
+          "y1": 186,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 58,
+          "x0": 88,
           "y0": 158,
-          "x1": 58,
-          "y1": 198,
+          "x1": 88,
+          "y1": 186,
           "color": 3
         },
         {
           "type": "drawLine",
-          "x0": 122,
+          "x0": 136,
           "y0": 158,
-          "x1": 122,
-          "y1": 198,
+          "x1": 136,
+          "y1": 186,
           "color": 3
         },
         {
           "type": "text",
           "text": "h",
-          "x": 128,
-          "y": 172,
+          "x": 140,
+          "y": 166,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
-        },
-        {
-          "type": "text",
-          "text": "TOP",
-          "x": 26,
-          "y": 212,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "drawLine",
-          "x0": 118,
-          "y0": 222,
-          "x1": 117.61570560806462,
-          "y1": 225.90180644032256,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 117.61570560806462,
-          "y0": 225.90180644032256,
-          "x1": 116.47759065022574,
-          "y1": 229.6536686473018,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 116.47759065022574,
-          "y0": 229.6536686473018,
-          "x1": 114.62939224605091,
-          "y1": 233.11140466039205,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 114.62939224605091,
-          "y0": 233.11140466039205,
-          "x1": 112.14213562373095,
-          "y1": 236.14213562373095,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 112.14213562373095,
-          "y0": 236.14213562373095,
-          "x1": 109.11140466039204,
-          "y1": 238.6293922460509,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 109.11140466039204,
-          "y0": 238.6293922460509,
-          "x1": 105.6536686473018,
-          "y1": 240.47759065022575,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 105.6536686473018,
-          "y0": 240.47759065022575,
-          "x1": 101.90180644032256,
-          "y1": 241.61570560806462,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 101.90180644032256,
-          "y0": 241.61570560806462,
-          "x1": 98,
-          "y1": 242,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 98,
-          "y0": 242,
-          "x1": 94.09819355967744,
-          "y1": 241.61570560806462,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 94.09819355967744,
-          "y0": 241.61570560806462,
-          "x1": 90.3463313526982,
-          "y1": 240.47759065022575,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 90.3463313526982,
-          "y0": 240.47759065022575,
-          "x1": 86.88859533960796,
-          "y1": 238.6293922460509,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 86.88859533960796,
-          "y0": 238.6293922460509,
-          "x1": 83.85786437626905,
-          "y1": 236.14213562373095,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 83.85786437626905,
-          "y0": 236.14213562373095,
-          "x1": 81.37060775394909,
-          "y1": 233.11140466039205,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 81.37060775394909,
-          "y0": 233.11140466039205,
-          "x1": 79.52240934977426,
-          "y1": 229.6536686473018,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 79.52240934977426,
-          "y0": 229.6536686473018,
-          "x1": 78.38429439193538,
-          "y1": 225.90180644032256,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 78.38429439193538,
-          "y0": 225.90180644032256,
-          "x1": 78,
-          "y1": 222,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 78,
-          "y0": 222,
-          "x1": 78.38429439193538,
-          "y1": 218.09819355967744,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 78.38429439193538,
-          "y0": 218.09819355967744,
-          "x1": 79.52240934977426,
-          "y1": 214.3463313526982,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 79.52240934977426,
-          "y0": 214.3463313526982,
-          "x1": 81.37060775394909,
-          "y1": 210.88859533960795,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 81.37060775394909,
-          "y0": 210.88859533960795,
-          "x1": 83.85786437626905,
-          "y1": 207.85786437626905,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 83.85786437626905,
-          "y0": 207.85786437626905,
-          "x1": 86.88859533960796,
-          "y1": 205.3706077539491,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 86.88859533960796,
-          "y0": 205.3706077539491,
-          "x1": 90.3463313526982,
-          "y1": 203.52240934977428,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 90.3463313526982,
-          "y0": 203.52240934977428,
-          "x1": 94.09819355967743,
-          "y1": 202.38429439193538,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 94.09819355967743,
-          "y0": 202.38429439193538,
-          "x1": 98,
-          "y1": 202,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 98,
-          "y0": 202,
-          "x1": 101.90180644032256,
-          "y1": 202.38429439193538,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 101.90180644032256,
-          "y0": 202.38429439193538,
-          "x1": 105.6536686473018,
-          "y1": 203.52240934977428,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 105.6536686473018,
-          "y0": 203.52240934977428,
-          "x1": 109.11140466039204,
-          "y1": 205.3706077539491,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 109.11140466039204,
-          "y0": 205.3706077539491,
-          "x1": 112.14213562373095,
-          "y1": 207.85786437626905,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 112.14213562373095,
-          "y0": 207.85786437626905,
-          "x1": 114.62939224605091,
-          "y1": 210.88859533960795,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 114.62939224605091,
-          "y0": 210.88859533960795,
-          "x1": 116.47759065022572,
-          "y1": 214.3463313526982,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 116.47759065022572,
-          "y0": 214.3463313526982,
-          "x1": 117.6157056080646,
-          "y1": 218.0981935596774,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 117.6157056080646,
-          "y0": 218.0981935596774,
-          "x1": 118,
-          "y1": 222,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 98,
-          "y0": 222,
-          "x1": 118,
-          "y1": 222,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": "r",
-          "x": 108,
-          "y": 224,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "text",
-          "text": "SIDE",
-          "x": 26,
-          "y": 250,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "drawRect",
-          "x0": 76,
-          "y0": 248,
-          "x1": 124,
-          "y1": 270,
-          "color": 3
-        },
-        {
-          "type": "drawLine",
-          "x0": 100,
-          "y0": 248,
-          "x1": 100,
-          "y1": 270,
-          "color": 3
         },
         {
           "type": "text",
           "text": "V=pi r^2 h",
-          "x": 166,
-          "y": 146,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "text",
-          "text": "side=2 pi r h",
-          "x": 166,
-          "y": 168,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "text",
-          "text": "S=2 pi r(r+h)",
-          "x": 166,
-          "y": 190,
+          "x": 176,
+          "y": 151,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6129,8 +6913,8 @@
         {
           "type": "text",
           "text": "I_axis=1/2 m r^2",
-          "x": 166,
-          "y": 212,
+          "x": 176,
+          "y": 173,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6139,19 +6923,395 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 194,
           "x1": 464,
-          "y1": 292,
+          "y1": 194,
+          "color": 1
+        },
+        {
+          "type": "text",
+          "text": "TOP",
+          "x": 22,
+          "y": 218,
+          "color": 3,
+          "alignX": -1,
+          "alignY": 0,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "drawLine",
+          "x0": 130,
+          "y0": 218,
+          "x1": 129.65413504725814,
+          "y1": 221.5116257962903,
           "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 129.65413504725814,
+          "y0": 221.5116257962903,
+          "x1": 128.62983158520316,
+          "y1": 224.8883017825716,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 128.62983158520316,
+          "y0": 224.8883017825716,
+          "x1": 126.96645302144582,
+          "y1": 228.00026419435284,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 126.96645302144582,
+          "y0": 228.00026419435284,
+          "x1": 124.72792206135786,
+          "y1": 230.72792206135784,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 124.72792206135786,
+          "y0": 230.72792206135784,
+          "x1": 122.00026419435284,
+          "y1": 232.9664530214458,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 122.00026419435284,
+          "y0": 232.9664530214458,
+          "x1": 118.88830178257162,
+          "y1": 234.62983158520316,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 118.88830178257162,
+          "y0": 234.62983158520316,
+          "x1": 115.5116257962903,
+          "y1": 235.65413504725814,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 115.5116257962903,
+          "y0": 235.65413504725814,
+          "x1": 112,
+          "y1": 236,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 112,
+          "y0": 236,
+          "x1": 108.4883742037097,
+          "y1": 235.65413504725814,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 108.4883742037097,
+          "y0": 235.65413504725814,
+          "x1": 105.11169821742838,
+          "y1": 234.62983158520316,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 105.11169821742838,
+          "y0": 234.62983158520316,
+          "x1": 101.99973580564716,
+          "y1": 232.96645302144583,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 101.99973580564716,
+          "y0": 232.96645302144583,
+          "x1": 99.27207793864214,
+          "y1": 230.72792206135784,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 99.27207793864214,
+          "y0": 230.72792206135784,
+          "x1": 97.03354697855418,
+          "y1": 228.00026419435284,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 97.03354697855418,
+          "y0": 228.00026419435284,
+          "x1": 95.37016841479684,
+          "y1": 224.88830178257163,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 95.37016841479684,
+          "y0": 224.88830178257163,
+          "x1": 94.34586495274185,
+          "y1": 221.5116257962903,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 94.34586495274185,
+          "y0": 221.5116257962903,
+          "x1": 94,
+          "y1": 218,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 94,
+          "y0": 218,
+          "x1": 94.34586495274185,
+          "y1": 214.4883742037097,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 94.34586495274185,
+          "y0": 214.4883742037097,
+          "x1": 95.37016841479684,
+          "y1": 211.1116982174284,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 95.37016841479684,
+          "y0": 211.1116982174284,
+          "x1": 97.03354697855418,
+          "y1": 207.99973580564716,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 97.03354697855418,
+          "y0": 207.99973580564716,
+          "x1": 99.27207793864214,
+          "y1": 205.27207793864216,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 99.27207793864214,
+          "y0": 205.27207793864216,
+          "x1": 101.99973580564716,
+          "y1": 203.0335469785542,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 101.99973580564716,
+          "y0": 203.0335469785542,
+          "x1": 105.11169821742837,
+          "y1": 201.37016841479684,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 105.11169821742837,
+          "y0": 201.37016841479684,
+          "x1": 108.48837420370968,
+          "y1": 200.34586495274186,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 108.48837420370968,
+          "y0": 200.34586495274186,
+          "x1": 112,
+          "y1": 200,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 112,
+          "y0": 200,
+          "x1": 115.5116257962903,
+          "y1": 200.34586495274186,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 115.5116257962903,
+          "y0": 200.34586495274186,
+          "x1": 118.88830178257162,
+          "y1": 201.37016841479684,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 118.88830178257162,
+          "y0": 201.37016841479684,
+          "x1": 122.00026419435284,
+          "y1": 203.03354697855417,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 122.00026419435284,
+          "y0": 203.03354697855417,
+          "x1": 124.72792206135784,
+          "y1": 205.27207793864216,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 124.72792206135784,
+          "y0": 205.27207793864216,
+          "x1": 126.96645302144582,
+          "y1": 207.99973580564716,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 126.96645302144582,
+          "y0": 207.99973580564716,
+          "x1": 128.62983158520316,
+          "y1": 211.11169821742837,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 128.62983158520316,
+          "y0": 211.11169821742837,
+          "x1": 129.65413504725814,
+          "y1": 214.4883742037097,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 129.65413504725814,
+          "y0": 214.4883742037097,
+          "x1": 130,
+          "y1": 218,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 112,
+          "y0": 218,
+          "x1": 130,
+          "y1": 218,
+          "color": 3
+        },
+        {
+          "type": "text",
+          "text": "r",
+          "x": 116,
+          "y": 204,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "base=pi r^2",
+          "x": 176,
+          "y": 197,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "C=2 pi r",
+          "x": 176,
+          "y": 219,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 240,
+          "x1": 464,
+          "y1": 240,
+          "color": 1
+        },
+        {
+          "type": "text",
+          "text": "SIDE",
+          "x": 22,
+          "y": 264,
+          "color": 3,
+          "alignX": -1,
+          "alignY": 0,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "drawRect",
+          "x0": 94,
+          "y0": 244,
+          "x1": 130,
+          "y1": 284,
+          "color": 3
+        },
+        {
+          "type": "drawLine",
+          "x0": 112,
+          "y0": 244,
+          "x1": 112,
+          "y1": 284,
+          "color": 3
+        },
+        {
+          "type": "text",
+          "text": "h",
+          "x": 134,
+          "y": 248,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "side=2 pi r h",
+          "x": 176,
+          "y": 243,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "S=2 pi r(r+h)",
+          "x": 176,
+          "y": 265,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 289,
+          "x1": 464,
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:SET",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -6159,7 +7319,7 @@
     {
       "name": "08-vacuum",
       "title": "VAC",
-      "description": "Vacuum and gas-flow values for nitrogen.",
+      "description": "Nitrogen vacuum telemetry with Pip-OS readouts.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -6167,8 +7327,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "VACUUM (N2)",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -6177,19 +7409,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "VACUUM N2",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "GAS",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6198,7 +7468,7 @@
           "type": "text",
           "text": "VAC",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6206,16 +7476,26 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
-          "y0": 58,
-          "x1": 464,
-          "y1": 82,
+          "x0": 24,
+          "y0": 59,
+          "x1": 456,
+          "y1": 81,
           "color": 3
         },
         {
           "type": "text",
+          "text": ">",
+          "x": 28,
+          "y": 60,
+          "color": 0,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
           "text": "P (Pa)",
-          "x": 26,
+          "x": 46,
           "y": 60,
           "color": 0,
           "alignX": -1,
@@ -6225,7 +7505,7 @@
         {
           "type": "text",
           "text": "1",
-          "x": 454,
+          "x": 452,
           "y": 60,
           "color": 0,
           "alignX": 1,
@@ -6235,9 +7515,9 @@
         {
           "type": "text",
           "text": "T (K)",
-          "x": 26,
+          "x": 36,
           "y": 92,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6245,7 +7525,7 @@
         {
           "type": "text",
           "text": "293.15",
-          "x": 454,
+          "x": 452,
           "y": 92,
           "color": 3,
           "alignX": 1,
@@ -6255,9 +7535,9 @@
         {
           "type": "text",
           "text": "d (m)",
-          "x": 26,
+          "x": 36,
           "y": 124,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6265,7 +7545,7 @@
         {
           "type": "text",
           "text": "3.7e-10",
-          "x": 454,
+          "x": 452,
           "y": 124,
           "color": 3,
           "alignX": 1,
@@ -6275,9 +7555,9 @@
         {
           "type": "text",
           "text": "L (m)",
-          "x": 26,
+          "x": 36,
           "y": 156,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6285,7 +7565,7 @@
         {
           "type": "text",
           "text": "0.1",
-          "x": 454,
+          "x": 452,
           "y": 156,
           "color": 3,
           "alignX": 1,
@@ -6293,10 +7573,28 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 180,
+          "x1": 464,
+          "y1": 180,
+          "color": 1
+        },
+        {
+          "type": "text",
+          "text": "READOUT",
+          "x": 26,
+          "y": 188,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "text",
           "text": "mean free path",
           "x": 26,
-          "y": 190,
+          "y": 198,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6306,7 +7604,7 @@
           "type": "text",
           "text": "0.00665434 m",
           "x": 454,
-          "y": 190,
+          "y": 198,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6316,7 +7614,7 @@
           "type": "text",
           "text": "number density",
           "x": 26,
-          "y": 214,
+          "y": 220,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6326,7 +7624,7 @@
           "type": "text",
           "text": "2.47074e20 /m3",
           "x": 454,
-          "y": 214,
+          "y": 220,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6336,7 +7634,7 @@
           "type": "text",
           "text": "Knudsen/regime",
           "x": 26,
-          "y": 238,
+          "y": 242,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6346,7 +7644,7 @@
           "type": "text",
           "text": "0.06654338 transitional",
           "x": 454,
-          "y": 238,
+          "y": 242,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6356,7 +7654,7 @@
           "type": "text",
           "text": "mean speed",
           "x": 26,
-          "y": 262,
+          "y": 264,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -6366,7 +7664,7 @@
           "type": "text",
           "text": "470.70715368 m/s",
           "x": 454,
-          "y": 262,
+          "y": 264,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6375,19 +7673,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:X10/STEP  PRESS:ANS",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]
@@ -6395,7 +7693,7 @@
     {
       "name": "09-tape",
       "title": "TAPE",
-      "description": "Calculation history and theme toggle.",
+      "description": "Calculation tape in the terminal log frame.",
       "width": 480,
       "height": 320,
       "ops": [
@@ -6403,8 +7701,80 @@
           "type": "clear"
         },
         {
+          "type": "drawRect",
+          "x0": 10,
+          "y0": 6,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 24,
+          "x1": 10,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 6,
+          "x1": 28,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 6,
+          "x1": 470,
+          "y1": 6,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 6,
+          "x1": 470,
+          "y1": 24,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 294,
+          "x1": 10,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 10,
+          "y0": 312,
+          "x1": 28,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 452,
+          "y0": 312,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 470,
+          "y0": 294,
+          "x1": 470,
+          "y1": 312,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "TAPE",
+          "text": "ROBCO",
           "x": 18,
           "y": 6,
           "color": 3,
@@ -6413,19 +7783,57 @@
           "font": "Monofonto23"
         },
         {
+          "type": "text",
+          "text": "PIP-OS",
+          "x": 86,
+          "y": 6,
+          "color": 1,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "TAPE",
+          "x": 240,
+          "y": 6,
+          "color": 3,
+          "alignX": 0,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "LOG",
+          "x": 462,
+          "y": 6,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
           "type": "drawLine",
           "x0": 16,
-          "y0": 26,
+          "y0": 27,
           "x1": 464,
-          "y1": 26,
-          "color": 3
+          "y1": 27,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 16,
+          "y0": 54,
+          "x1": 464,
+          "y1": 54,
+          "color": 1
         },
         {
           "type": "text",
           "text": "MODE",
           "x": 26,
-          "y": 32,
-          "color": 3,
+          "y": 33,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6434,7 +7842,7 @@
           "type": "text",
           "text": "TAPE",
           "x": 454,
-          "y": 32,
+          "y": 33,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6443,9 +7851,9 @@
         {
           "type": "text",
           "text": "THEME",
-          "x": 26,
+          "x": 36,
           "y": 64,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6453,7 +7861,7 @@
         {
           "type": "text",
           "text": "GREEN",
-          "x": 454,
+          "x": 452,
           "y": 64,
           "color": 3,
           "alignX": 1,
@@ -6462,9 +7870,9 @@
         },
         {
           "type": "fillRect",
-          "x0": 16,
+          "x0": 22,
           "y0": 96,
-          "x1": 464,
+          "x1": 458,
           "y1": 122,
           "color": 3
         },
@@ -6481,19 +7889,19 @@
         {
           "type": "drawLine",
           "x0": 16,
-          "y0": 292,
+          "y0": 289,
           "x1": 464,
-          "y1": 292,
-          "color": 3
+          "y1": 289,
+          "color": 1
         },
         {
           "type": "text",
           "text": "WHEEL:FIELD  THUMB:SET  PRESS:USE",
           "x": 240,
-          "y": 317,
+          "y": 304,
           "color": 3,
           "alignX": 0,
-          "alignY": 1,
+          "alignY": 0,
           "font": "Monofonto23"
         }
       ]

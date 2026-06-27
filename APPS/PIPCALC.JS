@@ -5,8 +5,8 @@
   //  CONST | VAC | TAPE      -- one shared f(x) + variable x
   // ============================================================
 
-  var W = 480, H = 320;     // working coordinate space (tune to device)
-  var FG = 3, BG = 0;       // palette indices: bright fg / black (verify)
+  var W = 480, H = 320;             // working coordinate space (tune to device)
+  var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
 
   var MODES = ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"];
   var mode = "CALC";
@@ -513,10 +513,14 @@
       { name: "ELLIPSE", shape: "ELLIPSE", lines: ["A=pi a b", "x^2/a^2+y^2/b^2=1", "c^2=a^2-b^2", "P~2pi sqrt((a^2+b^2)/2)"] }
     ] },
     { name: "GEOM3D", items: [
-      { name: "BOX", shape: "BOX", lines: ["V=l w h", "S=2(lw+lh+wh)", "diag=sqrt(l^2+w^2+h^2)", "mass=rho V"] },
-      { name: "CYLINDER", shape: "CYL", lines: ["V=pi r^2 h", "side=2 pi r h", "S=2 pi r(r+h)", "I_axis=1/2 m r^2"] },
-      { name: "CONE", shape: "CONE", lines: ["V=pi r^2 h/3", "slant=sqrt(r^2+h^2)", "side=pi r slant", "S=pi r(r+slant)"] },
-      { name: "SPHERE", shape: "SPHERE", lines: ["V=4/3 pi r^3", "S=4 pi r^2", "great circle=2 pi r", "I_solid=2/5 m r^2"] }
+      { name: "BOX", shape: "BOX", solid: true,
+        iso: ["V=l w h", "mass=rho V"], top: ["base=l w"], side: ["S=2(lw+lh+wh)", "diag=sqrt(l^2+w^2+h^2)"] },
+      { name: "CYLINDER", shape: "CYL", solid: true,
+        iso: ["V=pi r^2 h", "I_axis=1/2 m r^2"], top: ["base=pi r^2", "C=2 pi r"], side: ["side=2 pi r h", "S=2 pi r(r+h)"] },
+      { name: "CONE", shape: "CONE", solid: true,
+        iso: ["V=pi r^2 h/3", "S=pi r(r+slant)"], top: ["base=pi r^2"], side: ["slant=sqrt(r^2+h^2)", "side=pi r slant"] },
+      { name: "SPHERE", shape: "SPHERE", solid: true,
+        iso: ["V=4/3 pi r^3", "S=4 pi r^2"], top: ["great circle=2 pi r"], side: ["I_solid=2/5 m r^2"] }
     ] },
     { name: "ENG", items: [
       { name: "VECTORS", lines: ["dot: a.b=|a||b|cos t", "cross: |axb|=|a||b|sin t", "proj_b a=(a.b/|b|^2)b", "work=F.d", "torque=r x F"] },
@@ -670,72 +674,115 @@
   // ============================================================
   //  DRAWING
   // ============================================================
+  function drawScanlines() {
+    h.setColor(FG);
+  }
+  function drawCorners(x0, y0, x1, y1, n) {
+    h.drawLine(x0, y0 + n, x0, y0); h.drawLine(x0, y0, x0 + n, y0);
+    h.drawLine(x1 - n, y0, x1, y0); h.drawLine(x1, y0, x1, y0 + n);
+    h.drawLine(x0, y1 - n, x0, y1); h.drawLine(x0, y1, x0 + n, y1);
+    h.drawLine(x1 - n, y1, x1, y1); h.drawLine(x1, y1 - n, x1, y1);
+  }
+  function beginScreen(title, status) {
+    h.reset().clear().setColor(FG).setFont("Monofonto23");
+    drawScanlines();
+    h.setColor(DIM).drawRect(10, 6, W - 10, H - 8);
+    drawCorners(10, 6, W - 10, H - 8, 18);
+    h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO", 18, 6);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("PIP-OS", 86, 6);
+    h.setColor(FG).setFontAlign(0, -1).drawString(title, W / 2, 6);
+    h.setFontAlign(1, -1).drawString(status || mode, W - 18, 6);
+    h.setColor(DIM).drawLine(16, 27, W - 16, 27);
+  }
+  function panel(x0, y0, x1, y1, label) {
+    h.setColor(DIM).drawRect(x0, y0, x1, y1);
+    drawCorners(x0, y0, x1, y1, 8);
+    if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, x0 + 10, y0 + 4);
+    h.setColor(FG);
+  }
+  function section(label, y) {
+    h.setColor(DIM).drawLine(16, y, W - 16, y);
+    if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, 26, y + 8);
+    h.setColor(FG);
+  }
   function drawTab() {
-    h.setColor(FG).drawLine(16, 26, W - 16, 26);
-    if (curField() === 0) { h.setColor(FG).fillRect(16, 30, W - 16, 54); h.setColor(BG); } else h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString("MODE", 26, 32);
-    h.setFontAlign(1, -1).drawString(mode, W - 26, 32);
+    var sel = curField() === 0;
+    h.setColor(DIM).drawLine(16, 54, W - 16, 54);
+    if (sel) { h.setColor(FG).fillRect(18, 32, W - 18, 52); h.setColor(BG); }
+    else h.setColor(MID);
+    h.setFontAlign(-1, -1).drawString("MODE", 26, 33);
+    if (!sel) h.setColor(FG);
+    h.setFontAlign(1, -1).drawString(mode, W - 26, 33);
     h.setColor(FG);
   }
   function footer(s) {
-    h.setColor(FG).drawLine(16, H - 28, W - 16, H - 28);
-    h.setFontAlign(0, 1).drawString(s, W / 2, H - 3);
+    h.setColor(DIM).drawLine(16, H - 31, W - 16, H - 31);
+    h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(s, 42), W / 2, H - 16);
   }
   function row(label, val, y, sel) {
-    if (sel) { h.setColor(FG).fillRect(16, y - 2, W - 16, y + 22); h.setColor(BG); } else h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString(fitRight(label, 13), 26, y);
-    h.setFontAlign(1, -1).drawString(fitLeft(val, 24), W - 26, y);
+    if (sel) {
+      h.setColor(FG).fillRect(24, y - 1, W - 24, y + 21);
+      h.setColor(BG).setFontAlign(-1, -1).drawString(">", 28, y);
+      h.setFontAlign(-1, -1).drawString(fitRight(label, 12), 46, y);
+      h.setFontAlign(1, -1).drawString(fitLeft(val, 23), W - 28, y);
+    } else {
+      h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 13), 36, y);
+      h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 24), W - 28, y);
+    }
     h.setColor(FG);
   }
   function miniRow(label, val, y) {
-    h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(label, 8), 36, y);
-    h.setFontAlign(1, -1).drawString(fitLeft(val, 31), W - 26, y);
+    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 8), 36, y);
+    h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 31), W - 28, y);
   }
 
   function drawCalc() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("CALC", 18, 6);
-    h.setFontAlign(1, -1).drawString(angleMode + (shift ? "  2nd" : ""), W - 18, 6);
+    beginScreen("CALC", angleMode + (shift ? "  2nd" : ""));
     var shown = expr === "" ? "0" : expr;
     if (shown.length > 30) shown = "<" + shown.slice(shown.length - 29);
-    h.setFontAlign(1, -1).drawString(shown, W - 18, 34);
+    panel(16, 32, W - 16, 78, "EVALUATOR");
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("EXPR", 28, 36);
+    h.setColor(FG).setFontAlign(1, -1).drawString(shown, W - 28, 36);
     var pv = safeEval();
-    h.setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), W - 18, 60);
-    h.setColor(FG).drawLine(16, 80, W - 16, 80);
-    var KX = 12, KY = 86, KW = (W - 24) / COLS, KH = 24;
+    h.setColor(DIM).drawLine(28, 56, W - 28, 56);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("LIVE", 28, 58);
+    h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), W - 28, 58);
+    h.setColor(DIM).drawLine(16, 84, W - 16, 84);
+    var KX = 16, KY = 89, KW = (W - 32) / COLS, KH = 24;
+    panel(16, 84, W - 16, 282, "");
     for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
       var lbl = GRID[r][c];
       if (shift && SHIFTLBL[lbl]) lbl = SHIFTLBL[lbl];
       if (lbl === "DRG") lbl = angleMode;
       var x0 = KX + c * KW, y0 = KY + r * KH;
-      if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 1, y0 + 1, x0 + KW - 1, y0 + KH - 1); h.setColor(BG); } else h.setColor(FG);
+      if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 2, y0 + 2, x0 + KW - 4, y0 + KH - 4); h.setColor(BG); } else h.setColor(FG);
       h.setFontAlign(0, 0).drawString(lbl, x0 + KW / 2, y0 + KH / 2);
     }
     footer("WHEEL:MOVE  PRESS:ENTER");
   }
 
   function drawConv() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("CONVERT", 18, 6); drawTab();
+    beginScreen("CONVERT", "UNIT");
+    drawTab();
     var c = CATS[convCat], ry = [58, 84, 110, 136], out = convResult(), unit = c.u[convTo];
     var rows = [["CATEGORY", c.name], ["FROM", c.u[convFrom]], ["TO", c.u[convTo]], ["VALUE", convFmt(convVal)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], convField === i + 1);
-    h.setColor(FG).drawLine(16, 164, W - 16, 164);
-    miniRow("RAW =", rawFmt(out) + " " + unit, 174);
-    h.setFontAlign(-1, -1).drawString("ALSO =", 26, 206);
-    miniRow("SCI", sci(out, 8) + " " + unit, 230);
-    miniRow("ENG", eng(out, 8) + " " + unit, 254);
+    section("OUTPUT", 164);
+    miniRow("RAW =", rawFmt(out) + " " + unit, 192);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("ALSO =", 26, 218);
+    miniRow("SCI", sci(out, 8) + " " + unit, 240);
+    miniRow("ENG", eng(out, 8) + " " + unit, 264);
     if (msg) h.setFontAlign(0, -1).drawString(msg, W / 2, 276);
     footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
   }
 
   function drawConst() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("CONSTANTS", 18, 6); drawTab();
+    beginScreen("CONSTANTS", "DATA");
+    drawTab();
     row("GROUP", CONST_GROUPS[constGroup], 58, constField === 1);
     row("FIND", CONST_SEARCHES[constSearch], 82, constField === 2);
     var list = constEnsure(), e = constCurrent(), pos = list.indexOf(constSel), y;
-    h.setColor(FG).drawLine(16, 112, W - 16, 112);
+    section("", 112);
     if (!e) {
       h.setFontAlign(-1, -1).drawString("NO MATCHES", 26, 128);
       h.setFontAlign(-1, -1).drawString("Try GROUP=ALL or FIND=ALL", 26, 154);
@@ -746,12 +793,12 @@
     h.setFontAlign(1, -1).drawString(fitLeft(constGroupOf(e) + " " + e[0], 20), W - 26, 122);
     h.setFontAlign(-1, -1).drawString(fitRight(e[1], 25), 26, 146);
     h.setFontAlign(1, -1).drawString(constValueText(e), W - 26, 146);
-    h.drawLine(16, 178, W - 16, 178);
+    h.setColor(DIM).drawLine(16, 178, W - 16, 178);
     var vis = 4, lh = 24, top = Math.max(0, Math.min(pos - 1, list.length - vis));
     for (var i = 0; i < vis && top + i < list.length; i++) {
       var idx = list[top + i], ce = CONSTS[idx];
       y = 190 + i * lh;
-      if (idx === constSel && constField === 3) { h.setColor(FG).fillRect(16, y - 2, W - 16, y + 20); h.setColor(BG); } else h.setColor(FG);
+      if (idx === constSel && constField === 3) { h.setColor(FG).fillRect(22, y - 2, W - 22, y + 20); h.setColor(BG); } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(fitRight(ce[0] + " " + ce[1], 21), 26, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 21), W - 26, y);
     }
@@ -777,40 +824,72 @@
       drawEllipse(x + 66, y + 58, 42, 42); h.drawLine(x + 66, y + 58, x + 108, y + 58); h.drawString("r", x + 86, y + 62);
     } else if (kind === "ELLIPSE") {
       drawEllipse(x + 66, y + 58, 54, 34); h.drawLine(x + 12, y + 58, x + 120, y + 58); h.drawLine(x + 66, y + 24, x + 66, y + 92); h.drawString("a", x + 92, y + 62); h.drawString("b", x + 70, y + 34);
-    } else if (kind === "BOX") {
-      h.drawString("ISO", x + 2, y + 0);
-      h.drawRect(x + 24, y + 22, x + 72, y + 52); h.drawRect(x + 42, y + 10, x + 90, y + 40);
-      h.drawLine(x + 24, y + 22, x + 42, y + 10); h.drawLine(x + 72, y + 22, x + 90, y + 10); h.drawLine(x + 72, y + 52, x + 90, y + 40);
-      h.drawString("TOP", x + 2, y + 68); h.drawRect(x + 50, y + 66, x + 106, y + 88); h.drawString("l", x + 72, y + 90); h.drawString("w", x + 110, y + 70);
-      h.drawString("SIDE", x + 2, y + 104); h.drawRect(x + 50, y + 102, x + 106, y + 124); h.drawString("h", x + 110, y + 106);
+    }
+  }
+  // 3D solids: one of the three orthographic/iso views, centred at (cx,cy)
+  function drawSolidView(view, kind, cx, cy) {
+    h.setColor(FG).setFontAlign(-1, -1);
+    if (kind === "BOX") {
+      if (view === 0) {                                   // ISO cube
+        h.drawRect(cx - 20, cy - 6, cx + 8, cy + 18);
+        h.drawLine(cx - 20, cy - 6, cx - 10, cy - 16); h.drawLine(cx - 10, cy - 16, cx + 18, cy - 16); h.drawLine(cx + 18, cy - 16, cx + 8, cy - 6);
+        h.drawLine(cx + 18, cy - 16, cx + 18, cy + 8); h.drawLine(cx + 18, cy + 8, cx + 8, cy + 18);
+      } else if (view === 1) {                            // TOP: l x w footprint
+        h.drawRect(cx - 26, cy - 12, cx + 26, cy + 12); h.drawString("l", cx - 2, cy + 14); h.drawString("w", cx + 30, cy - 8);
+      } else {                                            // SIDE: w x h profile
+        h.drawRect(cx - 18, cy - 18, cx + 18, cy + 18); h.drawString("w", cx - 2, cy + 20); h.drawString("h", cx + 22, cy - 14);
+      }
     } else if (kind === "CYL") {
-      h.drawString("ISO", x + 2, y + 0);
-      drawEllipse(x + 66, y + 14, 32, 8); drawEllipse(x + 66, y + 54, 32, 8);
-      h.drawLine(x + 34, y + 14, x + 34, y + 54); h.drawLine(x + 98, y + 14, x + 98, y + 54); h.drawString("h", x + 104, y + 28);
-      h.drawString("TOP", x + 2, y + 68); drawEllipse(x + 74, y + 78, 20, 20); h.drawLine(x + 74, y + 78, x + 94, y + 78); h.drawString("r", x + 84, y + 80);
-      h.drawString("SIDE", x + 2, y + 106); h.drawRect(x + 52, y + 104, x + 100, y + 126); h.drawLine(x + 76, y + 104, x + 76, y + 126);
+      if (view === 0) {
+        drawEllipse(cx, cy - 14, 24, 5); drawEllipse(cx, cy + 14, 24, 5);
+        h.drawLine(cx - 24, cy - 14, cx - 24, cy + 14); h.drawLine(cx + 24, cy - 14, cx + 24, cy + 14); h.drawString("h", cx + 28, cy - 6);
+      } else if (view === 1) {
+        drawEllipse(cx, cy, 18, 18); h.drawLine(cx, cy, cx + 18, cy); h.drawString("r", cx + 4, cy - 14);
+      } else {
+        h.drawRect(cx - 18, cy - 20, cx + 18, cy + 20); h.drawLine(cx, cy - 20, cx, cy + 20); h.drawString("h", cx + 22, cy - 16);
+      }
     } else if (kind === "CONE") {
-      h.drawString("ISO", x + 2, y + 0);
-      drawEllipse(x + 66, y + 56, 34, 9); h.drawLine(x + 32, y + 56, x + 66, y + 10); h.drawLine(x + 100, y + 56, x + 66, y + 10); h.drawLine(x + 66, y + 10, x + 66, y + 56);
-      h.drawString("TOP", x + 2, y + 68); drawEllipse(x + 74, y + 78, 20, 20); h.drawLine(x + 74, y + 78, x + 94, y + 78); h.drawString("r", x + 84, y + 80);
-      h.drawString("SIDE", x + 2, y + 106); h.drawLine(x + 50, y + 126, x + 102, y + 126); h.drawLine(x + 50, y + 126, x + 76, y + 102); h.drawLine(x + 102, y + 126, x + 76, y + 102); h.drawLine(x + 76, y + 102, x + 76, y + 126);
+      if (view === 0) {
+        drawEllipse(cx, cy + 14, 24, 5);
+        h.drawLine(cx - 24, cy + 14, cx, cy - 18); h.drawLine(cx + 24, cy + 14, cx, cy - 18); h.drawLine(cx, cy - 18, cx, cy + 14); h.drawString("h", cx + 4, cy - 6);
+      } else if (view === 1) {
+        drawEllipse(cx, cy, 18, 18); h.drawLine(cx, cy, cx + 18, cy); h.drawString("r", cx + 4, cy - 14);
+      } else {
+        h.drawLine(cx - 22, cy + 18, cx + 22, cy + 18); h.drawLine(cx - 22, cy + 18, cx, cy - 18); h.drawLine(cx + 22, cy + 18, cx, cy - 18);
+        h.drawLine(cx, cy - 18, cx, cy + 18); h.drawString("h", cx + 4, cy - 6);
+      }
     } else if (kind === "SPHERE") {
-      h.drawString("ISO", x + 2, y + 0);
-      drawEllipse(x + 66, y + 32, 30, 30); drawEllipse(x + 66, y + 32, 30, 9); h.drawLine(x + 66, y + 32, x + 96, y + 32); h.drawString("r", x + 80, y + 34);
-      h.drawString("TOP", x + 2, y + 72); drawEllipse(x + 72, y + 82, 18, 18); h.drawLine(x + 72, y + 82, x + 90, y + 82);
-      h.drawString("SIDE", x + 2, y + 108); drawEllipse(x + 72, y + 118, 18, 18); h.drawLine(x + 72, y + 118, x + 90, y + 118);
+      if (view === 0) {
+        drawEllipse(cx, cy, 18, 18); drawEllipse(cx, cy, 18, 5); h.drawLine(cx, cy, cx + 18, cy); h.drawString("r", cx + 4, cy - 16);
+      } else {
+        drawEllipse(cx, cy, 17, 17);
+      }
+    }
+  }
+  // GEOM3D card: stacked ISO / TOP / SIDE rows, each with its own equations
+  function drawSolid3D(item) {
+    var names = ["ISO", "TOP", "SIDE"], groups = [item.iso, item.top, item.side];
+    for (var r = 0; r < 3; r++) {
+      var y0 = 150 + r * 46, cy = y0 + 22;
+      if (r > 0) h.setColor(DIM).drawLine(16, y0 - 2, W - 16, y0 - 2);
+      h.setColor(FG).setFontAlign(-1, 0).drawString(names[r], 22, cy);
+      drawSolidView(r, item.shape, 112, cy);
+      var g = groups[r] || [];
+      for (var i = 0; i < g.length && i < 2; i++)
+        h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(g[i], 26), 176, y0 + 1 + i * 22);
     }
   }
   function drawRef() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("RULES", 18, 6); drawTab();
+    beginScreen("RULES", "REF");
+    drawTab();
     var sec = refCurSec(), item = refCurItem();
     row("TOPIC", sec.name, 58, refField === 1);
     row("CARD", item.name, 82, refField === 2);
-    h.setColor(FG).drawLine(16, 112, W - 16, 112);
+    section("", 112);
     h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, 26, 122);
     h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 20), W - 26, 122);
     var x = 34, y = 150, max = 34;
+    if (item.solid) { drawSolid3D(item); footer("WHEEL:FIELD  THUMB:SET"); return; }
     if (item.shape) {
       drawShape(item.shape, 24, 144);
       x = 166; y = 146; max = 27;
@@ -822,32 +901,38 @@
   }
 
   function drawVac() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("VACUUM (N2)", 18, 6); drawTab();
+    beginScreen("VACUUM N2", "GAS");
+    drawTab();
     var ry = [60, 92, 124, 156];
     var rows = [["P (Pa)", fmt(vacP)], ["T (K)", fmt(vacT)], ["d (m)", fmt(vacD)], ["L (m)", fmt(vacL)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], vacField === i + 1);
     var mfp = meanFreePath(), Kn = mfp / vacL, reg = Kn < 0.01 ? "viscous" : Kn < 1 ? "transitional" : "molecular";
+    section("READOUT", 180);
     h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString("mean free path", 26, 190); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 22), W - 26, 190);
-    h.setFontAlign(-1, -1).drawString("number density", 26, 214); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 22), W - 26, 214);
-    h.setFontAlign(-1, -1).drawString("Knudsen/regime", 26, 238); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 24), W - 26, 238);
-    h.setFontAlign(-1, -1).drawString("mean speed", 26, 262); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 22), W - 26, 262);
+    h.setFontAlign(-1, -1).drawString("mean free path", 26, 198); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 22), W - 26, 198);
+    h.setFontAlign(-1, -1).drawString("number density", 26, 220); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 22), W - 26, 220);
+    h.setFontAlign(-1, -1).drawString("Knudsen/regime", 26, 242); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 24), W - 26, 242);
+    h.setFontAlign(-1, -1).drawString("mean speed", 26, 264); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 22), W - 26, 264);
     footer("WHEEL:FIELD  THUMB:X10/STEP  PRESS:ANS");
   }
 
   function drawGraph() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("GRAPH", 18, 6); drawTab();
+    beginScreen("GRAPH", "TRACE");
+    drawTab();
     var ctl = ["MODE", "EDIT", "ZOOM", "PAN-X", "PAN-Y"][graphField];
     var fxs = "f(x)=" + fx; if (fxs.length > 24) fxs = fxs.slice(0, 24);
     h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, 18, 62);
     h.setFontAlign(1, -1).drawString("[" + ctl + "]", W - 18, 62);
     var px0 = 44, py0 = 88, px1 = W - 12, py1 = H - 68;
-    h.drawRect(px0, py0, px1, py1);
+    h.setColor(DIM).drawRect(px0, py0, px1, py1);
+    drawCorners(px0, py0, px1, py1, 8);
+    for (var gx = 1; gx < 4; gx++) h.drawLine(px0 + (px1 - px0) * gx / 4, py0, px0 + (px1 - px0) * gx / 4, py1);
+    for (var gy = 1; gy < 4; gy++) h.drawLine(px0, py0 + (py1 - py0) * gy / 4, px1, py0 + (py1 - py0) * gy / 4);
     function my(y) { return py1 - (y - (gyc - gys)) / (2 * gys) * (py1 - py0); }
+    h.setColor(MID);
     if (gxc - gxs < 0 && gxc + gxs > 0) { var ax = px0 + (0 - (gxc - gxs)) / (2 * gxs) * (px1 - px0); h.drawLine(ax, py0, ax, py1); }
     if (gyc - gys < 0 && gyc + gys > 0) { var ay = my(0); h.drawLine(px0, ay, px1, ay); }
+    h.setColor(FG);
     var pjx = null, pjy = null;
     for (var sx = px0; sx <= px1; sx++) {
       var x = (gxc - gxs) + (sx - px0) / (px1 - px0) * (2 * gxs), y = fAt(x);
@@ -865,15 +950,14 @@
   }
 
   function drawCalculus() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("CALCULUS", 18, 6); drawTab();
+    beginScreen("CALCULUS", "NUM");
+    drawTab();
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
     var ry = [58, 84, 110, 136];
     var rows = [["f(x)", fx.length > 18 ? fx.slice(0, 18) : fx], ["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], calcuField === i + 1);
-    h.setColor(FG).drawLine(16, 164, W - 16, 164);
-    h.setFontAlign(-1, -1).drawString("READOUT", 26, 172);
+    section("READOUT", 164);
     if (calcuOp === 0) {
       var fa = fAt(calcuA), fb = fAt(calcuB), dx = calcuB - calcuA;
       miniRow("f(A)", fmt(fa), 198);
@@ -912,8 +996,8 @@
     return fitLeft(s, 25);
   }
   function drawCirc() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("CIRCUIT", 18, 6); drawTab();
+    beginScreen("CIRCUIT", "WORK");
+    drawTab();
     var t = CIRC_TOOLS[circTool];
     row("WORKBENCH", t.name, 60, circField === 1);
     var y = 88, vals = [];
@@ -921,8 +1005,7 @@
       var inp = t.in[i]; vals.push(inp.v);
       row(inp.l, circInputText(inp), y, circField === i + 2); y += 24;
     }
-    h.setColor(FG).drawLine(16, 184, W - 16, 184);
-    h.setFontAlign(-1, -1).drawString("READOUT", 26, 188);
+    section("READOUT", 184);
     var outs = t.out.apply(null, vals);
     y = 204;
     for (var j = 0; j < outs.length && j < 4; j++) {
@@ -933,15 +1016,15 @@
   }
 
   function drawTape() {
-    h.reset().clear().setColor(FG).setFont("Monofonto23");
-    h.setFontAlign(-1, -1).drawString("TAPE", 18, 6); drawTab();
+    beginScreen("TAPE", "LOG");
+    drawTab();
     row("THEME", theme, 64, tapeField === 1);
     var y = 98;
     if (!hist.length) h.setColor(FG).setFontAlign(-1, -1).drawString("(no history yet)", 26, y);
     for (var i = 0; i < hist.length; i++) {
       var sel = tapeField === 2 && i === tapeSel, line = hist[i].s;
       if (line.length > 30) line = "<" + line.slice(line.length - 29);
-      if (sel) { h.setColor(FG).fillRect(16, y - 2, W - 16, y + 24); h.setColor(BG); } else h.setColor(FG);
+      if (sel) { h.setColor(FG).fillRect(22, y - 2, W - 22, y + 24); h.setColor(BG); } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(line, 26, y); h.setColor(FG); y += 30;
     }
     footer("WHEEL:FIELD  THUMB:SET  PRESS:USE");

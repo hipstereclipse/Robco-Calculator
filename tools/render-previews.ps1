@@ -21,13 +21,17 @@ $data = Get-Content -Raw $OpsPath | ConvertFrom-Json
 
 $bg = [System.Drawing.Color]::FromArgb(4, 8, 4)
 $fg = [System.Drawing.Color]::FromArgb(90, 255, 112)
+$mid = [System.Drawing.Color]::FromArgb(48, 190, 76)
+$dim = [System.Drawing.Color]::FromArgb(18, 92, 34)
 $dark = [System.Drawing.Color]::FromArgb(1, 3, 1)
 
 function Get-PipColor($Index) {
-  if ([int]$Index -eq 0) {
-    return $script:dark
+  switch ([int]$Index) {
+    0 { return $script:dark }
+    1 { return $script:dim }
+    2 { return $script:mid }
+    default { return $script:fg }
   }
-  return $script:fg
 }
 
 function New-Brush($Color) {

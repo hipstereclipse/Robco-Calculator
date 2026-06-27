@@ -167,31 +167,31 @@ function capture(name, title, description) {
 
 // Build one real tape entry and leave the calculator on its evaluated state.
 ["2", "+", "3", "*", "4", "="].forEach(pressCalc);
-capture("01-calc-result", "CALC", "Scientific calculator keypad with a completed expression.");
+capture("01-calc-result", "CALC", "Framed RobCo keypad with a completed expression.");
 
 pressCalc("MODE");
 knob1(1);
-capture("02-graph", "GRAPH", "Plots the shared f(x), defaulting to sin(x).");
+capture("02-graph", "GRAPH", "Pip-OS trace grid plotting the shared f(x).");
 knob1(-1);
 
 knob2(1);
 knob1(1);
-capture("03-calculus", "CALCULUS", "Clear value, slope, area, root, and extrema readouts.");
+capture("03-calculus", "CALCULUS", "Dim terminal controls for slope, area, root, and extrema.");
 knob1(-1);
 
 knob2(1);
 knob1(1);
-capture("04-circuit", "CIRC", "Loaded divider plus electronics helpers.");
+capture("04-circuit", "CIRC", "Workbench readouts inside the Pip-Boy status frame.");
 knob1(-1);
 
 knob2(1);
 knob1(1);
-capture("05-converter", "CONV", "Metric, imperial, radiation, and cooking conversions.");
+capture("05-converter", "CONV", "Unit conversion panel with readout staging.");
 knob1(-1);
 
 knob2(1);
 knob1(1);
-capture("06-constants", "CONST", "Math, physics, unit, space, and kitchen constants.");
+capture("06-constants", "CONST", "Indexed constants in the RobCo data-bank style.");
 knob1(-1);
 
 knob2(1);
@@ -199,17 +199,17 @@ knob1(1);
 knob2(6);
 knob1(1);
 knob2(1);
-capture("07-rules", "REF", "Formula cards, series, calculus rules, and 3D projection views.");
+capture("07-rules", "REF", "Formula cards with 3D projection views.");
 knob1(-2);
 
 knob2(1);
 knob1(1);
-capture("08-vacuum", "VAC", "Vacuum and gas-flow values for nitrogen.");
+capture("08-vacuum", "VAC", "Nitrogen vacuum telemetry with Pip-OS readouts.");
 knob1(-1);
 
 knob2(1);
 knob1(2);
-capture("09-tape", "TAPE", "Calculation history and theme toggle.");
+capture("09-tape", "TAPE", "Calculation tape in the terminal log frame.");
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(
