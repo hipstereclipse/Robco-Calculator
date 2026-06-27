@@ -4,7 +4,11 @@ const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
 const outputPath = process.argv[2] || path.join(root, "screenshots", "_screen_ops.json");
-const appPath = path.join(root, "APPS", "PIPCALC.JS");
+// Which directory to load the app + its on-demand modules from. Defaults to the
+// readable source in src/; pass "APPS" to verify the minified build renders the
+// same. (render-previews.ps1 calls with only an output path, so it uses src/.)
+const baseDir = process.argv[3] || "src";
+const appPath = path.join(root, baseDir, "PIPCALC.JS");
 const source = fs.readFileSync(appPath, "utf8");
 
 let ops = [];
@@ -91,7 +95,7 @@ const Pip = {
 // Storage/fs read used by PIPCALC.JS's lazy module loader). The app tries
 // bare names and APPS/ prefixes; map any of them back to a repo file.
 function loadProjectFile(p) {
-  const candidates = [p, String(p).replace(/^\/+/, ""), path.join("APPS", path.basename(p))];
+  const candidates = [p, String(p).replace(/^\/+/, ""), path.join(baseDir, path.basename(p))];
   for (const c of candidates) {
     const abs = path.join(root, c);
     if (fs.existsSync(abs)) return fs.readFileSync(abs, "utf8");

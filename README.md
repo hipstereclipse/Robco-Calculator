@@ -41,22 +41,32 @@ The core app is `APPS/PIPCALC.JS`. It returns a Pip app factory that:
 - solves roots and extrema with Newton-style numerical searches
 
 To fit in device RAM (the Pip runtime is Espruino-based, with limited
-memory), the heavy reference modes live in separate files that are loaded
-from the card only while open and freed on exit, so only one is ever
-resident:
+memory), only the `CALC` keypad and the shared expression evaluator stay
+resident. **Every other mode** lives in its own file that is loaded from the
+card only while open and freed on exit, so only one is ever resident:
 
+- `APPS/PGRAPH.JS` — function plotter (`GRAPH`)
+- `APPS/PCALCULUS.JS` — numeric calculus (`CALCULUS`)
+- `APPS/PCIRC.JS` — circuit workbench (`CIRC`)
 - `APPS/PCONV.JS` — unit converter (`CONV`)
 - `APPS/PCONST.JS` — constants (`CONST`)
 - `APPS/PREF.JS` — reference formula cards (`REF`)
-- `APPS/PCIRC.JS` — circuit workbench (`CIRC`)
 - `APPS/PVAC.JS` — vacuum tools (`VAC`)
+- `APPS/PTAPE.JS` — calculation tape + theme (`TAPE`)
 
 Each module file evaluates to a `function(ctx)` factory that returns a
 `{ fieldCount, draw, knob2, press }` object; `PIPCALC.JS` passes shared
-drawing/formatting helpers and state accessors through `ctx`. The loader
-tries the runtime's `Storage`, `fs`, and `E.openFile` APIs in turn; if none
-can read the file, the mode shows a notice instead of crashing the app.
-`CALC`, `GRAPH`, `CALCULUS`, and `TAPE` stay in the core file.
+drawing/formatting helpers, the f(x) evaluator, and state accessors through
+`ctx`. The loader tries the runtime's `Storage`, `fs`, and `E.openFile` APIs
+in turn; if none can read the file, the mode shows a notice instead of
+crashing the app.
+
+Espruino keeps each function's source text resident in RAM, so file size is
+essentially RAM cost. The readable source lives in `src/`; the device files in
+`APPS/` are the **minified build** produced by `tools/build.js` (terser). The
+minified core is ~14 KB versus ~30 KB unminified, which is what lets the app
+launch without `ERROR Errors: CALLBACK, LOW_MEMORY, MEMORY`. Edit `src/` and
+re-run `npm run build`; never hand-edit `APPS/`.
 
 The metadata file `APPINFO/CALC.info` names the app, version, source file, and install payload for the Pip launcher.
 
@@ -77,12 +87,22 @@ If the direct install fails (some SD-card/OS combinations throw `NotReadableErro
 ### Manual install
 
 1. Connect or mount the device storage used by your Pip runtime.
-2. Copy `APPS/PIPCALC.JS` and the five mode modules (`APPS/PCONV.JS`, `APPS/PCONST.JS`, `APPS/PREF.JS`, `APPS/PCIRC.JS`, `APPS/PVAC.JS`) into the device's `APPS/` directory.
+2. Copy `APPS/PIPCALC.JS` and all eight mode modules (`APPS/PGRAPH.JS`, `APPS/PCALCULUS.JS`, `APPS/PCIRC.JS`, `APPS/PCONV.JS`, `APPS/PCONST.JS`, `APPS/PREF.JS`, `APPS/PVAC.JS`, `APPS/PTAPE.JS`) into the device's `APPS/` directory.
 3. Copy `APPINFO/CALC.info` into the device's `APPINFO/` directory.
 4. Restart, rescan, or reload the Pip launcher.
 5. Open **Engineer's Calc** from the app list.
 
-This project does not use npm packages for the app itself. The runtime must provide the global `Pip` API and graphics helper `h`; opening `APPS/PIPCALC.JS` directly in a browser or Node.js will not launch the app. The `CONV`, `CONST`, `REF`, `CIRC`, and `VAC` modes need the matching `APPS/P*.JS` files alongside `PIPCALC.JS` to load on the device.
+The app itself ships no npm packages; the runtime must provide the global `Pip` API and graphics helper `h`, so opening `APPS/PIPCALC.JS` directly in a browser or Node.js will not launch the app. Every mode except `CALC` needs its matching `APPS/P*.JS` file alongside `PIPCALC.JS` to load on the device.
+
+### Building from source
+
+The device files in `APPS/` are generated from `src/` and are committed so the
+installer can fetch them directly. To rebuild after editing `src/`:
+
+1. `npm install` — installs the only dev dependency, `terser`.
+2. `npm run build` — minifies `src/*.JS` into `APPS/*.JS`.
+3. `npm run verify` — confirms the minified build renders byte-for-byte
+   identically to the source (drives the headless harness over every screen).
 
 ## Preview Images
 
