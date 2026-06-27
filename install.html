@@ -291,6 +291,26 @@
       accent-color: var(--phos);
     }
 
+    .hint {
+      color: var(--phos-dim);
+      font-size: 0.82rem;
+    }
+
+    .hint strong {
+      color: var(--amber);
+    }
+
+    #zipButton {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    #zipButton:hover:not(:disabled) {
+      background: var(--amber);
+      color: #150d02;
+      box-shadow: 0 0 12px rgba(255, 194, 75, 0.5);
+    }
+
     .ref-field {
       display: grid;
       gap: 6px;
@@ -523,10 +543,13 @@
 
           <div class="action-row">
             <button type="button" id="installButton" disabled>Install</button>
+            <button type="button" id="zipButton">Download .zip</button>
             <p class="status" id="installStatus">Waiting for target</p>
           </div>
 
-          <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing</label>
+          <p class="hint">Direct install failing (e.g. <strong>NotReadableError</strong>)? Use <strong>Download .zip</strong> and extract it to the microSD root &mdash; it works in any browser and writes no files directly.</p>
+
+          <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing (direct install only)</label>
 
           <div class="progress" aria-hidden="true">
             <div class="progress-bar" id="progressBar"></div>
@@ -572,6 +595,7 @@
     const progressBar = document.getElementById("progressBar");
     const logList = document.getElementById("log");
     const cleanInstall = document.getElementById("cleanInstall");
+    const zipButton = document.getElementById("zipButton");
 
     let targetDirectory = null;
     let payloadFiles = FALLBACK_PAYLOAD.slice();
@@ -603,6 +627,7 @@
 
       selectTarget.addEventListener("click", selectInstallTarget);
       installButton.addEventListener("click", installApp);
+      zipButton.addEventListener("click", downloadZip);
     }
 
     function cleanRef(value) {
@@ -870,7 +895,17 @@
         directory = await directory.getDirectoryHandle(part, { create: true });
       }
 
-      const fileHandle = await directory.getFileHandle(parts[parts.length - 1], { create: true });
+      // Remove any existing file first so createWritable starts from an empty
+      // file and never has to read the old contents (which can throw
+      // NotReadableError on some SD-card/OS combinations).
+      const name = parts[parts.length - 1];
+      try {
+        await directory.removeEntry(name);
+      } catch (error) {
+        // missing or undeletable -- proceed; the write below still overwrites
+      }
+
+      const fileHandle = await directory.getFileHandle(name, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(bytes);
       await writable.close();
@@ -894,6 +929,7 @@
       busy = nextBusy;
       selectTarget.disabled = busy;
       installButton.disabled = busy || !targetDirectory;
+      zipButton.disabled = busy;
       refInput.disabled = busy;
       cleanInstall.disabled = busy;
       if (busy) {
@@ -907,6 +943,149 @@
 
     function setProgress(value) {
       progressBar.style.width = Math.max(0, Math.min(100, value)) + "%";
+    }
+
+    // --- Offline path: bundle the payload into a .zip the user extracts to
+    //     the microSD root. Avoids the File System Access write API entirely,
+    //     so it works even where direct install throws NotReadableError. ---
+    async function downloadZip() {
+      if (busy) {
+        return;
+      }
+      try {
+        setBusy(true);
+        setProgress(0);
+        logList.replaceChildren();
+
+        if (!appInfo) {
+          try {
+            await loadManifest();
+          } catch (error) {
+            useFallbackPayload(error);
+          }
+        }
+
+        const entries = [];
+        for (let index = 0; index < payloadFiles.length; index += 1) {
+          const path = payloadFiles[index];
+          addLog("Downloading " + path + "...");
+          entries.push({ name: path, bytes: await downloadFile(path) });
+          setProgress(((index + 1) / payloadFiles.length) * 100);
+        }
+
+        const blob = buildZip(entries);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "RobCo-Calculator.zip";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+        installStatus.textContent = "ZIP ready";
+        addLog("Saved RobCo-Calculator.zip (" + entries.length + " files). Extract it to the microSD root; it creates APPS/ and APPINFO/.", "ok");
+      } catch (error) {
+        installStatus.textContent = "ZIP failed";
+        addLog(describeError(error), "error");
+      } finally {
+        setBusy(false);
+        updateInstallState();
+      }
+    }
+
+    const CRC_TABLE = (function () {
+      const table = new Uint32Array(256);
+      for (let n = 0; n < 256; n += 1) {
+        let c = n;
+        for (let k = 0; k < 8; k += 1) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[n] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function crc32(bytes) {
+      let c = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i += 1) {
+        c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+      }
+      return (c ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function asciiBytes(text) {
+      const out = new Uint8Array(text.length);
+      for (let i = 0; i < text.length; i += 1) {
+        out[i] = text.charCodeAt(i) & 0xFF;
+      }
+      return out;
+    }
+
+    // Minimal "stored" (uncompressed) ZIP writer -- no dependencies.
+    function buildZip(entries) {
+      const parts = [];
+      const central = [];
+      let offset = 0;
+      const dosTime = 0;
+      const dosDate = 0x21; // 1980-01-01
+
+      entries.forEach((entry) => {
+        const nameBytes = asciiBytes(entry.name);
+        const crc = crc32(entry.bytes);
+        const size = entry.bytes.length;
+
+        const local = new DataView(new ArrayBuffer(30));
+        local.setUint32(0, 0x04034b50, true);
+        local.setUint16(4, 20, true);
+        local.setUint16(6, 0, true);
+        local.setUint16(8, 0, true); // method 0 = stored
+        local.setUint16(10, dosTime, true);
+        local.setUint16(12, dosDate, true);
+        local.setUint32(14, crc, true);
+        local.setUint32(18, size, true);
+        local.setUint32(22, size, true);
+        local.setUint16(26, nameBytes.length, true);
+        local.setUint16(28, 0, true);
+        parts.push(new Uint8Array(local.buffer), nameBytes, entry.bytes);
+
+        const dir = new DataView(new ArrayBuffer(46));
+        dir.setUint32(0, 0x02014b50, true);
+        dir.setUint16(4, 20, true);
+        dir.setUint16(6, 20, true);
+        dir.setUint16(8, 0, true);
+        dir.setUint16(10, 0, true);
+        dir.setUint16(12, dosTime, true);
+        dir.setUint16(14, dosDate, true);
+        dir.setUint32(16, crc, true);
+        dir.setUint32(20, size, true);
+        dir.setUint32(24, size, true);
+        dir.setUint16(28, nameBytes.length, true);
+        dir.setUint16(30, 0, true);
+        dir.setUint16(32, 0, true);
+        dir.setUint16(34, 0, true);
+        dir.setUint16(36, 0, true);
+        dir.setUint32(38, 0, true);
+        dir.setUint32(42, offset, true);
+        central.push(new Uint8Array(dir.buffer), nameBytes);
+
+        offset += 30 + nameBytes.length + size;
+      });
+
+      let centralSize = 0;
+      central.forEach((chunk) => { centralSize += chunk.length; });
+
+      const end = new DataView(new ArrayBuffer(22));
+      end.setUint32(0, 0x06054b50, true);
+      end.setUint16(4, 0, true);
+      end.setUint16(6, 0, true);
+      end.setUint16(8, entries.length, true);
+      end.setUint16(10, entries.length, true);
+      end.setUint32(12, centralSize, true);
+      end.setUint32(16, offset, true);
+      end.setUint16(20, 0, true);
+
+      return new Blob(parts.concat(central, [new Uint8Array(end.buffer)]), { type: "application/zip" });
     }
 
     function describeError(error) {

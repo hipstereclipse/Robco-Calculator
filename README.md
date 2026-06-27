@@ -72,6 +72,8 @@ The installer reads the payload list from `APPINFO/CALC.info`, downloads the fil
 
 **Purge any previous install** is on by default: before writing, the installer reads any `APPINFO/CALC.info` already on the card, deletes every file that older version listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
 
+If the direct install fails (some SD-card/OS combinations throw `NotReadableError` from the browser's File System Access API), click **Download .zip** instead. It bundles the same payload into `RobCo-Calculator.zip`; extract that to the microSD root and it creates the `APPS/` and `APPINFO/` folders for you. This path writes no files directly, so it works in any browser.
+
 ### Manual install
 
 1. Connect or mount the device storage used by your Pip runtime.
