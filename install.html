@@ -275,6 +275,22 @@
       overflow-wrap: anywhere;
     }
 
+    .opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--phos-dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .opt input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--phos);
+    }
+
     .ref-field {
       display: grid;
       gap: 6px;
@@ -510,6 +526,8 @@
             <p class="status" id="installStatus">Waiting for target</p>
           </div>
 
+          <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing</label>
+
           <div class="progress" aria-hidden="true">
             <div class="progress-bar" id="progressBar"></div>
           </div>
@@ -553,6 +571,7 @@
     const fileList = document.getElementById("fileList");
     const progressBar = document.getElementById("progressBar");
     const logList = document.getElementById("log");
+    const cleanInstall = document.getElementById("cleanInstall");
 
     let targetDirectory = null;
     let payloadFiles = FALLBACK_PAYLOAD.slice();
@@ -698,6 +717,11 @@
         guardTargetDirectory(targetDirectory);
         await ensureWritable(targetDirectory);
 
+        if (cleanInstall.checked) {
+          addLog("Scanning microSD for a previous install...");
+          await removeOldInstall(targetDirectory);
+        }
+
         if (!appInfo) {
           try {
             await loadManifest();
@@ -724,6 +748,68 @@
       } finally {
         setBusy(false);
         updateInstallState();
+      }
+    }
+
+    // Read the app manifest already on the card (if any) so we know exactly
+    // which files a previous version wrote -- even if it used different names.
+    async function readExistingManifest(directory) {
+      try {
+        const appinfo = await directory.getDirectoryHandle("APPINFO");
+        const handle = await appinfo.getFileHandle("CALC.info");
+        const file = await handle.getFile();
+        const data = JSON.parse(await file.text());
+        const list = String(data.files || "")
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+        if (data.src) list.push(data.src);
+        if (data.icon) list.push(data.icon);
+        return uniquePaths(list);
+      } catch (error) {
+        return [];
+      }
+    }
+
+    async function deletePath(root, path) {
+      const parts = path.split("/").filter(Boolean);
+      if (!parts.length) {
+        return false;
+      }
+      let directory = root;
+      try {
+        for (const part of parts.slice(0, -1)) {
+          directory = await directory.getDirectoryHandle(part);
+        }
+        await directory.removeEntry(parts[parts.length - 1]);
+        return true;
+      } catch (error) {
+        return false; // missing, or not removable -- nothing to clear
+      }
+    }
+
+    async function removeOldInstall(directory) {
+      const existing = await readExistingManifest(directory);
+      // delete the old manifest's files + the current payload, manifest last
+      const targets = uniquePaths(existing.concat(payloadFiles))
+        .filter((path) => path !== INFO_PATH);
+      let removed = 0;
+
+      for (const path of targets) {
+        if (await deletePath(directory, path)) {
+          removed += 1;
+          addLog("Removed old " + path, "warn");
+        }
+      }
+      if (await deletePath(directory, INFO_PATH)) {
+        removed += 1;
+        addLog("Removed old " + INFO_PATH, "warn");
+      }
+
+      if (removed) {
+        addLog("Cleared " + removed + " file(s) from a previous install.", "ok");
+      } else {
+        addLog("No previous install detected.", "ok");
       }
     }
 
@@ -784,6 +870,7 @@
       selectTarget.disabled = busy;
       installButton.disabled = busy || !targetDirectory;
       refInput.disabled = busy;
+      cleanInstall.disabled = busy;
       if (busy) {
         installStatus.textContent = "Installing...";
       }

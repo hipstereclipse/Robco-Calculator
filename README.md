@@ -70,6 +70,8 @@ The metadata file `APPINFO/CALC.info` names the app, version, source file, and i
 
 The installer reads the payload list from `APPINFO/CALC.info`, downloads the files from this GitHub repository, and writes them into matching `APPS/` and `APPINFO/` folders on the selected card. If your browser does not offer folder write access, use the manual steps below.
 
+**Purge any previous install** is on by default: before writing, the installer reads any `APPINFO/CALC.info` already on the card, deletes every file that older version listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
+
 ### Manual install
 
 1. Connect or mount the device storage used by your Pip runtime.
