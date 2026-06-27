@@ -42,6 +42,16 @@ The metadata file `APPINFO/CALC.info` names the app, version, source file, and i
 
 ## Installation
 
+### Browser installer
+
+1. Open `install.html` in Chrome or Edge.
+2. Select the root of the microSD card used by your Pip runtime.
+3. Click **Install**.
+
+The installer reads the payload list from `APPINFO/CALC.info`, downloads the files from this GitHub repository, and writes them into matching `APPS/` and `APPINFO/` folders on the selected card. If your browser does not offer folder write access, use the manual steps below.
+
+### Manual install
+
 1. Connect or mount the device storage used by your Pip runtime.
 2. Copy `APPS/PIPCALC.JS` into the device's `APPS/` directory.
 3. Copy `APPINFO/CALC.info` into the device's `APPINFO/` directory.

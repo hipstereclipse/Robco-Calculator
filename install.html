@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RobCo Calculator Installer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f5ef;
+      --ink: #172016;
+      --muted: #5b6657;
+      --line: #c7cfbc;
+      --panel: #ffffff;
+      --panel-strong: #e7ebdf;
+      --green: #2f7d49;
+      --green-dark: #205534;
+      --amber: #b46318;
+      --danger: #a53d31;
+      --shadow: 0 18px 48px rgba(23, 32, 22, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 0 18px;
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(180, 99, 24, 0.4);
+      outline-offset: 2px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .shell {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--green-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4.25rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .source-pill {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .installer,
+    .preview {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .installer {
+      min-width: 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-strong);
+    }
+
+    .section-head h2 {
+      font-size: 1.15rem;
+      letter-spacing: 0;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .target-row,
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .target-row button {
+      background: var(--green);
+    }
+
+    .action-row button {
+      background: var(--ink);
+      min-width: 140px;
+    }
+
+    .selected-target {
+      min-width: min(100%, 240px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #f9faf6;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .ref-field {
+      display: grid;
+      gap: 6px;
+      max-width: 320px;
+    }
+
+    .ref-field label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .ref-field input {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .payload {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fbfcf8;
+      padding: 18px;
+    }
+
+    .payload h3 {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .file-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.86rem;
+      overflow-wrap: anywhere;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #dce3d2;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+      transition: width 160ms ease;
+    }
+
+    .log {
+      display: grid;
+      gap: 8px;
+      min-height: 116px;
+      max-height: 260px;
+      margin: 0;
+      padding: 0;
+      overflow: auto;
+      list-style-position: inside;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .log li {
+      border-left: 3px solid var(--line);
+      padding: 2px 0 2px 9px;
+    }
+
+    .log li.ok {
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+
+    .log li.warn {
+      border-color: var(--amber);
+      color: #6e3d0d;
+    }
+
+    .log li.error {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .preview {
+      display: grid;
+      gap: 0;
+    }
+
+    .preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #111;
+    }
+
+    .preview-meta {
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .preview-meta strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topline,
+      .section-head {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .source-pill {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100% - 20px, 1120px);
+        padding: 16px 0;
+      }
+
+      .target-row button,
+      .action-row button,
+      .selected-target,
+      .ref-field {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topline">
+      <div class="brand">
+        <p class="eyebrow">Pip runtime installer</p>
+        <h1>RobCo Calculator</h1>
+      </div>
+      <div class="source-pill" id="sourceLabel">Source: GitHub main</div>
+    </div>
+
+    <div class="layout">
+      <section class="installer" aria-labelledby="installerTitle">
+        <div class="section-head">
+          <div>
+            <h2 id="installerTitle">microSD Install</h2>
+            <p class="status" id="appStatus">Loading manifest...</p>
+          </div>
+          <div class="ref-field">
+            <label for="refInput">Git ref</label>
+            <input id="refInput" type="text" value="main" autocomplete="off" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="target-row">
+            <button type="button" id="selectTarget">Select microSD Root</button>
+            <div class="selected-target" id="targetLabel">No target selected</div>
+          </div>
+
+          <div class="action-row">
+            <button type="button" id="installButton" disabled>Install</button>
+            <p class="status" id="installStatus">Waiting for target</p>
+          </div>
+
+          <div class="progress" aria-hidden="true">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+
+        <div class="payload">
+          <h3>Payload</h3>
+          <ul class="file-list" id="fileList"></ul>
+        </div>
+
+        <div class="controls">
+          <ol class="log" id="log"></ol>
+        </div>
+      </section>
+
+      <aside class="preview" aria-label="RobCo Calculator preview">
+        <img src="screenshots/preview-contact-sheet.png" alt="RobCo Calculator screen previews">
+        <div class="preview-meta">
+          <strong>Engineer's Calc</strong>
+          APPS/PIPCALC.JS plus APPINFO/CALC.info
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    "use strict";
+
+    const REPOSITORY = "hipstereclipse/Robco-Calculator";
+    const DEFAULT_REF = "main";
+    const INFO_PATH = "APPINFO/CALC.info";
+    const FALLBACK_PAYLOAD = ["APPS/PIPCALC.JS", "APPINFO/CALC.info"];
+
+    const sourceLabel = document.getElementById("sourceLabel");
+    const appStatus = document.getElementById("appStatus");
+    const installStatus = document.getElementById("installStatus");
+    const refInput = document.getElementById("refInput");
+    const selectTarget = document.getElementById("selectTarget");
+    const installButton = document.getElementById("installButton");
+    const targetLabel = document.getElementById("targetLabel");
+    const fileList = document.getElementById("fileList");
+    const progressBar = document.getElementById("progressBar");
+    const logList = document.getElementById("log");
+
+    let targetDirectory = null;
+    let payloadFiles = FALLBACK_PAYLOAD.slice();
+    let appInfo = null;
+    let busy = false;
+
+    init();
+
+    function init() {
+      const refParam = new URLSearchParams(window.location.search).get("ref");
+      refInput.value = cleanRef(refParam || DEFAULT_REF);
+      renderSource();
+      renderPayload();
+      bindEvents();
+      loadManifest().catch((error) => {
+        useFallbackPayload(error);
+      });
+      updateInstallState();
+    }
+
+    function bindEvents() {
+      refInput.addEventListener("change", () => {
+        refInput.value = cleanRef(refInput.value || DEFAULT_REF);
+        renderSource();
+        loadManifest().catch((error) => {
+          useFallbackPayload(error);
+        });
+      });
+
+      selectTarget.addEventListener("click", selectInstallTarget);
+      installButton.addEventListener("click", installApp);
+    }
+
+    function cleanRef(value) {
+      return String(value).trim().replace(/^\/+|\/+$/g, "") || DEFAULT_REF;
+    }
+
+    function getRef() {
+      return cleanRef(refInput.value);
+    }
+
+    function renderSource() {
+      sourceLabel.textContent = "Source: github.com/" + REPOSITORY + " @ " + getRef();
+    }
+
+    function rawUrl(path) {
+      return "https://raw.githubusercontent.com/" + REPOSITORY + "/" + encodeURIComponent(getRef()) + "/" + path;
+    }
+
+    function renderPayload() {
+      fileList.replaceChildren();
+      payloadFiles.forEach((path) => {
+        const item = document.createElement("li");
+        item.textContent = path;
+        fileList.appendChild(item);
+      });
+    }
+
+    async function loadManifest() {
+      appInfo = null;
+      appStatus.textContent = "Loading manifest...";
+      const response = await fetch(rawUrl(INFO_PATH), { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("Manifest unavailable: " + response.status + " " + response.statusText);
+      }
+
+      const text = await response.text();
+      appInfo = JSON.parse(text);
+      const files = String(appInfo.files || "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      payloadFiles = uniquePaths(files.length ? files : FALLBACK_PAYLOAD);
+      if (!payloadFiles.includes(INFO_PATH)) {
+        payloadFiles.push(INFO_PATH);
+      }
+
+      renderPayload();
+      appStatus.textContent = appInfo.name + " " + appInfo.version;
+      addLog("Manifest loaded from GitHub.", "ok");
+      updateInstallState();
+    }
+
+    function useFallbackPayload(error) {
+      appInfo = null;
+      payloadFiles = FALLBACK_PAYLOAD.slice();
+      renderPayload();
+      appStatus.textContent = "Using fallback payload";
+      if (error) {
+        addLog(error.message, "warn");
+      }
+      updateInstallState();
+    }
+
+    function uniquePaths(paths) {
+      const seen = new Set();
+      const out = [];
+      paths.forEach((path) => {
+        const clean = path.replace(/\\/g, "/").replace(/^\/+/, "");
+        if (clean && !seen.has(clean)) {
+          seen.add(clean);
+          out.push(clean);
+        }
+      });
+      return out;
+    }
+
+    async function selectInstallTarget() {
+      if (!("showDirectoryPicker" in window)) {
+        addLog("Directory install requires Chrome or Edge with the File System Access API.", "error");
+        installStatus.textContent = "Browser unsupported";
+        return;
+      }
+
+      try {
+        targetDirectory = await window.showDirectoryPicker({
+          id: "robco-calculator-target",
+          mode: "readwrite"
+        });
+        targetLabel.textContent = targetDirectory.name || "Selected folder";
+        installStatus.textContent = "Target selected";
+        addLog("Selected target: " + targetLabel.textContent, "ok");
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          addLog(error.message, "error");
+        }
+      } finally {
+        updateInstallState();
+      }
+    }
+
+    async function installApp() {
+      if (busy || !targetDirectory) {
+        return;
+      }
+
+      try {
+        setBusy(true);
+        setProgress(0);
+        logList.replaceChildren();
+
+        guardTargetDirectory(targetDirectory);
+        await ensureWritable(targetDirectory);
+
+        if (!appInfo) {
+          try {
+            await loadManifest();
+          } catch (error) {
+            useFallbackPayload(error);
+          }
+        }
+
+        for (let index = 0; index < payloadFiles.length; index += 1) {
+          const path = payloadFiles[index];
+          addLog("Downloading " + path + "...");
+          const bytes = await downloadFile(path);
+          setProgress(((index + 0.45) / payloadFiles.length) * 100);
+          await writeFile(targetDirectory, path, bytes);
+          setProgress(((index + 1) / payloadFiles.length) * 100);
+          addLog("Installed " + path + " (" + bytes.byteLength + " bytes).", "ok");
+        }
+
+        installStatus.textContent = "Install complete";
+        addLog("Done. Restart or rescan the Pip launcher.", "ok");
+      } catch (error) {
+        installStatus.textContent = "Install failed";
+        addLog(error.message, "error");
+      } finally {
+        setBusy(false);
+        updateInstallState();
+      }
+    }
+
+    function guardTargetDirectory(directory) {
+      const name = String(directory.name || "").toUpperCase();
+      if (name === "APPS" || name === "APPINFO") {
+        throw new Error("Select the microSD root, not the " + name + " folder.");
+      }
+    }
+
+    async function ensureWritable(directory) {
+      if (!directory.queryPermission || !directory.requestPermission) {
+        return;
+      }
+
+      let permission = await directory.queryPermission({ mode: "readwrite" });
+      if (permission !== "granted") {
+        permission = await directory.requestPermission({ mode: "readwrite" });
+      }
+
+      if (permission !== "granted") {
+        throw new Error("Write permission was not granted.");
+      }
+    }
+
+    async function downloadFile(path) {
+      const response = await fetch(rawUrl(path), { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("Download failed for " + path + ": " + response.status + " " + response.statusText);
+      }
+      return new Uint8Array(await response.arrayBuffer());
+    }
+
+    async function writeFile(root, path, bytes) {
+      const parts = path.split("/").filter(Boolean);
+      if (!parts.length) {
+        throw new Error("Invalid payload path: " + path);
+      }
+
+      let directory = root;
+      for (const part of parts.slice(0, -1)) {
+        directory = await directory.getDirectoryHandle(part, { create: true });
+      }
+
+      const fileHandle = await directory.getFileHandle(parts[parts.length - 1], { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(bytes);
+      await writable.close();
+
+      const writtenFile = await fileHandle.getFile();
+      if (writtenFile.size !== bytes.byteLength) {
+        throw new Error("Write verification failed for " + path + ".");
+      }
+    }
+
+    function setBusy(nextBusy) {
+      busy = nextBusy;
+      selectTarget.disabled = busy;
+      installButton.disabled = busy || !targetDirectory;
+      refInput.disabled = busy;
+      if (busy) {
+        installStatus.textContent = "Installing...";
+      }
+    }
+
+    function updateInstallState() {
+      installButton.disabled = busy || !targetDirectory;
+    }
+
+    function setProgress(value) {
+      progressBar.style.width = Math.max(0, Math.min(100, value)) + "%";
+    }
+
+    function addLog(message, type) {
+      const item = document.createElement("li");
+      item.textContent = message;
+      if (type) {
+        item.className = type;
+      }
+      logList.appendChild(item);
+      logList.scrollTop = logList.scrollHeight;
+    }
+  </script>
+</body>
+</html>
