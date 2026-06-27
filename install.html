@@ -875,9 +875,18 @@
       await writable.write(bytes);
       await writable.close();
 
-      const writtenFile = await fileHandle.getFile();
-      if (writtenFile.size !== bytes.byteLength) {
-        throw new Error("Write verification failed for " + path + ".");
+      // Best-effort verification. Some removable-media setups throw
+      // NotReadableError when reading a file back right after writing it; the
+      // write/close above already succeeded, so a failed read-back must not
+      // fail the install. Only a confirmed size mismatch is a real error.
+      let writtenSize = null;
+      try {
+        writtenSize = (await fileHandle.getFile()).size;
+      } catch (error) {
+        writtenSize = null;
+      }
+      if (writtenSize !== null && writtenSize !== bytes.byteLength) {
+        throw new Error("Write verification failed for " + path + " (" + writtenSize + " of " + bytes.byteLength + " bytes).");
       }
     }
 
