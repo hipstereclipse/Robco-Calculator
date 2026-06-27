@@ -547,7 +547,7 @@
             <p class="status" id="installStatus">Waiting for target</p>
           </div>
 
-          <p class="hint">Direct install failing (e.g. <strong>NotReadableError</strong>)? Use <strong>Download .zip</strong> and extract it to the microSD root &mdash; it works in any browser and writes no files directly.</p>
+          <p class="hint">Direct install failing (e.g. <strong>NotReadableError</strong> after selecting the card)? Use <strong>Download .zip</strong> and extract it to the microSD root &mdash; it works in any browser and writes no files directly.</p>
 
           <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing (direct install only)</label>
 
@@ -784,7 +784,7 @@
         installStatus.textContent = "Install complete";
         addLog("Done. Restart or rescan the Pip launcher.", "ok");
       } catch (error) {
-        installStatus.textContent = "Install failed";
+        installStatus.textContent = isRemovableMediaReadError(error) ? "Direct install blocked" : "Install failed";
         addLog(describeError(error), "error");
       } finally {
         setBusy(false);
@@ -902,13 +902,25 @@
       try {
         await directory.removeEntry(name);
       } catch (error) {
-        // missing or undeletable -- proceed; the write below still overwrites
+        if (!isMissingEntryError(error)) {
+          addLog("Could not remove existing " + path + "; attempting empty overwrite.", "warn");
+        }
       }
 
       const fileHandle = await directory.getFileHandle(name, { create: true });
-      const writable = await fileHandle.createWritable();
-      await writable.write(bytes);
-      await writable.close();
+      let writable = null;
+      try {
+        writable = await fileHandle.createWritable({ keepExistingData: false });
+        await writable.write(bytes);
+        await writable.close();
+      } catch (error) {
+        if (writable) {
+          try {
+            await writable.abort();
+          } catch (abortError) {}
+        }
+        throw createWriteError(path, error);
+      }
 
       // Best-effort verification. Some removable-media setups throw
       // NotReadableError when reading a file back right after writing it; the
@@ -923,6 +935,29 @@
       if (writtenSize !== null && writtenSize !== bytes.byteLength) {
         throw new Error("Write verification failed for " + path + " (" + writtenSize + " of " + bytes.byteLength + " bytes).");
       }
+    }
+
+    function isMissingEntryError(error) {
+      return error && error.name === "NotFoundError";
+    }
+
+    function isRemovableMediaReadError(error) {
+      const message = String((error && error.message) || error || "").toLowerCase();
+      return !!error && (error.name === "NotReadableError" || message.includes("requested file could not be read"));
+    }
+
+    function createWriteError(path, error) {
+      if (isRemovableMediaReadError(error)) {
+        const wrapped = new Error("The browser could not access " + path + " on the selected card after permission was granted. This is a removable-media File System Access API failure; use Download .zip, or eject/reinsert the card and select the microSD root again before retrying.");
+        wrapped.name = error.name || "NotReadableError";
+        return wrapped;
+      }
+
+      const wrapped = new Error("Could not write " + path + ": " + (error && error.message ? error.message : String(error)));
+      if (error && error.name) {
+        wrapped.name = error.name;
+      }
+      return wrapped;
     }
 
     function setBusy(nextBusy) {
