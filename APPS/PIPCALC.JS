@@ -65,6 +65,11 @@
     s = "" + s;
     return s.length > n ? s.slice(0, n - 1) + ">" : s;
   }
+  function collect() {
+    try {
+      if (typeof global !== "undefined" && global.gc) global.gc();
+    } catch (e) {}
+  }
   function fmt(n) {
     if (typeof n === "string") return n;
     if (isNaN(n)) return "ERR";
@@ -401,14 +406,26 @@
   function ensureModule() {
     if (HEAVY[mode]) {
       if (activeName !== mode) {
+        var src, factory;
         activeModule = null; activeName = mode; loadErr = "";   // drop previous, mark target
-        var src = readModule(HEAVY[mode]);
+        collect();
+        src = readModule(HEAVY[mode]);
         if (!src) { loadErr = "file not found"; return; }
-        try { activeModule = eval(src)(ctx); }
-        catch (e) { activeModule = null; loadErr = "" + e; }
+        try {
+          factory = eval(src);
+          src = null;
+          collect();
+          activeModule = factory(ctx);
+          factory = null;
+          collect();
+        } catch (e) {
+          src = null; factory = null; activeModule = null; loadErr = "" + e;
+          collect();
+        }
       }
     } else if (activeName) {
       activeModule = null; activeName = null; loadErr = "";      // leaving a heavy mode -> free it
+      collect();
     }
   }
 
@@ -649,6 +666,7 @@
   Pip.on("knob1", onKnob1);
   Pip.on("knob2", onKnob2);
   draw();
+  collect();
 
   return {
     id: "PIPCALC",
@@ -659,6 +677,7 @@
       Pip.removeListener("knob1", onKnob1);
       Pip.removeListener("knob2", onKnob2);
       if (themeChanged) { try { Pip.setPalette(buildPalette(0.1, 1, 0.25)); } catch (e) {} } // restore green
+      collect();
     }
   };
 })
