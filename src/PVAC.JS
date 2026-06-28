@@ -1,12 +1,11 @@
-(function(ctx) {
+(function() {
   // ============================================================
-  //  VACUUM TOOLS (N2)  (loaded on demand by PIPCALC.JS)
-  //  mean free path, density, Knudsen, regime
+  //  VACUUM TOOLS (N2)  -- standalone load()-swap app.
+  //  mean free path, density, Knudsen, regime. Shared helpers are
+  //  inlined from _LIB.JS at build time; Ans comes from the shared
+  //  CALCST state file. Reached from CALC via the MODE menu.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, wrap = ctx.wrap;
-  var fmt = ctx.fmt, fitLeft = ctx.fitLeft;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var section = ctx.section, footer = ctx.footer;
+  //@inject _LIB.JS
 
   var vacP = 1, vacT = 293.15, vacD = 3.7e-10, vacL = 0.1;
   var KB = 1.380649e-23, MN2 = 4.6517e-26;
@@ -38,9 +37,9 @@
   }
 
   function press(field) {
-    if (field === 1) vacP = ctx.getAns(); else if (field === 2) vacT = ctx.getAns(); else if (field === 3) vacD = ctx.getAns(); else if (field === 4) vacL = ctx.getAns();
-    if (field) ctx.setMsg("Ans imported");
+    if (field === 1) vacP = ST.ans; else if (field === 2) vacT = ST.ans; else if (field === 3) vacD = ST.ans; else if (field === 4) vacL = ST.ans;
   }
 
-  return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
+  initState();
+  return bootMode({ mode: "VAC", fieldCount: function () { return 5; }, draw: draw, knob2: knob2, press: press });
 })

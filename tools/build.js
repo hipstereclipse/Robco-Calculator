@@ -1,13 +1,19 @@
 #!/usr/bin/env node
 // ============================================================
-//  build.js -- minify src/*.JS into APPS/*.JS for the device.
+//  build.js -- inline shared fragments, then minify src/*.JS into
+//  APPS/*.JS for the device.
 //
-//  Espruino keeps each function's *source text* resident in RAM
-//  (comments/whitespace/long names included) unless pretokenised,
-//  so file size ~= RAM cost. Shipping minified files is what lets
-//  the app launch without ERROR Errors: CALLBACK, LOW_MEMORY,
-//  MEMORY. Repo keeps readable source in src/; the installer ships
-//  the minified APPS/ files verbatim.
+//  Each mode is now its own standalone app that switches via load(),
+//  so only one app is ever resident. Shared helpers live once in
+//  src/_LIB.JS (+ src/_EVAL.JS for the math apps) and are spliced into
+//  each app at every `//@inject NAME.JS` marker here -- so every
+//  shipped APPS/ file is self-contained (duplicated bytes cost card
+//  space, not RAM, and there is no runtime lib eval() spike).
+//
+//  Espruino keeps each function's *source text* resident in RAM, so
+//  file size ~= RAM cost; shipping minified files is what lets the app
+//  launch without ERROR Errors: CALLBACK, LOW_MEMORY, MEMORY. Repo
+//  keeps readable source in src/; the installer ships APPS/ verbatim.
 //
 //  Usage: npm install && npm run build
 // ============================================================
@@ -19,14 +25,23 @@ const root = path.resolve(__dirname, "..");
 const srcDir = path.join(root, "src");
 const outDir = path.join(root, "APPS");
 
+const INJECT = /^[ \t]*\/\/@inject[ \t]+(\S+)[ \t]*$/gm;
+
+// Splice shared fragments (_LIB.JS / _EVAL.JS) into an app's source at each
+// //@inject marker. Fragments contain no markers themselves (no recursion).
+function inlineSource(name) {
+  const src = fs.readFileSync(path.join(srcDir, name), "utf8");
+  return src.replace(INJECT, (m, frag) => fs.readFileSync(path.join(srcDir, frag), "utf8"));
+}
+
 // Every app file is a bare parenthesised factory expression:
-//   (function(ctx){ ... })
+//   (function(){ ... })
 // the device loads it with eval(src) and calls the result. terser's
 // compressor would drop a bare expression as dead code, so we wrap it
 // in an assignment to keep it, then unwrap and re-parenthesise so the
 // output stays an expression eval() can return.
 async function buildFile(name) {
-  const src = fs.readFileSync(path.join(srcDir, name), "utf8");
+  const src = inlineSource(name);
   const result = await minify("var __m=" + src + ";", {
     compress: true,
     mangle: true,
@@ -42,7 +57,8 @@ async function buildFile(name) {
 
 async function main() {
   fs.mkdirSync(outDir, { recursive: true });
-  const files = fs.readdirSync(srcDir).filter((f) => /\.JS$/i.test(f));
+  // Skip fragment files (names starting with "_"): they are inlined, not shipped.
+  const files = fs.readdirSync(srcDir).filter((f) => /\.JS$/i.test(f) && !f.startsWith("_"));
   let before = 0, after = 0;
   for (const f of files) {
     const r = await buildFile(f);
@@ -57,7 +73,11 @@ async function main() {
   );
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+module.exports = { inlineSource };
+
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
