@@ -307,12 +307,10 @@ function rivet(x, y) {
 }
 function drawHardware() {
   h.setColor(DIM);
-  rivet(SAFE_L + 8, SAFE_T + 8); rivet(SAFE_R - 8, SAFE_T + 8);
-  rivet(SAFE_L + 8, SAFE_B - 8); rivet(SAFE_R - 8, SAFE_B - 8);
-  for (var y = SAFE_T + 52; y < SAFE_B - 42; y += 34) {
-    h.drawLine(SAFE_L + 3, y, SAFE_L + 11, y);
-    h.drawLine(SAFE_R - 11, y, SAFE_R - 3, y);
-  }
+  h.drawLine(SAFE_L + 5, SAFE_T + 38, SAFE_L + 13, SAFE_T + 38);
+  h.drawLine(SAFE_R - 13, SAFE_T + 38, SAFE_R - 5, SAFE_T + 38);
+  h.drawLine(SAFE_L + 5, SAFE_B - 28, SAFE_L + 13, SAFE_B - 28);
+  h.drawLine(SAFE_R - 13, SAFE_B - 28, SAFE_R - 5, SAFE_B - 28);
 }
 function drawGlassWear() {
 }
@@ -325,23 +323,22 @@ function smallFont() { h.setFont("6x8"); }
 function beginScreen(title, status) {
   h.reset().clear().setColor(FG).setFont("Monofonto23");
   drawScanlines();
-  h.setColor(DIM).drawRect(SAFE_L - 4, SAFE_T - 4, SAFE_R + 4, SAFE_B + 4);
-  h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
+  h.setColor(DIM);
   drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
   drawHardware();
   // Two zones only: brand left, mode/status right. A centred title here
   // collided with the brand on the device's wide font, so the mode name is
   // shown right-aligned (status when the mode supplies one, else the title).
-  h.setColor(MID).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
+  h.setColor(MID).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T + 4);
   // Right-align to TEXT_R, not CONTENT_R: CONTENT_R sits on the corner rivet
   // column, so a long mode name used to print straight through the rivet.
-  h.setColor(FG).setFontAlign(1, -1).drawString(caps(status || title || curMode), TEXT_R, SAFE_T);
-  h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
+  h.setColor(FG).setFontAlign(1, -1).drawString(caps(status || title || curMode), TEXT_R, SAFE_T + 4);
+  h.setColor(DIM).drawLine(CONTENT_L, 33, CONTENT_R, 33);
 }
 function panel(x0, y0, x1, y1, label) {
-  h.setColor(DIM).drawRect(x0, y0, x1, y1);
-  drawCorners(x0, y0, x1, y1, 8);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", x0 + 10, y0 + 4);
+  h.setColor(DIM).drawLine(x0, y0, x1, y0);
+  h.drawLine(x0, y1, x1, y1);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("> " + caps(label), x0 + 10, y0 + 4);
   h.setColor(FG);
 }
 // A section divider with an optional legend below it. The legend occupies a
@@ -349,7 +346,7 @@ function panel(x0, y0, x1, y1, label) {
 // ~30px below y (see the readout blocks in the mode apps).
 function section(label, y) {
   h.setColor(DIM).drawLine(CONTENT_L, y, CONTENT_R, y);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", TEXT_L, y + 6);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("> " + caps(label), TEXT_L, y + 6);
   h.setColor(FG);
 }
 // Control legend, drawn as a dim status strip in the small font so it clears
@@ -358,30 +355,30 @@ function section(label, y) {
 function footer(s) {
   h.setColor(DIM).drawLine(CONTENT_L, H - 32, CONTENT_R, H - 32);
   smallFont();
-  h.setColor(MID).setFontAlign(0, 0).drawString(fitRight(caps(s), 52), W / 2, H - 21);
+  h.setColor(MID).setFontAlign(0, 0).drawString(fitRight(caps(s), 56), W / 2, H - 21);
   bigFont();
 }
 function row(label, val, y, sel) {
   if (sel) {
-    h.setColor(DIM).drawRect(CONTENT_L, y - 1, CONTENT_R, y + 21);
+    h.setColor(DIM).drawLine(CONTENT_L, y + 21, CONTENT_R, y + 21);
     h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
     h.setFontAlign(-1, -1).drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
     h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
-    h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
+    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
     h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
   }
   h.setColor(FG);
 }
 function miniRow(label, val, y) {
-  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
+  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
   h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
 }
 // Label/value readout row meant to be drawn in the small font (caller switches
 // with smallFont()): the small glyphs let the full label and a long value
 // share one line without the 8-char truncation miniRow needs at heading size.
 function outRow(label, val, y) {
-  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
+  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
   h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 30), TEXT_R, y);
 }
 

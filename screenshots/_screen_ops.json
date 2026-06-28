@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T15:45:06.564Z",
+  "generatedAt": "2026-06-28T16:23:46.649Z",
   "appIds": [
     "pipcalc",
     "pipgraph",
@@ -22,22 +22,6 @@
       "ops": [
         {
           "type": "clear"
-        },
-        {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
         },
         {
           "type": "drawLine",
@@ -104,170 +88,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -277,7 +133,7 @@
           "type": "text",
           "text": "RAD",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -286,89 +142,33 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 32,
-          "y0": 36,
-          "x1": 448,
-          "y1": 82,
+          "y1": 33,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 44,
-          "x1": 32,
-          "y1": 36,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 32,
-          "y0": 36,
-          "x1": 40,
-          "y1": 36,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 440,
           "y0": 36,
           "x1": 448,
           "y1": 36,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 448,
-          "y0": 36,
-          "x1": 448,
-          "y1": 44,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 32,
-          "y0": 74,
-          "x1": 32,
-          "y1": 82,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 32,
           "y0": 82,
-          "x1": 40,
-          "y1": 82,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 440,
-          "y0": 82,
-          "x1": 448,
-          "y1": 82,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 448,
-          "y0": 74,
           "x1": 448,
           "y1": 82,
           "color": 1
         },
         {
           "type": "text",
-          "text": "ENTRY",
+          "text": "IN>",
           "x": 38,
           "y": 40,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -393,10 +193,10 @@
         },
         {
           "type": "text",
-          "text": "READ",
+          "text": "RD>",
           "x": 38,
           "y": 62,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -412,73 +212,17 @@
           "font": "Monofonto23"
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
           "y0": 86,
           "x1": 448,
-          "y1": 278,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 32,
-          "y0": 94,
-          "x1": 32,
           "y1": 86,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 32,
-          "y0": 86,
-          "x1": 40,
-          "y1": 86,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 440,
-          "y0": 86,
-          "x1": 448,
-          "y1": 86,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 448,
-          "y0": 86,
-          "x1": 448,
-          "y1": 94,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 32,
-          "y0": 270,
-          "x1": 32,
-          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 32,
           "y0": 278,
-          "x1": 40,
-          "y1": 278,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 440,
-          "y0": 278,
-          "x1": 448,
-          "y1": 278,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 448,
-          "y0": 270,
           "x1": 448,
           "y1": 278,
           "color": 1
@@ -925,10 +669,10 @@
         },
         {
           "type": "fillRect",
-          "x0": 174,
-          "y0": 254,
-          "x1": 236,
-          "y1": 271,
+          "x0": 175,
+          "y0": 255,
+          "x1": 235,
+          "y1": 270,
           "color": 3
         },
         {
@@ -1002,22 +746,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -1082,170 +810,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -1255,7 +855,7 @@
           "type": "text",
           "text": "GRAPH",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -1264,9 +864,9 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
@@ -1280,9 +880,9 @@
           "font": "Monofonto23"
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 61,
+          "y0": 83,
           "x1": 448,
           "y1": 83,
           "color": 1
@@ -4632,22 +4232,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -4712,170 +4296,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -4885,7 +4341,7 @@
           "type": "text",
           "text": "CALCULUS",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4894,15 +4350,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -4942,7 +4398,7 @@
           "text": "TASK",
           "x": 38,
           "y": 66,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4962,7 +4418,7 @@
           "text": "X POINT",
           "x": 38,
           "y": 92,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4982,7 +4438,7 @@
           "text": "2ND POINT B",
           "x": 38,
           "y": 118,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5002,7 +4458,7 @@
           "text": "STEP",
           "x": 38,
           "y": 144,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5027,7 +4483,7 @@
         },
         {
           "type": "text",
-          "text": "[READOUT]",
+          "text": "> READOUT",
           "x": 38,
           "y": 182,
           "color": 3,
@@ -5040,7 +4496,7 @@
           "text": "F(A)",
           "x": 38,
           "y": 210,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -5060,7 +4516,7 @@
           "text": "SLOPE F'(A)",
           "x": 38,
           "y": 228,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -5080,7 +4536,7 @@
           "text": "F(B)",
           "x": 38,
           "y": 246,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -5100,7 +4556,7 @@
           "text": "SECANT A..B",
           "x": 38,
           "y": 264,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -5146,22 +4602,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -5226,170 +4666,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -5399,7 +4711,7 @@
           "type": "text",
           "text": "CIRCUIT",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -5408,15 +4720,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -5456,7 +4768,7 @@
           "text": "VIN",
           "x": 38,
           "y": 68,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5476,7 +4788,7 @@
           "text": "RTOP",
           "x": 38,
           "y": 92,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5496,7 +4808,7 @@
           "text": "RBOT",
           "x": 38,
           "y": 116,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5516,7 +4828,7 @@
           "text": "LOAD",
           "x": 38,
           "y": 140,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5541,7 +4853,7 @@
         },
         {
           "type": "text",
-          "text": "[READOUT]",
+          "text": "> READOUT",
           "x": 38,
           "y": 170,
           "color": 3,
@@ -5660,22 +4972,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -5740,170 +5036,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -5913,7 +5081,7 @@
           "type": "text",
           "text": "CONVERT",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -5922,15 +5090,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -5970,7 +5138,7 @@
           "text": "FROM",
           "x": 38,
           "y": 66,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5990,7 +5158,7 @@
           "text": "TO",
           "x": 38,
           "y": 92,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6010,7 +5178,7 @@
           "text": "VALUE",
           "x": 38,
           "y": 118,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6035,7 +5203,7 @@
         },
         {
           "type": "text",
-          "text": "[OUTPUT]",
+          "text": "> OUTPUT",
           "x": 38,
           "y": 152,
           "color": 3,
@@ -6048,7 +5216,7 @@
           "text": "RAW =",
           "x": 38,
           "y": 176,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6078,7 +5246,7 @@
           "text": "SCI",
           "x": 38,
           "y": 224,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6098,7 +5266,7 @@
           "text": "ENG",
           "x": 38,
           "y": 248,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6144,22 +5312,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -6224,170 +5376,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -6397,7 +5421,7 @@
           "type": "text",
           "text": "CONSTANTS",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6406,15 +5430,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -6454,7 +5478,7 @@
           "text": "FIND",
           "x": 38,
           "y": 64,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6636,22 +5660,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -6716,170 +5724,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -6889,7 +5769,7 @@
           "type": "text",
           "text": "RULES",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -6898,15 +5778,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -6946,7 +5826,7 @@
           "text": "CARD",
           "x": 38,
           "y": 64,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7070,22 +5950,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -7150,170 +6014,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -7323,7 +6059,7 @@
           "type": "text",
           "text": "VACUUM N2",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -7332,15 +6068,15 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {
-          "type": "drawRect",
+          "type": "drawLine",
           "x0": 32,
-          "y0": 39,
+          "y0": 61,
           "x1": 448,
           "y1": 61,
           "color": 1
@@ -7380,7 +6116,7 @@
           "text": "TEMP",
           "x": 38,
           "y": 68,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7400,7 +6136,7 @@
           "text": "MOL DIAM",
           "x": 38,
           "y": 96,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7420,7 +6156,7 @@
           "text": "CHAR LEN",
           "x": 38,
           "y": 124,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7440,7 +6176,7 @@
           "text": "CONVERTER",
           "x": 38,
           "y": 152,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7465,7 +6201,7 @@
         },
         {
           "type": "text",
-          "text": "[READOUT]",
+          "text": "> READOUT",
           "x": 38,
           "y": 182,
           "color": 3,
@@ -7478,7 +6214,7 @@
           "text": "MEAN FREE PATH",
           "x": 38,
           "y": 210,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -7498,7 +6234,7 @@
           "text": "NUMBER DENSITY",
           "x": 38,
           "y": 228,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -7518,7 +6254,7 @@
           "text": "KNUDSEN NO",
           "x": 38,
           "y": 246,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -7538,7 +6274,7 @@
           "text": "MEAN SPEED",
           "x": 38,
           "y": 264,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -7584,22 +6320,6 @@
           "type": "clear"
         },
         {
-          "type": "drawRect",
-          "x0": 20,
-          "y0": 8,
-          "x1": 460,
-          "y1": 310,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 24,
-          "y0": 12,
-          "x1": 456,
-          "y1": 306,
-          "color": 1
-        },
-        {
           "type": "drawLine",
           "x0": 24,
           "y0": 26,
@@ -7664,170 +6384,42 @@
           "color": 1
         },
         {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 18,
-          "x1": 34,
-          "y1": 22,
+          "type": "drawLine",
+          "x0": 29,
+          "y0": 50,
+          "x1": 37,
+          "y1": 50,
+          "color": 1
+        },
+        {
+          "type": "drawLine",
+          "x0": 443,
+          "y0": 50,
+          "x1": 451,
+          "y1": 50,
           "color": 1
         },
         {
           "type": "drawLine",
           "x0": 29,
-          "y0": 20,
-          "x1": 35,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 18,
-          "x1": 450,
-          "y1": 22,
+          "y0": 278,
+          "x1": 37,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "drawLine",
-          "x0": 445,
-          "y0": 20,
+          "x0": 443,
+          "y0": 278,
           "x1": 451,
-          "y1": 20,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 30,
-          "y0": 296,
-          "x1": 34,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 29,
-          "y0": 298,
-          "x1": 35,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawRect",
-          "x0": 446,
-          "y0": 296,
-          "x1": 450,
-          "y1": 300,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 298,
-          "x1": 451,
-          "y1": 298,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 64,
-          "x1": 35,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 64,
-          "x1": 453,
-          "y1": 64,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 98,
-          "x1": 35,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 98,
-          "x1": 453,
-          "y1": 98,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 132,
-          "x1": 35,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 132,
-          "x1": 453,
-          "y1": 132,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 166,
-          "x1": 35,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 166,
-          "x1": 453,
-          "y1": 166,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 200,
-          "x1": 35,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 200,
-          "x1": 453,
-          "y1": 200,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 27,
-          "y0": 234,
-          "x1": 35,
-          "y1": 234,
-          "color": 1
-        },
-        {
-          "type": "drawLine",
-          "x0": 445,
-          "y0": 234,
-          "x1": 453,
-          "y1": 234,
+          "y1": 278,
           "color": 1
         },
         {
           "type": "text",
           "text": "ROBCO TERMLINK",
           "x": 38,
-          "y": 12,
+          "y": 16,
           "color": 2,
           "alignX": -1,
           "alignY": -1,
@@ -7837,7 +6429,7 @@
           "type": "text",
           "text": "1/2",
           "x": 442,
-          "y": 12,
+          "y": 16,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -7846,9 +6438,9 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 32,
+          "y0": 33,
           "x1": 448,
-          "y1": 32,
+          "y1": 33,
           "color": 1
         },
         {

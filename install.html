@@ -593,7 +593,10 @@
       "APPS/PCONV.JS", "APPS/PCONST.JS", "APPS/PREF.JS", "APPS/PVAC.JS", "APPS/PTAPE.JS",
       "APPINFO/CALC.info", "APPINFO/GRAPH.info", "APPINFO/CALCULUS.info",
       "APPINFO/CIRC.info", "APPINFO/CONV.info", "APPINFO/CONST.info",
-      "APPINFO/REF.info", "APPINFO/VAC.info", "APPINFO/TAPE.info"
+      "APPINFO/REF.info", "APPINFO/VAC.info", "APPINFO/TAPE.info",
+      "APPINFO/CALC.png", "APPINFO/GRAPH.png", "APPINFO/CALCULUS.png",
+      "APPINFO/CIRC.png", "APPINFO/CONV.png", "APPINFO/CONST.png",
+      "APPINFO/REF.png", "APPINFO/VAC.png", "APPINFO/TAPE.png"
     ];
 
     const sourceLabel = document.getElementById("sourceLabel");
@@ -685,6 +688,7 @@
           .filter(Boolean)
           .forEach((item) => all.push(item));
         if (data.src) all.push(data.src);
+        if (data.icon) all.push(data.icon);
         all.push(infoPath);
       }
 

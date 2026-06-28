@@ -96,11 +96,11 @@
     var shown = expr === "" ? "0" : expr;
     if (shown.length > 26) shown = "<" + shown.slice(shown.length - 25);
     panel(CONTENT_L, 36, CONTENT_R, 82, "");
-    h.setColor(FG).setFontAlign(-1, -1).drawString("ENTRY", TEXT_L, 40);
+    h.setColor(MID).setFontAlign(-1, -1).drawString("IN>", TEXT_L, 40);
     h.setColor(FG).setFontAlign(1, -1).drawString(shown, TEXT_R, 40);
     var pv = safeEval();
     h.setColor(DIM).drawLine(TEXT_L, 60, TEXT_R, 60);
-    h.setColor(FG).setFontAlign(-1, -1).drawString("READ", TEXT_L, 62);
+    h.setColor(MID).setFontAlign(-1, -1).drawString("RD>", TEXT_L, 62);
     h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), TEXT_R, 62);
     var KX = CONTENT_L + 4, KY = 91, KW = (CONTENT_R - CONTENT_L - 8) / COLS, KH = 23;
     panel(CONTENT_L, 86, CONTENT_R, 278, "");
@@ -109,7 +109,7 @@
       if (shift && SHIFTLBL[lbl]) lbl = SHIFTLBL[lbl];
       if (lbl === "DRG") lbl = ST.ang;
       var x0 = KX + c * KW, y0 = KY + r * KH;
-      if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 2, y0 + 2, x0 + KW - 4, y0 + KH - 4); h.setColor(BG); } else h.setColor(FG);
+      if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 3, y0 + 3, x0 + KW - 5, y0 + KH - 5); h.setColor(BG); } else h.setColor(FG);
       h.setFontAlign(0, 0).drawString(caps(lbl), x0 + KW / 2, y0 + KH / 2);
     }
     footer("WHEEL ROW  THUMB COLUMN  PRESS KEY");

@@ -87,6 +87,10 @@ installer can fetch them directly. To rebuild after editing `src/`:
 
 The `screenshots/` directory contains generated previews for the main screens:
 
+<p align="center">
+  <img src="./screenshots/holotape-icons.png" alt="RobCo Calculator holotape launcher icons" width="720">
+</p>
+
 | Screen | Preview |
 | --- | --- |
 | Calculator | <img src="./screenshots/01-calc-result.png" alt="Calculator result preview" width="360"> |
@@ -103,6 +107,7 @@ To regenerate previews on Windows with Node.js and PowerShell:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/render-previews.ps1 -Scale 2
+powershell -ExecutionPolicy Bypass -File tools/render-holotapes.ps1
 ```
 
 The capture script evaluates the app in a small mocked Pip environment, records drawing operations, and renders PNG files plus `screenshots/preview-contact-sheet.png`.
@@ -114,6 +119,7 @@ src/_LIB.JS              Shared helpers (drawing, theming, CALCST state, bootstr
 src/_EVAL.JS             Shared expression evaluator inlined into the math apps
 src/P*.JS                Readable source for each app (built into APPS/ by tools/build.js)
 APPINFO/*.info           One launcher manifest per app (CALC, GRAPH, CALCULUS, CIRC, CONV, CONST, REF, VAC, TAPE)
+APPINFO/*.png            Cartoon holotape launcher icons referenced by the app manifests
 APPS/PIPCALC.JS          Calc — scientific keypad (home app)
 APPS/PGRAPH.JS           Graph — function plotter
 APPS/PCALCULUS.JS        Calculus — numeric value/slope/area/roots/extrema
@@ -128,4 +134,5 @@ tools/build.js           Inlines fragments + minifies src/ into APPS/
 tools/capture-preview-ops.js
 tools/verify-build.js    Confirms APPS/ renders identically to src/
 tools/render-previews.ps1
+tools/render-holotapes.ps1
 ```
