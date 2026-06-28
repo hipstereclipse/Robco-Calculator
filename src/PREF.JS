@@ -1,4 +1,6 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  return bootCtxMode("REF", function(ctx) {
   // ============================================================
   //  REFERENCE RULES  (loaded on demand by PIPCALC.JS)
   //  formulas, approximations, geometry cards
@@ -163,4 +165,5 @@
   function press() { ctx.setMsg(""); }
 
   return { fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press };
+  });
 })

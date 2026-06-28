@@ -13,10 +13,19 @@
 var W = 480, H = 320;                 // working coordinate space (tune to device)
 var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
 
-// Modes that exist as standalone apps + the file each lives in. The menu
-// only offers what is actually installed and converted; expand in Phase 2.
-var MODES = ["CALC", "VAC"];
-var FILES = { CALC: "PIPCALC.JS", VAC: "PVAC.JS" };
+// Modes that exist as standalone apps + the file each lives in.
+var MODES = ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"];
+var FILES = {
+  CALC: "PIPCALC.JS",
+  GRAPH: "PGRAPH.JS",
+  CALCULUS: "PCALCULUS.JS",
+  CIRC: "PCIRC.JS",
+  CONV: "PCONV.JS",
+  CONST: "PCONST.JS",
+  REF: "PREF.JS",
+  VAC: "PVAC.JS",
+  TAPE: "PTAPE.JS"
+};
 
 var ST;                               // shared state (see initState); lives in CALCST
 var field = 0;                        // selected field on a mode screen (0 = MODE tab)
@@ -115,6 +124,7 @@ function initState() {
   if (ST.mem == null) ST.mem = 0;
   if (ST.ang == null) ST.ang = "RAD";
   if (ST.th == null) ST.th = "GREEN";
+  if (ST.msg == null) ST.msg = "";
   if (!ST.hist) ST.hist = [];
   applyTheme();
   return ST;
@@ -211,6 +221,42 @@ function drawMenu() {
     h.setColor(FG);
   }
   footer("WHEEL:MOVE  PRESS:OPEN  THUMB:BACK");
+}
+
+// ---------- compatibility services for the standalone-wrapped mode modules ----------
+function makeCtx() {
+  return {
+    W: W, H: H, FG: FG, MID: MID, DIM: DIM, BG: BG, h: h,
+    wrap: wrap, fmt: fmt, convFmt: convFmt, rawFmt: rawFmt, sci: sci, eng: eng,
+    fitLeft: fitLeft, fitRight: fitRight,
+    beginScreen: function(t, s) { return beginScreen(t, s); },
+    drawTab: function() { return drawTab(); },
+    drawCorners: function(a, b, c, d, n) { return drawCorners(a, b, c, d, n); },
+    panel: function(a, b, c, d, l) { return panel(a, b, c, d, l); },
+    section: function(l, y) { return section(l, y); },
+    footer: function(s) { return footer(s); },
+    row: function(l, v, y, sel) { return row(l, v, y, sel); },
+    miniRow: function(l, v, y) { return miniRow(l, v, y); },
+    getAns: function() { return ST.ans; },
+    getMsg: function() { return ST.msg || ""; },
+    setMsg: function(s) { ST.msg = s || ""; },
+    insert: function(s) { ST.ins = s; },
+    setMode: function(m) { if (FILES[m]) gotoMode(FILES[m]); },
+    fAt: function(x) { return fAt(x); },
+    getFx: function() { return ST.fx; },
+    editFx: function(rm) { ST.edit = rm; gotoMode(FILES.CALC); },
+    getHist: function() { return ST.hist; },
+    getTheme: function() { return ST.th; },
+    toggleTheme: function() { ST.th = ST.th === "GREEN" ? "AMBER" : "GREEN"; applyTheme(); }
+  };
+}
+
+function bootCtxMode(mode, factory) {
+  initState();
+  if (typeof setF === "function") setF(ST.fx);
+  var spec = factory(makeCtx());
+  spec.mode = mode;
+  return bootMode(spec);
 }
 
 // ============================================================

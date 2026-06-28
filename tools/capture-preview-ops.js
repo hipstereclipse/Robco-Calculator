@@ -96,17 +96,47 @@ function capture(name, title, description, rt) {
   screens.push({ name, title, description, width: 480, height: 320, ops: rt.getOps() });
 }
 
-// --- CALC: build a real expression, then open the mode menu ---
+function seedState(extra = {}) {
+  return {
+    CALCST: JSON.stringify(Object.assign({
+      fx: "sin(x)",
+      ans: 14,
+      mem: 0,
+      ang: "RAD",
+      th: "GREEN",
+      msg: "",
+      hist: [{ s: "2+3*4 = 14", v: 14 }, { s: "sqrt(2) = 1.41421356", v: 1.41421356 }],
+    }, extra)),
+  };
+}
+
+function assertModeMenu(rt) {
+  const text = rt.getOps().filter((op) => op.type === "text").map((op) => op.text);
+  for (const mode of ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"]) {
+    if (!text.some((t) => t.indexOf(mode) >= 0)) throw new Error(`Mode menu is missing ${mode}`);
+  }
+}
+
+// --- CALC: build a real expression, then verify the full mode menu ---
 const calc = runApp("PIPCALC.JS", {});
 const press = calcDriver(calc.handlers);
 ["2", "+", "3", "*", "4", "="].forEach(press);
 capture("01-calc-result", "CALC", "Framed RobCo keypad with a completed expression.", calc);
 press("MODE");
-capture("02-mode-menu", "MENU", "Mode-select overlay that load()s the chosen applet.", calc);
+assertModeMenu(calc);
+calc.handlers.knob1(1);
+calc.handlers.knob1(0);
+if (calc.storage.__loaded !== "PGRAPH.JS") throw new Error(`Mode menu loaded ${calc.storage.__loaded}, expected PGRAPH.JS`);
 
-// --- VAC: standalone app, reading Ans from the shared CALCST state ---
-const vac = runApp("PVAC.JS", { CALCST: JSON.stringify({ fx: "sin(x)", ans: 1234.5, mem: 0, ang: "RAD", th: "GREEN", hist: [] }) });
-capture("08-vacuum", "VAC", "Nitrogen vacuum telemetry with Pip-OS readouts.", vac);
+// --- Standalone applets, all reading shared CALCST state ---
+capture("02-graph", "GRAPH", "Shared f(x) trace with zoom and pan controls.", runApp("PGRAPH.JS", seedState()));
+capture("03-calculus", "CALCULUS", "Numeric value, slope, area, roots, and extrema.", runApp("PCALCULUS.JS", seedState()));
+capture("04-circuit", "CIRCUIT", "Electronics workbench calculators and readouts.", runApp("PCIRC.JS", seedState()));
+capture("05-converter", "CONVERT", "Engineering unit conversion with raw, scientific, and engineering formats.", runApp("PCONV.JS", seedState()));
+capture("06-constants", "CONSTANTS", "Filtered math, physics, unit, and material constants.", runApp("PCONST.JS", seedState()));
+capture("07-rules", "RULES", "Reference formulas and geometry cards.", runApp("PREF.JS", seedState()));
+capture("08-vacuum", "VAC", "Nitrogen vacuum telemetry with Pip-OS readouts.", runApp("PVAC.JS", seedState({ ans: 1234.5 })));
+capture("09-tape", "TAPE", "Calculation history and theme controls.", runApp("PTAPE.JS", seedState()));
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(

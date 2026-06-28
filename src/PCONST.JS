@@ -1,4 +1,6 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  return bootCtxMode("CONST", function(ctx) {
   // ============================================================
   //  CONSTANTS  (loaded on demand by PIPCALC.JS)
   //  filtered math, SI physics, unit factors, space, kitchen
@@ -119,4 +121,5 @@
   }
 
   return { fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press };
+  });
 })

@@ -1,4 +1,7 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  //@inject _EVAL.JS
+  return bootCtxMode("GRAPH", function(ctx) {
   // ============================================================
   //  GRAPH  (loaded on demand by PIPCALC.JS)
   //  plots the shared f(x); zoom / pan-x / pan-y / auto-Y.
@@ -62,4 +65,5 @@
   }
 
   return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
+  });
 })

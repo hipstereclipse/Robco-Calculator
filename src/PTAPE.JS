@@ -1,4 +1,6 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  return bootCtxMode("TAPE", function(ctx) {
   // ============================================================
   //  TAPE  (loaded on demand by PIPCALC.JS)
   //  calculation-history log + GREEN/AMBER theme toggle.
@@ -38,4 +40,5 @@
   }
 
   return { fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press };
+  });
 })

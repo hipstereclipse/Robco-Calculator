@@ -1,4 +1,7 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  //@inject _EVAL.JS
+  return bootCtxMode("CALCULUS", function(ctx) {
   // ============================================================
   //  CALCULUS  (loaded on demand by PIPCALC.JS)
   //  numeric value/slope, area, zero, and extreme over the shared
@@ -99,4 +102,5 @@
   }
 
   return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
+  });
 })

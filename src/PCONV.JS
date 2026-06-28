@@ -1,4 +1,6 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  return bootCtxMode("CONV", function(ctx) {
   // ============================================================
   //  UNIT CONVERTER  (loaded on demand by PIPCALC.JS)
   // ============================================================
@@ -115,4 +117,5 @@
   }
 
   return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
+  });
 })

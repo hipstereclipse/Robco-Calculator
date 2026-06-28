@@ -1,4 +1,6 @@
-(function(ctx) {
+(function() {
+  //@inject _LIB.JS
+  return bootCtxMode("CIRC", function(ctx) {
   // ============================================================
   //  CIRCUIT CALCULATORS (data-driven)  (loaded on demand)
   // ============================================================
@@ -90,4 +92,5 @@
   }
 
   return { fieldCount: function() { return 2 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press };
+  });
 })
