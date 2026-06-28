@@ -3,12 +3,12 @@
 //  build.js -- inline shared fragments, then minify src/*.JS into
 //  APPS/*.JS for the device.
 //
-//  Each mode is now its own standalone app that switches via load(),
-//  so only one app is ever resident. Shared helpers live once in
-//  src/_LIB.JS (+ src/_EVAL.JS for the math apps) and are spliced into
-//  each app at every `//@inject NAME.JS` marker here -- so every
-//  shipped APPS/ file is self-contained (duplicated bytes cost card
-//  space, not RAM, and there is no runtime lib eval() spike).
+//  Each mode is its own independent Pip launcher app (its own
+//  APPINFO/*.info tile); only one app is ever resident. Shared helpers
+//  live once in src/_LIB.JS (+ src/_EVAL.JS for the math apps) and are
+//  spliced into each app at every `//@inject NAME.JS` marker here -- so
+//  every shipped APPS/ file is self-contained (duplicated bytes cost
+//  card space, not RAM, and there is no runtime lib eval() spike).
 //
 //  Espruino keeps each function's *source text* resident in RAM, so
 //  file size ~= RAM cost; shipping minified files is what lets the app

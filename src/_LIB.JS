@@ -5,10 +5,14 @@
 //  at runtime, only ONE app (and therefore one copy of these helpers)
 //  is ever resident. Duplicated bytes cost card space, not RAM.
 //
-//  Provides: palette/geometry constants, number formatting, the
-//  Pip-Boy drawing helpers, theming, the cross-app shared-state file
-//  (CALCST), the mode-select menu, and the load()-swap navigation +
-//  app bootstrap. Apps that also do math additionally inject _EVAL.JS.
+//  Each mode now ships as its OWN independent Pip launcher app (its
+//  own APPINFO/*.info tile); there is no in-app MODE menu and no
+//  cross-app load() navigation. Apps only share values (f(x), Ans,
+//  mem, angle, theme, history, a staged insert) through the CALCST
+//  card file. Provides: palette/geometry constants, number
+//  formatting, Pip-Boy drawing helpers, theming, the shared-state
+//  file, on-device render compat, and the app bootstrap. Apps that
+//  also do math additionally inject _EVAL.JS.
 // ============================================================
 var W = 480, H = 320;                 // working coordinate space (tune to device)
 var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
@@ -16,30 +20,16 @@ var SAFE_L = 24, SAFE_T = 12, SAFE_R = W - 24, SAFE_B = H - 14;
 var CONTENT_L = SAFE_L + 8, CONTENT_R = SAFE_R - 8;
 var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 
-// Modes that exist as standalone apps + the file each lives in.
-var MODES = ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"];
-var FILES = {
-  CALC: "PIPCALC.JS",
-  GRAPH: "PGRAPH.JS",
-  CALCULUS: "PCALCULUS.JS",
-  CIRC: "PCIRC.JS",
-  CONV: "PCONV.JS",
-  CONST: "PCONST.JS",
-  REF: "PREF.JS",
-  VAC: "PVAC.JS",
-  TAPE: "PTAPE.JS"
-};
-
 var ST;                               // shared state (see initState); lives in CALCST
-var field = 0;                        // selected field on a mode screen (0 = MODE tab)
+var field = 0;                        // selected field on a mode screen (0 = THEME tab)
 var curMode = "CALC";                 // which mode THIS app is
-var menuOpen = false, menuCur = 0;    // mode-select overlay
 
 // ---------- helpers ----------
 function wrap(v, n) { return ((v % n) + n) % n; }
 function click() { try { Pip.audioBuiltin("COLUMN"); } catch (e) {} }
 function ok()    { try { Pip.audioBuiltin("OK"); } catch (e) {} }
 function collect() { try { if (typeof global !== "undefined" && global.gc) global.gc(); } catch (e) {} }
+function onDevice() { return typeof setInterval !== "undefined"; } // false under the Node harness
 
 function sci(n, digits) {
   return n.toExponential(digits).replace(/(\.\d*?)0+e/, "$1e").replace(/\.e/, "e").replace(/e\+/, "e");
@@ -116,8 +106,49 @@ function buildPalette(rr, gg, bb) {
 function applyTheme() {
   try { Pip.setPalette(ST.th === "AMBER" ? buildPalette(1, 0.6, 0) : buildPalette(0.1, 1, 0.25)); } catch (e) {}
 }
+function toggleTheme() { ST.th = ST.th === "GREEN" ? "AMBER" : "GREEN"; applyTheme(); }
 
-// ---------- shared state (survives load() via the CALCST card file) ----------
+// ---------- on-device render compatibility ----------
+//  On the real Pip framebuffer the graphics helper `h` takes RGB colours and
+//  a single small index reads as near-black, so palette-index draws come out
+//  blank. We capture the active theme colour from setPalette and remap
+//  setColor(0..3) to scaled RGB in software, with a font fallback. Skipped
+//  entirely under the Node preview harness (no setInterval there), so the
+//  src/ and APPS/ renders stay byte-identical for verify-build.js.
+var devBase = { r: 0.1, g: 1.0, b: 0.25 };
+function dec565(v) { v = v | 0; return { r: ((v >> 11) & 31) / 31, g: ((v >> 5) & 63) / 63, b: (v & 31) / 31 }; }
+function installDeviceCompat() {
+  if (!onDevice() || typeof h === "undefined" || !h) return;
+  if (h.setColor && !h.$c) {
+    var s = h.setColor;
+    h.setColor = function (a) {
+      if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
+        var L = [0, 0.34, 0.67, 1][a | 0];
+        try { return s.call(h, devBase.r * L, devBase.g * L, devBase.b * L); } catch (e) { return h; }
+      }
+      try { return s.apply(h, arguments); } catch (e) { return h; }
+    };
+    h.$c = 1;
+  }
+  if (typeof Pip !== "undefined" && Pip && Pip.setPalette && !Pip.$c) {
+    var p = Pip.setPalette;
+    Pip.setPalette = function (a) {
+      try { if (a && a[0] && a[0].length > 3) { var c = dec565(a[0][a[0].length - 1]); devBase.r = c.r; devBase.g = c.g; devBase.b = c.b; } } catch (e) {}
+      try { if (p) return p.call(Pip, a); } catch (e) {}
+    };
+    Pip.$c = 1;
+  }
+  if (h.setFont && !h.$f) {
+    var f = h.setFont;
+    h.setFont = function (n, z) {
+      try { return f.call(h, n, z); }
+      catch (e) { try { return f.call(h, "6x8"); } catch (e2) { try { return h.setFontVector ? h.setFontVector(22) : h; } catch (e3) { return h; } } }
+    };
+    h.$f = 1;
+  }
+}
+
+// ---------- shared state (survives across apps via the CALCST card file) ----------
 function loadState() { try { var s = require("Storage").read("CALCST"); if (s) return JSON.parse(s); } catch (e) {} return null; }
 function saveState() { try { require("Storage").write("CALCST", JSON.stringify(ST)); } catch (e) {} }
 function initState() {
@@ -129,16 +160,9 @@ function initState() {
   if (ST.th == null) ST.th = "GREEN";
   if (ST.msg == null) ST.msg = "";
   if (!ST.hist) ST.hist = [];
+  installDeviceCompat();
   applyTheme();
   return ST;
-}
-
-// ---------- load()-swap navigation ----------
-function gotoMode(file) {
-  saveState(); collect();
-  try { load(file); return; } catch (e) {}
-  try { load("APPS/" + file); return; } catch (e) {}
-  try { if (typeof Pip !== "undefined" && Pip.load) { Pip.load(file); return; } } catch (e) {}
 }
 
 // ============================================================
@@ -173,14 +197,15 @@ function section(label, y) {
   if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, TEXT_L, y + 8);
   h.setColor(FG);
 }
+// Field 0 of every mode app is the THEME toggle, drawn as the top tab.
 function drawTab() {
   var sel = field === 0;
   h.setColor(DIM).drawLine(CONTENT_L, 56, CONTENT_R, 56);
   if (sel) { h.setColor(FG).fillRect(CONTENT_L, 34, CONTENT_R, 54); h.setColor(BG); }
   else h.setColor(MID);
-  h.setFontAlign(-1, -1).drawString("MODE", TEXT_L, 35);
+  h.setFontAlign(-1, -1).drawString("THEME", TEXT_L, 35);
   if (!sel) h.setColor(FG);
-  h.setFontAlign(1, -1).drawString(curMode, TEXT_R, 35);
+  h.setFontAlign(1, -1).drawString(ST.th, TEXT_R, 35);
   h.setColor(FG);
 }
 function footer(s) {
@@ -205,82 +230,41 @@ function miniRow(label, val, y) {
 }
 
 // ============================================================
-//  MODE-SELECT MENU (overlay; load()s the chosen app)
-// ============================================================
-function openMenu() { menuOpen = true; menuCur = MODES.indexOf(curMode); if (menuCur < 0) menuCur = 0; }
-function menuK1(dir) { if (dir === 0) { var m = MODES[menuCur]; if (m === curMode) menuOpen = false; else gotoMode(FILES[m]); } else { menuCur = wrap(menuCur + dir, MODES.length); } }
-function menuK2() { menuOpen = false; }
-function drawMenu() {
-  h.reset().clear().setColor(FG).setFont("Monofonto23");
-  h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
-  drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
-  h.setColor(FG).setFontAlign(0, -1).drawString("SELECT MODE", W / 2, 18);
-  h.setColor(DIM).drawLine(CONTENT_L, 46, CONTENT_R, 46);
-  var y0 = 58, lh = 24;
-  for (var i = 0; i < MODES.length; i++) {
-    var y = y0 + i * lh, sel = i === menuCur;
-    if (sel) { h.setColor(FG).fillRect(64, y - 2, W - 64, y + 20); h.setColor(BG); } else h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString((MODES[i] === curMode ? "* " : "  ") + MODES[i], 80, y);
-    h.setColor(FG);
-  }
-  footer("WHEEL:MOVE  PRESS:OPEN  THUMB:BACK");
-}
-
-// ---------- compatibility services for the standalone-wrapped mode modules ----------
-function makeCtx() {
-  return {
-    W: W, H: H, FG: FG, MID: MID, DIM: DIM, BG: BG, h: h,
-    wrap: wrap, fmt: fmt, convFmt: convFmt, rawFmt: rawFmt, sci: sci, eng: eng,
-    fitLeft: fitLeft, fitRight: fitRight,
-    beginScreen: function(t, s) { return beginScreen(t, s); },
-    drawTab: function() { return drawTab(); },
-    drawCorners: function(a, b, c, d, n) { return drawCorners(a, b, c, d, n); },
-    panel: function(a, b, c, d, l) { return panel(a, b, c, d, l); },
-    section: function(l, y) { return section(l, y); },
-    footer: function(s) { return footer(s); },
-    row: function(l, v, y, sel) { return row(l, v, y, sel); },
-    miniRow: function(l, v, y) { return miniRow(l, v, y); },
-    getAns: function() { return ST.ans; },
-    getMsg: function() { return ST.msg || ""; },
-    setMsg: function(s) { ST.msg = s || ""; },
-    insert: function(s) { ST.ins = s; },
-    setMode: function(m) { if (FILES[m]) gotoMode(FILES[m]); },
-    fAt: function(x) { return fAt(x); },
-    getFx: function() { return ST.fx; },
-    editFx: function(rm) { ST.edit = rm; gotoMode(FILES.CALC); },
-    getHist: function() { return ST.hist; },
-    getTheme: function() { return ST.th; },
-    toggleTheme: function() { ST.th = ST.th === "GREEN" ? "AMBER" : "GREEN"; applyTheme(); }
-  };
-}
-
-function bootCtxMode(mode, factory) {
-  initState();
-  if (typeof setF === "function") setF(ST.fx);
-  var spec = factory(makeCtx());
-  spec.mode = mode;
-  return bootMode(spec);
-}
-
-// ============================================================
 //  BOOTSTRAP
-//  finishBoot wires the knob handlers + draw + remove and returns the
-//  Pip app object. bootMode is the generic shell every NON-CALC mode
-//  uses: field navigation, MODE-tab -> menu, delegate to the mode's
-//  draw/knob2/press. CALC supplies its own handlers (keypad) and calls
-//  finishBoot directly.
+//  finishBoot wires knob handlers + draw + remove and returns the Pip
+//  app object; on the device it also flips the framebuffer (initial +
+//  ~20fps). bootMode is the generic shell every NON-CALC mode uses:
+//  field 0 is the THEME toggle, fields 1..N are the mode's controls;
+//  it delegates to the mode's draw/knob2/press. CALC supplies its own
+//  keypad handlers and calls finishBoot directly.
 // ============================================================
 function finishBoot(k1, k2, redraw) {
-  redraw();
-  Pip.on("knob1", k1);
-  Pip.on("knob2", k2);
+  function paint() {
+    try { redraw(); }
+    catch (e) {
+      try {
+        h.reset().clear().setColor(FG);
+        if (h.setFontAlign) h.setFontAlign(-1, -1);
+        h.drawString("ERR: " + ("" + ((e && e.message) || e)).slice(0, 36), TEXT_L, 40);
+      } catch (_) {}
+    }
+    if (onDevice()) { try { if (h.flip) h.flip(); } catch (e) {} }
+  }
+  paint();
+  var h1 = function (d) { k1(d); paint(); };
+  var h2 = function (d) { k2(d); paint(); };
+  Pip.on("knob1", h1);
+  Pip.on("knob2", h2);
+  var flipId = null;
+  if (onDevice()) { try { flipId = setInterval(function () { try { if (h.flip) h.flip(); } catch (e) {} }, 50); } catch (e) {} }
   collect();
   return {
     id: "PIPCALC", notDefault: true, fullscreen: true,
     remove: function () {
+      try { if (flipId !== null) clearInterval(flipId); } catch (e) {}
       saveState();                                                    // flush shared state on close
-      Pip.removeListener("knob1", k1);
-      Pip.removeListener("knob2", k2);
+      Pip.removeListener("knob1", h1);
+      Pip.removeListener("knob2", h2);
       try { Pip.setPalette(buildPalette(0.1, 1, 0.25)); } catch (e) {} // restore green on true exit
       collect();
     }
@@ -288,18 +272,15 @@ function finishBoot(k1, k2, redraw) {
 }
 function bootMode(spec) {
   curMode = spec.mode; field = 0;
-  function redraw() { if (menuOpen) drawMenu(); else spec.draw(field); }
+  function redraw() { spec.draw(field); }
   function k1(dir) {
-    if (menuOpen) { menuK1(dir); redraw(); return; }
-    if (dir === 0) { if (field === 0) openMenu(); else { spec.press(field); ok(); } }
+    if (dir === 0) { if (field === 0) toggleTheme(); else { spec.press(field); ok(); } }
     else { field = wrap(field + dir, spec.fieldCount()); click(); }
-    redraw();
   }
   function k2(dir) {
-    if (menuOpen) { menuK2(); redraw(); return; }
     if (!dir) return;
     if (field !== 0) spec.knob2(field, dir);
-    click(); redraw();
+    click();
   }
   return finishBoot(k1, k2, redraw);
 }

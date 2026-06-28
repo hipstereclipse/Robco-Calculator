@@ -1,0 +1,7 @@
+{
+  "id": "pipconv",
+  "name": "Convert",
+  "version": "3.43",
+  "files": "APPS/PCONV.JS,APPINFO/CONV.info",
+  "src": "APPS/PCONV.JS"
+}

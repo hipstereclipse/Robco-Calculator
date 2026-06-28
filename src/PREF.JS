@@ -1,15 +1,9 @@
 (function() {
   //@inject _LIB.JS
-  return bootCtxMode("REF", function(ctx) {
   // ============================================================
-  //  REFERENCE RULES  (loaded on demand by PIPCALC.JS)
-  //  formulas, approximations, geometry cards
+  //  REFERENCE RULES  -- standalone app: formulas, approximations,
+  //  geometry cards. Read-only reference; helpers inlined at build.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, DIM = ctx.DIM, wrap = ctx.wrap;
-  var fitLeft = ctx.fitLeft, fitRight = ctx.fitRight;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var section = ctx.section, footer = ctx.footer;
-
   var REF_SECTIONS = [
     { name: "LOG/EXP", items: [
       { name: "LOG LAWS", lines: ["ln(ab)=ln a+ln b", "ln(a/b)=ln a-ln b", "ln(a^r)=r ln a", "log_b(a)=ln(a)/ln(b)", "a^x=e^(x ln a)"] },
@@ -162,8 +156,8 @@
     else if (field === 2) refItem = wrap(refItem + dir, refCurSec().items.length);
   }
 
-  function press() { ctx.setMsg(""); }
+  function press() { ST.msg = ""; }
 
-  return { fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  return bootMode({ mode: "REF", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
 })

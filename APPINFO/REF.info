@@ -1,0 +1,7 @@
+{
+  "id": "pipref",
+  "name": "Reference",
+  "version": "3.43",
+  "files": "APPS/PREF.JS,APPINFO/REF.info",
+  "src": "APPS/PREF.JS"
+}

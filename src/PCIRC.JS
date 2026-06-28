@@ -1,14 +1,9 @@
 (function() {
   //@inject _LIB.JS
-  return bootCtxMode("CIRC", function(ctx) {
   // ============================================================
-  //  CIRCUIT CALCULATORS (data-driven)  (loaded on demand)
+  //  CIRCUIT CALCULATORS (data-driven)  -- standalone app. Pulls the
+  //  shared Ans (set in the CALC app) into a field via press.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, wrap = ctx.wrap;
-  var fmt = ctx.fmt, fitLeft = ctx.fitLeft, fitRight = ctx.fitRight;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var section = ctx.section, footer = ctx.footer;
-
   var COLORS = ["blk","brn","red","org","yel","grn","blu","vio","gry","wht"];
   var MULTS = ["x.01","x.1","x1","x10","x100","x1k","x10k","x100k","x1M","x10M"];
   var MULTF = [0.01,0.1,1,10,100,1000,10000,100000,1000000,10000000];
@@ -88,9 +83,9 @@
   }
 
   function press(field) {
-    if (field >= 2) { CIRC_TOOLS[circTool].in[field - 2].v = ctx.getAns(); ctx.setMsg("Ans imported"); }
+    if (field >= 2) { CIRC_TOOLS[circTool].in[field - 2].v = ST.ans; ST.msg = "Ans imported"; }
   }
 
-  return { fieldCount: function() { return 2 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  return bootMode({ mode: "CIRC", fieldCount: function() { return 2 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press });
 })

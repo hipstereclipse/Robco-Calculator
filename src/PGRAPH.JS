@@ -1,17 +1,11 @@
 (function() {
   //@inject _LIB.JS
   //@inject _EVAL.JS
-  return bootCtxMode("GRAPH", function(ctx) {
   // ============================================================
-  //  GRAPH  (loaded on demand by PIPCALC.JS)
-  //  plots the shared f(x); zoom / pan-x / pan-y / auto-Y.
-  //  View state (centre/span) lives here and resets when the mode
-  //  is left -- consistent with the other on-demand modules.
+  //  GRAPH  -- standalone app: plots the shared f(x) (authored in the
+  //  CALC app); zoom / pan-x / pan-y / auto-Y. View state (centre/span)
+  //  is local and resets each launch. Helpers/evaluator inlined at build.
   // ============================================================
-  var W = ctx.W, H = ctx.H, FG = ctx.FG, MID = ctx.MID, DIM = ctx.DIM;
-  var fmt = ctx.fmt, fAt = ctx.fAt;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, drawCorners = ctx.drawCorners, footer = ctx.footer;
-
   var gxc = 0, gxs = Math.PI * 2, gyc = 0, gys = 2;
 
   function autoY() {
@@ -23,8 +17,8 @@
   function draw(field) {
     beginScreen("GRAPH", "TRACE");
     drawTab();
-    var ctl = ["MODE", "EDIT", "ZOOM", "PAN-X", "PAN-Y"][field];
-    var fxs = "f(x)=" + ctx.getFx(); if (fxs.length > 24) fxs = fxs.slice(0, 24);
+    var ctl = ["THEME", "AUTO", "ZOOM", "PAN-X", "PAN-Y"][field];
+    var fxs = "f(x)=" + ST.fx; if (fxs.length > 24) fxs = fxs.slice(0, 24);
     h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, TEXT_L, 62);
     h.setFontAlign(1, -1).drawString("[" + ctl + "]", TEXT_R, 62);
     var px0 = 58, py0 = 90, px1 = CONTENT_R, py1 = H - 76;
@@ -60,10 +54,10 @@
   }
 
   function press(field) {
-    if (field === 1) ctx.editFx("GRAPH");
-    else if (field >= 2) { autoY(); ctx.setMsg("auto-Y"); }
+    if (field >= 1) { autoY(); ST.msg = "auto-Y"; }
   }
 
-  return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  setF(ST.fx);
+  return bootMode({ mode: "GRAPH", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
 })

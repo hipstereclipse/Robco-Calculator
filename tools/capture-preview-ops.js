@@ -66,7 +66,7 @@ function runApp(name, storage) {
 }
 
 const GRID = [
-  ["2nd", "MODE", "DRG", "AC", "DEL", ">f"],
+  ["2nd", "THM", "DRG", "AC", "DEL", ">f"],
   ["sin", "cos", "tan", "asin", "acos", "atan"],
   ["sinh", "cosh", "tanh", "ln", "log", "exp"],
   ["sqrt", "cbrt", "abs", "pi", "e", "x"],
@@ -110,23 +110,11 @@ function seedState(extra = {}) {
   };
 }
 
-function assertModeMenu(rt) {
-  const text = rt.getOps().filter((op) => op.type === "text").map((op) => op.text);
-  for (const mode of ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"]) {
-    if (!text.some((t) => t.indexOf(mode) >= 0)) throw new Error(`Mode menu is missing ${mode}`);
-  }
-}
-
-// --- CALC: build a real expression, then verify the full mode menu ---
+// --- CALC: build a real expression in the standalone CALC app ---
 const calc = runApp("PIPCALC.JS", {});
 const press = calcDriver(calc.handlers);
 ["2", "+", "3", "*", "4", "="].forEach(press);
 capture("01-calc-result", "CALC", "Framed RobCo keypad with a completed expression.", calc);
-press("MODE");
-assertModeMenu(calc);
-calc.handlers.knob1(1);
-calc.handlers.knob1(0);
-if (calc.storage.__loaded !== "PGRAPH.JS") throw new Error(`Mode menu loaded ${calc.storage.__loaded}, expected PGRAPH.JS`);
 
 // --- Standalone applets, all reading shared CALCST state ---
 capture("02-graph", "GRAPH", "Shared f(x) trace with zoom and pan controls.", runApp("PGRAPH.JS", seedState()));

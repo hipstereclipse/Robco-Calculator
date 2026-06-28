@@ -1,14 +1,9 @@
 (function() {
   //@inject _LIB.JS
-  return bootCtxMode("CONV", function(ctx) {
   // ============================================================
-  //  UNIT CONVERTER  (loaded on demand by PIPCALC.JS)
+  //  UNIT CONVERTER  -- standalone app. Pulls the shared Ans (set in
+  //  the CALC app) into the value field via press.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, DIM = ctx.DIM, wrap = ctx.wrap;
-  var convFmt = ctx.convFmt, rawFmt = ctx.rawFmt, sci = ctx.sci, eng = ctx.eng;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var miniRow = ctx.miniRow, section = ctx.section, footer = ctx.footer;
-
   var CATS = [
     { name: "PRESSURE", u: ["Pa","kPa","MPa","GPa","hPa","bar","mbar","ubar","atm","Torr","mTorr","psi","ksi","psf","inHg","mmHg","cmHg","inH2O","ftH2O","cmH2O","mmH2O","kgf/cm2","dyn/cm2"],
       f: [1,1e3,1e6,1e9,100,1e5,100,0.1,101325,133.322368,0.133322368,6894.757293,6.894757293e6,47.88025898,3386.389,133.322368,1333.22368,249.0889,2989.06692,98.0665,9.80665,98066.5,0.1] },
@@ -98,7 +93,7 @@
     h.setColor(DIM).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 218);
     miniRow("SCI", sci(out, 8) + " " + unit, 240);
     miniRow("ENG", eng(out, 8) + " " + unit, 264);
-    var m = ctx.getMsg();
+    var m = ST.msg || "";
     if (m) h.setFontAlign(0, -1).drawString(m, W / 2, 276);
     footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
   }
@@ -112,10 +107,10 @@
   }
 
   function press() {
-    convVal = ctx.getAns();
-    ctx.setMsg("Ans imported");
+    convVal = ST.ans;
+    ST.msg = "Ans imported";
   }
 
-  return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  return bootMode({ mode: "CONV", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
 })

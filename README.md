@@ -1,6 +1,6 @@
 # RobCo Calculator
 
-RobCo Calculator is a Pip-Boy style engineer's calculator for the Pip runtime. The app installs as `Engineer's Calc` and combines a scientific calculator, graphing view, calculus tools, electronics helpers, unit conversions, constants, reference formulas, vacuum calculations, and a calculation tape in one 480x320 fullscreen interface.
+RobCo Calculator is a Pip-Boy style engineer's calculator suite for the Pip runtime. It installs as **nine independent apps** — a scientific calculator, graphing view, calculus tools, electronics helpers, unit conversions, constants, reference formulas, vacuum calculations, and a calculation tape — each its own 480x320 fullscreen launcher tile. They share `f(x)`, `Ans`, memory, angle mode, theme, and history through a small state file on the card, so values flow between them without bundling everything into one resident app.
 
 <p align="center">
   <img src="./screenshots/preview-contact-sheet.png" alt="RobCo Calculator preview contact sheet" width="720">
@@ -20,55 +20,35 @@ RobCo Calculator is a Pip-Boy style engineer's calculator for the Pip runtime. T
 
 ## Controls
 
-RobCo Calculator uses the Pip runtime's two rotary inputs:
+Each app uses the Pip runtime's two rotary inputs:
 
 - **Knob 1 / wheel** moves through rows or editable fields.
 - **Knob 1 press** activates the selected calculator key, field action, insertion, or import.
-- **Knob 2 / thumb** moves through columns in `CALC` or changes the selected field in tool modes.
+- **Knob 2 / thumb** moves through columns in `Calc` or changes the selected field in the tool apps.
 
-The calculator, graph, and calculus screens share the same `f(x)` expression. In `CALC`, build an expression and press `>f` to set it as the graph/calculus function. Constants and tool results can be inserted back into the calculator, and evaluated results are stored in `Ans` and the tape.
+In every tool app, **field 0 is the `THEME` tab** — pressing it toggles the GREEN / AMBER palette; in `Calc` the `THM` key does the same.
+
+The `Calc`, `Graph`, and `Calculus` apps share the same `f(x)` expression: build an expression in `Calc` and press `>f` to publish it, then open `Graph` or `Calculus` to plot or analyze it. `Constants` and `Tape` stage a value into the shared state; the next time you open `Calc` it inserts that value. Evaluated results are stored in `Ans` and the tape and are available to the other apps.
 
 ## How It Works
 
-The core app is `APPS/PIPCALC.JS`. It returns a Pip app factory that:
+Each mode is its own Pip launcher app — a self-contained file that returns a Pip app factory which registers `knob1` / `knob2` handlers, draws the fullscreen interface through the Pip graphics helper `h`, and (for the math apps) parses expressions with a small recursive-descent evaluator, differentiates with central differences, integrates with Simpson's rule, and solves roots/extrema with Newton-style searches. There is **no in-app mode menu and no cross-app `load()` navigation** — you open each app directly from the Pip launcher, and only one app is ever resident.
 
-- registers `knob1` and `knob2` handlers with `Pip.on(...)`
-- draws the fullscreen interface through the Pip graphics helper `h`
-- stores all mode state in memory while the app is open
-- parses expressions with a small recursive-descent evaluator
-- computes numerical derivatives with central differences
-- integrates with Simpson's rule
-- solves roots and extrema with Newton-style numerical searches
+- `APPS/PIPCALC.JS` — scientific keypad (`Calc`, the home app)
+- `APPS/PGRAPH.JS` — function plotter (`Graph`)
+- `APPS/PCALCULUS.JS` — numeric calculus (`Calculus`)
+- `APPS/PCIRC.JS` — circuit workbench (`Circuit`)
+- `APPS/PCONV.JS` — unit converter (`Convert`)
+- `APPS/PCONST.JS` — constants (`Constants`)
+- `APPS/PREF.JS` — reference formula cards (`Reference`)
+- `APPS/PVAC.JS` — vacuum tools (`Vacuum`)
+- `APPS/PTAPE.JS` — calculation tape + theme (`Tape`)
 
-To fit in device RAM (the Pip runtime is Espruino-based, with limited
-memory), only the `CALC` keypad and the shared expression evaluator stay
-resident. **Every other mode** lives in its own file that is loaded from the
-card only while open and freed on exit, so only one is ever resident:
+**Shared state** (`f(x)`, `Ans`, memory, angle mode, theme, history, and a value staged for `Calc`) lives in the `CALCST` file on the card via `require("Storage")`. Each app reads it on launch and writes it back on exit, so values flow between apps even though only one runs at a time.
 
-- `APPS/PGRAPH.JS` — function plotter (`GRAPH`)
-- `APPS/PCALCULUS.JS` — numeric calculus (`CALCULUS`)
-- `APPS/PCIRC.JS` — circuit workbench (`CIRC`)
-- `APPS/PCONV.JS` — unit converter (`CONV`)
-- `APPS/PCONST.JS` — constants (`CONST`)
-- `APPS/PREF.JS` — reference formula cards (`REF`)
-- `APPS/PVAC.JS` — vacuum tools (`VAC`)
-- `APPS/PTAPE.JS` — calculation tape + theme (`TAPE`)
+Espruino keeps each function's source text resident in RAM, so file size is essentially RAM cost. The shared helpers (`src/_LIB.JS`) and evaluator (`src/_EVAL.JS`) are **inlined into each app at build time** at every `//@inject` marker, so each shipped `APPS/*.JS` is standalone — the duplicated bytes cost card space, not RAM. The readable source lives in `src/`; the device files in `APPS/` are the **minified build** produced by `tools/build.js` (terser), which is what lets each app launch without `ERROR Errors: CALLBACK, LOW_MEMORY, MEMORY`. Edit `src/` and re-run `npm run build`; never hand-edit `APPS/`.
 
-Each module file evaluates to a `function(ctx)` factory that returns a
-`{ fieldCount, draw, knob2, press }` object; `PIPCALC.JS` passes shared
-drawing/formatting helpers, the f(x) evaluator, and state accessors through
-`ctx`. The loader tries the runtime's `Storage`, `fs`, and `E.openFile` APIs
-in turn; if none can read the file, the mode shows a notice instead of
-crashing the app.
-
-Espruino keeps each function's source text resident in RAM, so file size is
-essentially RAM cost. The readable source lives in `src/`; the device files in
-`APPS/` are the **minified build** produced by `tools/build.js` (terser). The
-minified core is ~14 KB versus ~30 KB unminified, which is what lets the app
-launch without `ERROR Errors: CALLBACK, LOW_MEMORY, MEMORY`. Edit `src/` and
-re-run `npm run build`; never hand-edit `APPS/`.
-
-The metadata file `APPINFO/CALC.info` names the app, version, source file, and install payload for the Pip launcher.
+Each app has its own metadata file in `APPINFO/` (`CALC.info`, `GRAPH.info`, …) naming the app, version, source file, and install payload for the Pip launcher.
 
 ## Installation
 
@@ -78,21 +58,21 @@ The metadata file `APPINFO/CALC.info` names the app, version, source file, and i
 2. Select the root of the microSD card used by your Pip runtime.
 3. Click **Install**.
 
-The installer reads the payload list from `APPINFO/CALC.info`, downloads the files from this GitHub repository, and writes them into matching `APPS/` and `APPINFO/` folders on the selected card. If your browser does not offer folder write access, use the manual steps below.
+The installer reads the payload list from all nine `APPINFO/*.info` manifests, downloads the files from this GitHub repository, and writes them into matching `APPS/` and `APPINFO/` folders on the selected card. If your browser does not offer folder write access, use the manual steps below.
 
-**Purge any previous install** is on by default: before writing, the installer reads any `APPINFO/CALC.info` already on the card, deletes every file that older version listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
+**Purge any previous install** is on by default: before writing, the installer reads any of the nine `APPINFO/*.info` manifests already on the card, deletes every file those older versions listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
 
 If the direct install fails (some SD-card/OS combinations throw `NotReadableError` from the browser's File System Access API), click **Download .zip** instead. It bundles the same payload into `RobCo-Calculator.zip`; extract that to the microSD root and it creates the `APPS/` and `APPINFO/` folders for you. This path writes no files directly, so it works in any browser.
 
 ### Manual install
 
 1. Connect or mount the device storage used by your Pip runtime.
-2. Copy `APPS/PIPCALC.JS` and all eight mode modules (`APPS/PGRAPH.JS`, `APPS/PCALCULUS.JS`, `APPS/PCIRC.JS`, `APPS/PCONV.JS`, `APPS/PCONST.JS`, `APPS/PREF.JS`, `APPS/PVAC.JS`, `APPS/PTAPE.JS`) into the device's `APPS/` directory.
-3. Copy `APPINFO/CALC.info` into the device's `APPINFO/` directory.
+2. Copy all nine app files (`APPS/PIPCALC.JS`, `APPS/PGRAPH.JS`, `APPS/PCALCULUS.JS`, `APPS/PCIRC.JS`, `APPS/PCONV.JS`, `APPS/PCONST.JS`, `APPS/PREF.JS`, `APPS/PVAC.JS`, `APPS/PTAPE.JS`) into the device's `APPS/` directory.
+3. Copy all nine manifests (`APPINFO/CALC.info`, `APPINFO/GRAPH.info`, `APPINFO/CALCULUS.info`, `APPINFO/CIRC.info`, `APPINFO/CONV.info`, `APPINFO/CONST.info`, `APPINFO/REF.info`, `APPINFO/VAC.info`, `APPINFO/TAPE.info`) into the device's `APPINFO/` directory.
 4. Restart, rescan, or reload the Pip launcher.
-5. Open **Engineer's Calc** from the app list.
+5. Open **Calc** (and any of the other tiles) from the app list.
 
-The app itself ships no npm packages; the runtime must provide the global `Pip` API and graphics helper `h`, so opening `APPS/PIPCALC.JS` directly in a browser or Node.js will not launch the app. Every mode except `CALC` needs its matching `APPS/P*.JS` file alongside `PIPCALC.JS` to load on the device.
+The apps ship no npm packages; the runtime must provide the global `Pip` API and graphics helper `h`, so opening an `APPS/*.JS` file directly in a browser or Node.js will not launch it. Each app is self-contained — you can install only the tiles you want — but `Graph` and `Calculus` read the `f(x)` you set in `Calc`, so they are most useful installed together.
 
 ### Building from source
 
@@ -131,14 +111,22 @@ The capture script evaluates the app in a small mocked Pip environment, records 
 ## Repository Layout
 
 ```text
-APPINFO/CALC.info        App metadata + install payload list used by the Pip launcher
-APPS/PIPCALC.JS          RobCo Calculator core (CALC/GRAPH/CALCULUS/TAPE + loader)
-APPS/PCONV.JS            CONV mode module (loaded on demand)
-APPS/PCONST.JS           CONST mode module (loaded on demand)
-APPS/PREF.JS             REF mode module (loaded on demand)
-APPS/PCIRC.JS            CIRC mode module (loaded on demand)
-APPS/PVAC.JS             VAC mode module (loaded on demand)
+src/_LIB.JS              Shared helpers (drawing, theming, CALCST state, bootstrap) inlined into each app
+src/_EVAL.JS             Shared expression evaluator inlined into the math apps
+src/P*.JS                Readable source for each app (built into APPS/ by tools/build.js)
+APPINFO/*.info           One launcher manifest per app (CALC, GRAPH, CALCULUS, CIRC, CONV, CONST, REF, VAC, TAPE)
+APPS/PIPCALC.JS          Calc — scientific keypad (home app)
+APPS/PGRAPH.JS           Graph — function plotter
+APPS/PCALCULUS.JS        Calculus — numeric value/slope/area/roots/extrema
+APPS/PCIRC.JS            Circuit — electronics workbench
+APPS/PCONV.JS            Convert — unit converter
+APPS/PCONST.JS           Constants — searchable constants
+APPS/PREF.JS             Reference — formula + geometry cards
+APPS/PVAC.JS             Vacuum — nitrogen vacuum tools
+APPS/PTAPE.JS            Tape — history + theme
 screenshots/             Generated README previews
+tools/build.js           Inlines fragments + minifies src/ into APPS/
 tools/capture-preview-ops.js
+tools/verify-build.js    Confirms APPS/ renders identically to src/
 tools/render-previews.ps1
 ```

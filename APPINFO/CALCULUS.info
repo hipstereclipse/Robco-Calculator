@@ -1,0 +1,7 @@
+{
+  "id": "pipcalculus",
+  "name": "Calculus",
+  "version": "3.43",
+  "files": "APPS/PCALCULUS.JS,APPINFO/CALCULUS.info",
+  "src": "APPS/PCALCULUS.JS"
+}

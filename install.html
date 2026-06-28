@@ -570,7 +570,7 @@
         <img src="./screenshots/preview-contact-sheet.png" alt="RobCo Calculator screen previews" width="828" height="1580" loading="lazy" decoding="async">
         <div class="preview-meta">
           <strong>Engineer's Calc</strong>
-          APPS/PIPCALC.JS + 5 mode modules plus APPINFO/CALC.info
+          Nine standalone apps (Calc, Graph, Calculus, Circuit, Convert, Constants, Reference, Vacuum, Tape) — one launcher tile each
         </div>
       </aside>
     </div>
@@ -581,8 +581,20 @@
 
     const REPOSITORY = "hipstereclipse/Robco-Calculator";
     const DEFAULT_REF = "main";
-    const INFO_PATH = "APPINFO/CALC.info";
-    const FALLBACK_PAYLOAD = ["APPS/PIPCALC.JS", "APPS/PCONV.JS", "APPS/PCONST.JS", "APPS/PREF.JS", "APPS/PCIRC.JS", "APPS/PVAC.JS", "APPINFO/CALC.info"];
+    // Each mode now installs as its own Pip launcher app, so the payload is the
+    // union of all nine app manifests (one APPINFO/*.info + its APPS/*.JS each).
+    const INFO_PATHS = [
+      "APPINFO/CALC.info", "APPINFO/GRAPH.info", "APPINFO/CALCULUS.info",
+      "APPINFO/CIRC.info", "APPINFO/CONV.info", "APPINFO/CONST.info",
+      "APPINFO/REF.info", "APPINFO/VAC.info", "APPINFO/TAPE.info"
+    ];
+    const FALLBACK_PAYLOAD = [
+      "APPS/PIPCALC.JS", "APPS/PGRAPH.JS", "APPS/PCALCULUS.JS", "APPS/PCIRC.JS",
+      "APPS/PCONV.JS", "APPS/PCONST.JS", "APPS/PREF.JS", "APPS/PVAC.JS", "APPS/PTAPE.JS",
+      "APPINFO/CALC.info", "APPINFO/GRAPH.info", "APPINFO/CALCULUS.info",
+      "APPINFO/CIRC.info", "APPINFO/CONV.info", "APPINFO/CONST.info",
+      "APPINFO/REF.info", "APPINFO/VAC.info", "APPINFO/TAPE.info"
+    ];
 
     const sourceLabel = document.getElementById("sourceLabel");
     const appStatus = document.getElementById("appStatus");
@@ -657,27 +669,30 @@
 
     async function loadManifest() {
       appInfo = null;
-      appStatus.textContent = "Loading manifest...";
-      const response = await fetch(rawUrl(INFO_PATH), { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error("Manifest unavailable: " + response.status + " " + response.statusText);
+      appStatus.textContent = "Loading manifests...";
+      const all = [];
+      let primary = null;
+      for (const infoPath of INFO_PATHS) {
+        const response = await fetch(rawUrl(infoPath), { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Manifest unavailable: " + infoPath + " " + response.status + " " + response.statusText);
+        }
+        const data = JSON.parse(await response.text());
+        if (!primary) primary = data;
+        String(data.files || "")
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .forEach((item) => all.push(item));
+        if (data.src) all.push(data.src);
+        all.push(infoPath);
       }
 
-      const text = await response.text();
-      appInfo = JSON.parse(text);
-      const files = String(appInfo.files || "")
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
-
-      payloadFiles = uniquePaths(files.length ? files : FALLBACK_PAYLOAD);
-      if (!payloadFiles.includes(INFO_PATH)) {
-        payloadFiles.push(INFO_PATH);
-      }
-
+      appInfo = primary;
+      payloadFiles = uniquePaths(all.length ? all : FALLBACK_PAYLOAD);
       renderPayload();
-      appStatus.textContent = appInfo.name + " " + appInfo.version;
-      addLog("Manifest loaded from GitHub.", "ok");
+      appStatus.textContent = "Engineer's Calc suite — " + INFO_PATHS.length + " apps v" + ((primary && primary.version) || "");
+      addLog("Loaded " + INFO_PATHS.length + " app manifests from GitHub.", "ok");
       updateInstallState();
     }
 
@@ -795,21 +810,29 @@
     // Read the app manifest already on the card (if any) so we know exactly
     // which files a previous version wrote -- even if it used different names.
     async function readExistingManifest(directory) {
+      const list = [];
       try {
         const appinfo = await directory.getDirectoryHandle("APPINFO");
-        const handle = await appinfo.getFileHandle("CALC.info");
-        const file = await handle.getFile();
-        const data = JSON.parse(await file.text());
-        const list = String(data.files || "")
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-        if (data.src) list.push(data.src);
-        if (data.icon) list.push(data.icon);
-        return uniquePaths(list);
+        for (const infoPath of INFO_PATHS) {
+          const base = infoPath.split("/").pop();
+          try {
+            const handle = await appinfo.getFileHandle(base);
+            const file = await handle.getFile();
+            const data = JSON.parse(await file.text());
+            String(data.files || "")
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean)
+              .forEach((item) => list.push(item));
+            if (data.src) list.push(data.src);
+            if (data.icon) list.push(data.icon);
+            list.push(infoPath);
+          } catch (error) { /* this app not present on the card */ }
+        }
       } catch (error) {
         return [];
       }
+      return uniquePaths(list);
     }
 
     async function deletePath(root, path) {
@@ -831,9 +854,9 @@
 
     async function removeOldInstall(directory) {
       const existing = await readExistingManifest(directory);
-      // delete the old manifest's files + the current payload, manifest last
-      const targets = uniquePaths(existing.concat(payloadFiles))
-        .filter((path) => path !== INFO_PATH);
+      // delete every file a previous install wrote, plus the current payload;
+      // the write step below recreates them all from a clean copy
+      const targets = uniquePaths(existing.concat(payloadFiles));
       let removed = 0;
 
       for (const path of targets) {
@@ -841,10 +864,6 @@
           removed += 1;
           addLog("Removed old " + path, "warn");
         }
-      }
-      if (await deletePath(directory, INFO_PATH)) {
-        removed += 1;
-        addLog("Removed old " + INFO_PATH, "warn");
       }
 
       if (removed) {

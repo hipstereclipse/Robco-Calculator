@@ -1,23 +1,17 @@
 (function() {
   //@inject _LIB.JS
-  return bootCtxMode("TAPE", function(ctx) {
   // ============================================================
-  //  TAPE  (loaded on demand by PIPCALC.JS)
-  //  calculation-history log + GREEN/AMBER theme toggle.
-  //  History and theme live in the core; this module only renders
-  //  them and drives the selection cursor.
+  //  TAPE  -- standalone app: calculation-history log (written by the
+  //  CALC app) + GREEN/AMBER theme toggle. History and theme live in
+  //  CALCST; this app renders them and drives the selection cursor.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, BG = ctx.BG;
-  var wrap = ctx.wrap;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row, footer = ctx.footer;
-
   var tapeSel = 0;
 
   function draw(field) {
     beginScreen("TAPE", "LOG");
     drawTab();
-    row("THEME", ctx.getTheme(), 64, field === 1);
-    var hist = ctx.getHist();
+    row("THEME", ST.th, 64, field === 1);
+    var hist = ST.hist;
     var y = 98;
     if (!hist.length) h.setColor(FG).setFontAlign(-1, -1).drawString("(no history yet)", TEXT_L, y);
     for (var i = 0; i < hist.length; i++) {
@@ -30,15 +24,15 @@
   }
 
   function knob2(field, dir) {
-    if (field === 1) ctx.toggleTheme();
-    else if (field === 2) tapeSel = wrap(tapeSel + dir, Math.max(1, ctx.getHist().length));
+    if (field === 1) toggleTheme();
+    else if (field === 2) tapeSel = wrap(tapeSel + dir, Math.max(1, ST.hist.length));
   }
 
   function press(field) {
-    var hist = ctx.getHist();
-    if (field === 2 && hist.length) { ctx.insert("" + hist[tapeSel].v); ctx.setMode("CALC"); ctx.setMsg(""); }
+    var hist = ST.hist;
+    if (field === 2 && hist.length) { ST.ins = "" + hist[tapeSel].v; ST.msg = "staged for CALC"; }
   }
 
-  return { fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  return bootMode({ mode: "TAPE", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
 })

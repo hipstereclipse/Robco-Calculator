@@ -1,0 +1,7 @@
+{
+  "id": "pipvac",
+  "name": "Vacuum",
+  "version": "3.43",
+  "files": "APPS/PVAC.JS,APPINFO/VAC.info",
+  "src": "APPS/PVAC.JS"
+}

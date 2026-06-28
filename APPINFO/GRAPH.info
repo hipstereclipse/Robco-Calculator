@@ -1,0 +1,7 @@
+{
+  "id": "pipgraph",
+  "name": "Graph",
+  "version": "3.43",
+  "files": "APPS/PGRAPH.JS,APPINFO/GRAPH.info",
+  "src": "APPS/PGRAPH.JS"
+}

@@ -1,11 +1,11 @@
 (function() {
   // ============================================================
   //  PIP-CALC :: ENGINEER'S CALCULATOR                Pip-Boy 3000
-  //  CALC (scientific) -- the resident home app. Every other mode
-  //  is its OWN standalone app (APPS/P*.JS); the MODE key opens a
-  //  picker that hands off with load(), so only one app is ever in
-  //  RAM (no core stacked under a module, no eval() spike). Shared
-  //  f(x)/Ans/mem/angle/theme/history live in the CALCST card file.
+  //  CALC (scientific) -- one of nine independent Pip apps, each its
+  //  own APPINFO/*.info launcher tile. There is no in-app mode menu:
+  //  CALC authors the shared f(x) and Ans, the other apps read them.
+  //  Shared f(x)/Ans/mem/angle/theme/history live in the CALCST card
+  //  file; a constant/tape value staged for CALC arrives as ST.ins.
   //  Source lives in src/; APPS/ ships the minified build. Helpers +
   //  evaluator are inlined from _LIB.JS / _EVAL.JS at build time.
   // ============================================================
@@ -18,10 +18,10 @@
   //  CALCULATOR UI (CALC-local state; shared values live in ST)
   // ============================================================
   var expr = "", justEval = false, calcCur = { r: 0, c: 0 };
-  var shift = false, msg = "", retEdit = null;
+  var shift = false, msg = "";
 
   var GRID = [
-    ["2nd", "MODE", "DRG", "AC",  "DEL", ">f"],
+    ["2nd", "THM",  "DRG", "AC",  "DEL", ">f"],
     ["sin", "cos", "tan", "asin", "acos", "atan"],
     ["sinh","cosh","tanh","ln",   "log",  "exp"],
     ["sqrt","cbrt","abs", "pi",   "e",    "x"],
@@ -50,7 +50,7 @@
     }
     switch (label) {
       case "2nd":  shift = !shift; return;
-      case "MODE": openMenu(); return;
+      case "THM":  toggleTheme(); return;
       case "DRG":  ST.ang = ST.ang === "RAD" ? "DEG" : "RAD"; return;
       case "AC":   expr = ""; justEval = false; return;
       case "DEL":  if (justEval) { expr = ""; justEval = false; } else expr = expr.slice(0, -1); return;
@@ -81,12 +81,10 @@
       expr = fmt(r); justEval = true;
     } catch (e) { msg = "SYNTAX ERR"; }
   }
-  // ">f": set the shared f(x). If we detoured here to edit it from another
-  // mode (retEdit), hop back to that mode's app once saved.
+  // ">f": set the shared f(x) so the GRAPH and CALCULUS apps pick it up.
   function doSetF() {
     setF(expr === "" ? ST.fx : expr);
     justEval = false; msg = "f(x) set";
-    if (retEdit) { var m = retEdit; retEdit = null; if (FILES[m]) gotoMode(FILES[m]); }
   }
   function safeEval() { try { return expr ? evaluate(expr) : 0; } catch (e) { return NaN; } }
 
@@ -114,25 +112,21 @@
     footer("WHEEL:MOVE  PRESS:ENTER");
   }
 
-  function redraw() { if (menuOpen) drawMenu(); else drawCalc(); }
+  function redraw() { drawCalc(); }
   function onKnob1(dir) {
-    if (menuOpen) { menuK1(dir); redraw(); return; }
     if (dir === 0) { pressKey(GRID[calcCur.r][calcCur.c]); ok(); }
     else { calcCur.r = wrap(calcCur.r + dir, ROWS); click(); }
-    redraw();
   }
   function onKnob2(dir) {
-    if (menuOpen) { menuK2(); redraw(); return; }
     if (!dir) return;
     calcCur.c = wrap(calcCur.c + dir, COLS);
-    click(); redraw();
+    click();
   }
 
-  // ---------- boot: load shared state, then resume any pending detour ----------
+  // ---------- boot: load shared state, consume any value staged for CALC ----------
   initState();
   setF(ST.fx);
-  if (ST.edit) { retEdit = ST.edit; ST.edit = null; expr = ST.fx; msg = "edit f(x), >f to save"; }
-  else if (ST.ins != null) { insert(ST.ins); ST.ins = null; }
+  if (ST.ins != null) { insert(ST.ins); ST.ins = null; }
 
   return finishBoot(onKnob1, onKnob2, redraw);
 })

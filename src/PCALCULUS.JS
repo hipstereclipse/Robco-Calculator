@@ -1,18 +1,12 @@
 (function() {
   //@inject _LIB.JS
   //@inject _EVAL.JS
-  return bootCtxMode("CALCULUS", function(ctx) {
   // ============================================================
-  //  CALCULUS  (loaded on demand by PIPCALC.JS)
-  //  numeric value/slope, area, zero, and extreme over the shared
-  //  f(x). The numeric routines live here (only this mode uses
-  //  them) and call back into the core's f(x) via ctx.fAt.
+  //  CALCULUS  -- standalone app: numeric value/slope, area, zero, and
+  //  extreme over the shared f(x) (authored in the CALC app). The
+  //  numeric routines live here and evaluate f(x) via fAt (inlined
+  //  evaluator). Helpers/evaluator inlined at build.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG;
-  var wrap = ctx.wrap, fmt = ctx.fmt, fAt = ctx.fAt;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var section = ctx.section, miniRow = ctx.miniRow, footer = ctx.footer;
-
   var calcuOp = 0, calcuA = 0, calcuB = 1;
 
   function deriv(x0) { var h2 = 1e-5 * (Math.abs(x0) + 1); return (fAt(x0 + h2) - fAt(x0 - h2)) / (2 * h2); }
@@ -59,7 +53,7 @@
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
     var ry = [58, 84, 110, 136];
-    var fx = ctx.getFx();
+    var fx = ST.fx;
     var rows = [["f(x)", fx.length > 18 ? fx.slice(0, 18) : fx], ["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
     section("READOUT", 164);
@@ -88,7 +82,7 @@
       miniRow("d/dx", fmt(d1), 246);
       miniRow("type", Math.abs(d1) > 1e-5 ? "check guess" : d2 > 0 ? "local min" : d2 < 0 ? "local max" : "flat", 270);
     }
-    footer("WHEEL:FIELD  THUMB:SET  PRESS:EDIT");
+    footer("WHEEL:FIELD  THUMB:SET");
   }
 
   function knob2(field, dir) {
@@ -98,9 +92,10 @@
   }
 
   function press(field) {
-    if (field === 1) ctx.editFx("CALCULUS");
+    if (field === 1) ST.msg = "set f(x) in CALC";
   }
 
-  return { fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  setF(ST.fx);
+  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
 })

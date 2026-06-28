@@ -1,15 +1,10 @@
 (function() {
   //@inject _LIB.JS
-  return bootCtxMode("CONST", function(ctx) {
   // ============================================================
-  //  CONSTANTS  (loaded on demand by PIPCALC.JS)
-  //  filtered math, SI physics, unit factors, space, kitchen
+  //  CONSTANTS  -- standalone app: filtered math, SI physics, unit
+  //  factors, space, kitchen. PRESS stages the selected value in
+  //  CALCST (ST.ins) so the CALC app inserts it on its next launch.
   // ============================================================
-  var W = ctx.W, FG = ctx.FG, BG = ctx.BG, DIM = ctx.DIM, wrap = ctx.wrap;
-  var fmt = ctx.fmt, fitLeft = ctx.fitLeft, fitRight = ctx.fitRight;
-  var beginScreen = ctx.beginScreen, drawTab = ctx.drawTab, row = ctx.row;
-  var section = ctx.section, footer = ctx.footer;
-
   var CONST_GROUPS = ["ALL","MATH","PHYS","ELEC","THERM","UNIT","MATL","EARTH","SPACE","COOK"];
   var CONST_SEARCHES = ["ALL","pi","log","grav","light","charge","mass","energy","press","length","temp","water","air","space","cook","planck","gas"];
   var CONSTS = [
@@ -117,9 +112,9 @@
   }
 
   function press(field) {
-    if (field) { var ce = constCurrent(); if (ce) { ctx.insert("" + ce[2]); ctx.setMode("CALC"); ctx.setMsg(""); } }
+    if (field) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "staged for CALC"; } }
   }
 
-  return { fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press };
-  });
+  initState();
+  return bootMode({ mode: "CONST", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
 })
