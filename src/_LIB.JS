@@ -12,6 +12,9 @@
 // ============================================================
 var W = 480, H = 320;                 // working coordinate space (tune to device)
 var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
+var SAFE_L = 24, SAFE_T = 12, SAFE_R = W - 24, SAFE_B = H - 14;
+var CONTENT_L = SAFE_L + 8, CONTENT_R = SAFE_R - 8;
+var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 
 // Modes that exist as standalone apps + the file each lives in.
 var MODES = ["CALC", "GRAPH", "CALCULUS", "CIRC", "CONV", "CONST", "REF", "VAC", "TAPE"];
@@ -151,13 +154,13 @@ function drawCorners(x0, y0, x1, y1, n) {
 function beginScreen(title, status) {
   h.reset().clear().setColor(FG).setFont("Monofonto23");
   drawScanlines();
-  h.setColor(DIM).drawRect(10, 6, W - 10, H - 8);
-  drawCorners(10, 6, W - 10, H - 8, 18);
-  h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO", 18, 6);
-  h.setColor(DIM).setFontAlign(-1, -1).drawString("PIP-OS", 86, 6);
-  h.setColor(FG).setFontAlign(0, -1).drawString(title, W / 2, 6);
-  h.setFontAlign(1, -1).drawString(status || curMode, W - 18, 6);
-  h.setColor(DIM).drawLine(16, 27, W - 16, 27);
+  h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
+  drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
+  h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO", CONTENT_L, SAFE_T);
+  h.setColor(DIM).setFontAlign(-1, -1).drawString("PIP-OS", CONTENT_L + 68, SAFE_T);
+  h.setColor(FG).setFontAlign(0, -1).drawString(title, W / 2, SAFE_T);
+  h.setFontAlign(1, -1).drawString(status || curMode, CONTENT_R, SAFE_T);
+  h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
 }
 function panel(x0, y0, x1, y1, label) {
   h.setColor(DIM).drawRect(x0, y0, x1, y1);
@@ -166,39 +169,39 @@ function panel(x0, y0, x1, y1, label) {
   h.setColor(FG);
 }
 function section(label, y) {
-  h.setColor(DIM).drawLine(16, y, W - 16, y);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, 26, y + 8);
+  h.setColor(DIM).drawLine(CONTENT_L, y, CONTENT_R, y);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, TEXT_L, y + 8);
   h.setColor(FG);
 }
 function drawTab() {
   var sel = field === 0;
-  h.setColor(DIM).drawLine(16, 54, W - 16, 54);
-  if (sel) { h.setColor(FG).fillRect(18, 32, W - 18, 52); h.setColor(BG); }
+  h.setColor(DIM).drawLine(CONTENT_L, 56, CONTENT_R, 56);
+  if (sel) { h.setColor(FG).fillRect(CONTENT_L, 34, CONTENT_R, 54); h.setColor(BG); }
   else h.setColor(MID);
-  h.setFontAlign(-1, -1).drawString("MODE", 26, 33);
+  h.setFontAlign(-1, -1).drawString("MODE", TEXT_L, 35);
   if (!sel) h.setColor(FG);
-  h.setFontAlign(1, -1).drawString(curMode, W - 26, 33);
+  h.setFontAlign(1, -1).drawString(curMode, TEXT_R, 35);
   h.setColor(FG);
 }
 function footer(s) {
-  h.setColor(DIM).drawLine(16, H - 31, W - 16, H - 31);
-  h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(s, 42), W / 2, H - 16);
+  h.setColor(DIM).drawLine(CONTENT_L, H - 38, CONTENT_R, H - 38);
+  h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(s, 38), W / 2, H - 22);
 }
 function row(label, val, y, sel) {
   if (sel) {
-    h.setColor(FG).fillRect(24, y - 1, W - 24, y + 21);
-    h.setColor(BG).setFontAlign(-1, -1).drawString(">", 28, y);
-    h.setFontAlign(-1, -1).drawString(fitRight(label, 12), 46, y);
-    h.setFontAlign(1, -1).drawString(fitLeft(val, 23), W - 28, y);
+    h.setColor(FG).fillRect(CONTENT_L, y - 1, CONTENT_R, y + 21);
+    h.setColor(BG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
+    h.setFontAlign(-1, -1).drawString(fitRight(label, 12), TEXT_L + 16, y);
+    h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
-    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 13), 36, y);
-    h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 24), W - 28, y);
+    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 13), TEXT_L, y);
+    h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
   }
   h.setColor(FG);
 }
 function miniRow(label, val, y) {
-  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 8), 36, y);
-  h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 31), W - 28, y);
+  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 8), TEXT_L, y);
+  h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
 }
 
 // ============================================================
@@ -209,15 +212,15 @@ function menuK1(dir) { if (dir === 0) { var m = MODES[menuCur]; if (m === curMod
 function menuK2() { menuOpen = false; }
 function drawMenu() {
   h.reset().clear().setColor(FG).setFont("Monofonto23");
-  h.setColor(DIM).drawRect(10, 6, W - 10, H - 8);
-  drawCorners(10, 6, W - 10, H - 8, 18);
-  h.setColor(FG).setFontAlign(0, -1).drawString("SELECT MODE", W / 2, 12);
-  h.setColor(DIM).drawLine(16, 40, W - 16, 40);
-  var y0 = 56, lh = 26;
+  h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
+  drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
+  h.setColor(FG).setFontAlign(0, -1).drawString("SELECT MODE", W / 2, 18);
+  h.setColor(DIM).drawLine(CONTENT_L, 46, CONTENT_R, 46);
+  var y0 = 58, lh = 24;
   for (var i = 0; i < MODES.length; i++) {
     var y = y0 + i * lh, sel = i === menuCur;
-    if (sel) { h.setColor(FG).fillRect(40, y - 2, W - 40, y + 20); h.setColor(BG); } else h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString((MODES[i] === curMode ? "* " : "  ") + MODES[i], 56, y);
+    if (sel) { h.setColor(FG).fillRect(64, y - 2, W - 64, y + 20); h.setColor(BG); } else h.setColor(FG);
+    h.setFontAlign(-1, -1).drawString((MODES[i] === curMode ? "* " : "  ") + MODES[i], 80, y);
     h.setColor(FG);
   }
   footer("WHEEL:MOVE  PRESS:OPEN  THUMB:BACK");
@@ -284,7 +287,7 @@ function finishBoot(k1, k2, redraw) {
   };
 }
 function bootMode(spec) {
-  curMode = spec.mode; field = 0;
+  curMode = spec.mode; field = spec.fieldCount() > 1 ? 1 : 0;
   function redraw() { if (menuOpen) drawMenu(); else spec.draw(field); }
   function k1(dir) {
     if (menuOpen) { menuK1(dir); redraw(); return; }

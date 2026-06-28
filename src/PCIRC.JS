@@ -76,8 +76,8 @@
     var outs = t.out.apply(null, vals);
     y = 204;
     for (var j = 0; j < outs.length && j < 4; j++) {
-      h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(outs[j][0], 10), 36, y);
-      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), W - 26, y); y += 20;
+      h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(outs[j][0], 10), TEXT_L, y);
+      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 20;
     }
     footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
   }

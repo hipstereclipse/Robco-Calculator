@@ -25,9 +25,9 @@
     drawTab();
     var ctl = ["MODE", "EDIT", "ZOOM", "PAN-X", "PAN-Y"][field];
     var fxs = "f(x)=" + ctx.getFx(); if (fxs.length > 24) fxs = fxs.slice(0, 24);
-    h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, 18, 62);
-    h.setFontAlign(1, -1).drawString("[" + ctl + "]", W - 18, 62);
-    var px0 = 44, py0 = 88, px1 = W - 12, py1 = H - 68;
+    h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, TEXT_L, 62);
+    h.setFontAlign(1, -1).drawString("[" + ctl + "]", TEXT_R, 62);
+    var px0 = 58, py0 = 90, px1 = CONTENT_R, py1 = H - 76;
     h.setColor(DIM).drawRect(px0, py0, px1, py1);
     drawCorners(px0, py0, px1, py1, 8);
     for (var gx = 1; gx < 4; gx++) h.drawLine(px0 + (px1 - px0) * gx / 4, py0, px0 + (px1 - px0) * gx / 4, py1);

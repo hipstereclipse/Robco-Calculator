@@ -128,9 +128,9 @@
     var names = ["ISO", "TOP", "SIDE"], groups = [item.iso, item.top, item.side];
     for (var r = 0; r < 3; r++) {
       var y0 = 150 + r * 46, cy = y0 + 22;
-      if (r > 0) h.setColor(DIM).drawLine(16, y0 - 2, W - 16, y0 - 2);
-      h.setColor(FG).setFontAlign(-1, 0).drawString(names[r], 22, cy);
-      drawSolidView(r, item.shape, 112, cy);
+      if (r > 0) h.setColor(DIM).drawLine(CONTENT_L, y0 - 2, CONTENT_R, y0 - 2);
+      h.setColor(FG).setFontAlign(-1, 0).drawString(names[r], TEXT_L, cy);
+      drawSolidView(r, item.shape, 122, cy);
       var g = groups[r] || [];
       for (var i = 0; i < g.length && i < 2; i++)
         h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(g[i], 26), 176, y0 + 1 + i * 22);
@@ -143,13 +143,13 @@
     row("TOPIC", sec.name, 58, field === 1);
     row("CARD", item.name, 82, field === 2);
     section("", 112);
-    h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, 26, 122);
-    h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 20), W - 26, 122);
+    h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, TEXT_L, 122);
+    h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 18), TEXT_R, 122);
     var x = 34, y = 150, max = 34;
     if (item.solid) { drawSolid3D(item); footer("WHEEL:FIELD  THUMB:SET"); return; }
     if (item.shape) {
-      drawShape(item.shape, 24, 144);
-      x = 166; y = 146; max = 27;
+      drawShape(item.shape, CONTENT_L, 144);
+      x = 178; y = 146; max = 25;
     }
     for (var i = 0; i < item.lines.length && i < 6; i++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(item.lines[i], max), x, y + i * 22);

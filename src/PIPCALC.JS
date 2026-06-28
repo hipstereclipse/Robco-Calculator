@@ -93,17 +93,16 @@
   function drawCalc() {
     beginScreen("CALC", ST.ang + (shift ? "  2nd" : ""));
     var shown = expr === "" ? "0" : expr;
-    if (shown.length > 30) shown = "<" + shown.slice(shown.length - 29);
-    panel(16, 32, W - 16, 78, "EVALUATOR");
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("EXPR", 28, 36);
-    h.setColor(FG).setFontAlign(1, -1).drawString(shown, W - 28, 36);
+    if (shown.length > 26) shown = "<" + shown.slice(shown.length - 25);
+    panel(CONTENT_L, 36, CONTENT_R, 82, "EVALUATOR");
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("EXPR", TEXT_L, 40);
+    h.setColor(FG).setFontAlign(1, -1).drawString(shown, TEXT_R, 40);
     var pv = safeEval();
-    h.setColor(DIM).drawLine(28, 56, W - 28, 56);
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("LIVE", 28, 58);
-    h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), W - 28, 58);
-    h.setColor(DIM).drawLine(16, 84, W - 16, 84);
-    var KX = 16, KY = 89, KW = (W - 32) / COLS, KH = 24;
-    panel(16, 84, W - 16, 282, "");
+    h.setColor(DIM).drawLine(TEXT_L, 60, TEXT_R, 60);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("LIVE", TEXT_L, 62);
+    h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), TEXT_R, 62);
+    var KX = CONTENT_L + 4, KY = 91, KW = (CONTENT_R - CONTENT_L - 8) / COLS, KH = 23;
+    panel(CONTENT_L, 86, CONTENT_R, 278, "");
     for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
       var lbl = GRID[r][c];
       if (shift && SHIFTLBL[lbl]) lbl = SHIFTLBL[lbl];

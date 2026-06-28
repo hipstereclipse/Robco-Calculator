@@ -19,12 +19,12 @@
     row("THEME", ctx.getTheme(), 64, field === 1);
     var hist = ctx.getHist();
     var y = 98;
-    if (!hist.length) h.setColor(FG).setFontAlign(-1, -1).drawString("(no history yet)", 26, y);
+    if (!hist.length) h.setColor(FG).setFontAlign(-1, -1).drawString("(no history yet)", TEXT_L, y);
     for (var i = 0; i < hist.length; i++) {
       var sel = field === 2 && i === tapeSel, line = hist[i].s;
-      if (line.length > 30) line = "<" + line.slice(line.length - 29);
-      if (sel) { h.setColor(FG).fillRect(22, y - 2, W - 22, y + 24); h.setColor(BG); } else h.setColor(FG);
-      h.setFontAlign(-1, -1).drawString(line, 26, y); h.setColor(FG); y += 30;
+      if (line.length > 28) line = "<" + line.slice(line.length - 27);
+      if (sel) { h.setColor(FG).fillRect(CONTENT_L, y - 2, CONTENT_R, y + 24); h.setColor(BG); } else h.setColor(FG);
+      h.setFontAlign(-1, -1).drawString(line, TEXT_L, y); h.setColor(FG); y += 30;
     }
     footer("WHEEL:FIELD  THUMB:SET  PRESS:USE");
   }

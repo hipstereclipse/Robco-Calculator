@@ -22,10 +22,10 @@
     var mfp = meanFreePath(), Kn = mfp / vacL, reg = Kn < 0.01 ? "viscous" : Kn < 1 ? "transitional" : "molecular";
     section("READOUT", 180);
     h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString("mean free path", 26, 198); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 22), W - 26, 198);
-    h.setFontAlign(-1, -1).drawString("number density", 26, 220); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 22), W - 26, 220);
-    h.setFontAlign(-1, -1).drawString("Knudsen/regime", 26, 242); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 24), W - 26, 242);
-    h.setFontAlign(-1, -1).drawString("mean speed", 26, 264); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 22), W - 26, 264);
+    h.setFontAlign(-1, -1).drawString("mean free path", TEXT_L, 198); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 20), TEXT_R, 198);
+    h.setFontAlign(-1, -1).drawString("number density", TEXT_L, 220); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 20), TEXT_R, 220);
+    h.setFontAlign(-1, -1).drawString("Knudsen/regime", TEXT_L, 242); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 23), TEXT_R, 242);
+    h.setFontAlign(-1, -1).drawString("mean speed", TEXT_L, 264); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 20), TEXT_R, 264);
     footer("WHEEL:FIELD  THUMB:X10/STEP  PRESS:ANS");
   }
 
