@@ -1,6 +1,6 @@
 # RobCo Calculator
 
-RobCo Calculator is a Pip-Boy style engineer's calculator suite for the Pip runtime. It installs as **nine independent apps** — a scientific calculator, graphing view, calculus tools, electronics helpers, unit conversions, constants, reference formulas, vacuum calculations, and a calculation tape — each its own 480x320 fullscreen launcher tile. They share `f(x)`, `Ans`, memory, angle mode, theme, and history through a small state file on the card, so values flow between them without bundling everything into one resident app.
+RobCo Calculator is a Pip-Boy style engineer's calculator suite for the Pip runtime. It installs as **nine independent apps** — a scientific calculator, graphing view, calculus tools, electronics helpers, unit conversions, constants, reference formulas, vacuum calculations, and a calculation tape — each its own 480x320 fullscreen launcher tile. They share `f(x)`, `Ans`, memory, angle mode, and history through a small state file on the card, so values flow between them without bundling everything into one resident app.
 
 <p align="center">
   <img src="./screenshots/preview-contact-sheet.png" alt="RobCo Calculator preview contact sheet" width="720">
@@ -16,7 +16,7 @@ RobCo Calculator is a Pip-Boy style engineer's calculator suite for the Pip runt
 - **CONST**: searchable constants for math, physics, electrical, thermal, unit, material, Earth, space, and cooking references.
 - **REF**: formula cards for logs, algebra, derivatives, integrals, series, geometry, vectors, electrical formulas, and mechanics.
 - **VAC**: nitrogen vacuum helper for mean free path, number density, Knudsen regime, and mean molecular speed.
-- **TAPE**: recent calculation history plus green / amber theme switching.
+- **TAPE**: recent calculation history plus staged-value recall.
 
 ## Controls
 
@@ -26,7 +26,7 @@ Each app uses the Pip runtime's two rotary inputs:
 - **Knob 1 press** activates the selected calculator key, field action, insertion, or import.
 - **Knob 2 / thumb** moves through columns in `Calc` or changes the selected field in the tool apps.
 
-In every tool app, **field 0 is the `THEME` tab** — pressing it toggles the GREEN / AMBER palette; in `Calc` the `THM` key does the same.
+The apps use the Pip runtime's current display color; there is no in-app theme control.
 
 The `Calc`, `Graph`, and `Calculus` apps share the same `f(x)` expression: build an expression in `Calc` and press `>f` to publish it, then open `Graph` or `Calculus` to plot or analyze it. `Constants` and `Tape` stage a value into the shared state; the next time you open `Calc` it inserts that value. Evaluated results are stored in `Ans` and the tape and are available to the other apps.
 
@@ -42,9 +42,9 @@ Each mode is its own Pip launcher app — a self-contained file that returns a P
 - `APPS/PCONST.JS` — constants (`Constants`)
 - `APPS/PREF.JS` — reference formula cards (`Reference`)
 - `APPS/PVAC.JS` — vacuum tools (`Vacuum`)
-- `APPS/PTAPE.JS` — calculation tape + theme (`Tape`)
+- `APPS/PTAPE.JS` — calculation tape (`Tape`)
 
-**Shared state** (`f(x)`, `Ans`, memory, angle mode, theme, history, and a value staged for `Calc`) lives in the `CALCST` file on the card via `require("Storage")`. Each app reads it on launch and writes it back on exit, so values flow between apps even though only one runs at a time.
+**Shared state** (`f(x)`, `Ans`, memory, angle mode, history, and a value staged for `Calc`) lives in the `CALCST` file on the card via `require("Storage")`. Each app reads it on launch and writes it back on exit, so values flow between apps even though only one runs at a time.
 
 Espruino keeps each function's source text resident in RAM, so file size is essentially RAM cost. The shared helpers (`src/_LIB.JS`) and evaluator (`src/_EVAL.JS`) are **inlined into each app at build time** at every `//@inject` marker, so each shipped `APPS/*.JS` is standalone — the duplicated bytes cost card space, not RAM. The readable source lives in `src/`; the device files in `APPS/` are the **minified build** produced by `tools/build.js` (terser), which is what lets each app launch without `ERROR Errors: CALLBACK, LOW_MEMORY, MEMORY`. Edit `src/` and re-run `npm run build`; never hand-edit `APPS/`.
 
@@ -123,7 +123,7 @@ APPS/PCONV.JS            Convert — unit converter
 APPS/PCONST.JS           Constants — searchable constants
 APPS/PREF.JS             Reference — formula + geometry cards
 APPS/PVAC.JS             Vacuum — nitrogen vacuum tools
-APPS/PTAPE.JS            Tape — history + theme
+APPS/PTAPE.JS            Tape — history
 screenshots/             Generated README previews
 tools/build.js           Inlines fragments + minifies src/ into APPS/
 tools/capture-preview-ops.js

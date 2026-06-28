@@ -59,20 +59,19 @@
   }
   function draw(field) {
     beginScreen("CIRCUIT", "WORK");
-    drawTab();
     var t = CIRC_TOOLS[circTool];
-    row("WORKBENCH", t.name, 60, field === 1);
-    var y = 88, vals = [];
+    row("WORKBENCH", t.name, 40, field === 1);
+    var y = 68, vals = [];
     for (var i = 0; i < t.in.length; i++) {
       var inp = t.in[i]; vals.push(inp.v);
       row(inp.l, circInputText(inp), y, field === i + 2); y += 24;
     }
-    section("READOUT", 184);
+    section("READOUT", 164);
     var outs = t.out.apply(null, vals);
-    y = 204;
+    y = 192;
     for (var j = 0; j < outs.length && j < 4; j++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(outs[j][0], 10), TEXT_L, y);
-      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 20;
+      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 18;
     }
     footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
   }
@@ -83,7 +82,7 @@
   }
 
   function press(field) {
-    if (field >= 2) { CIRC_TOOLS[circTool].in[field - 2].v = ST.ans; ST.msg = "Ans imported"; }
+    if (field >= 2) { CIRC_TOOLS[circTool].in[field - 2].v = ST.ans; ST.msg = "ANS IMPORTED"; }
   }
 
   initState();

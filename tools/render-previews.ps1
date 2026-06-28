@@ -19,11 +19,11 @@ if ($LASTEXITCODE -ne 0) {
 Add-Type -AssemblyName System.Drawing
 $data = Get-Content -Raw $OpsPath | ConvertFrom-Json
 
-$bg = [System.Drawing.Color]::FromArgb(4, 8, 4)
-$fg = [System.Drawing.Color]::FromArgb(90, 255, 112)
-$mid = [System.Drawing.Color]::FromArgb(48, 190, 76)
-$dim = [System.Drawing.Color]::FromArgb(18, 92, 34)
-$dark = [System.Drawing.Color]::FromArgb(1, 3, 1)
+$bg = [System.Drawing.Color]::FromArgb(0, 10, 5)
+$fg = [System.Drawing.Color]::FromArgb(26, 255, 128)
+$mid = [System.Drawing.Color]::FromArgb(109, 218, 118)
+$dim = [System.Drawing.Color]::FromArgb(0, 95, 0)
+$dark = [System.Drawing.Color]::FromArgb(0, 12, 3)
 
 function Get-PipColor($Index) {
   switch ([int]$Index) {

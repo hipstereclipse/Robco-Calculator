@@ -84,17 +84,16 @@
 
   function draw(field) {
     beginScreen("CONVERT", "UNIT");
-    drawTab();
-    var c = CATS[convCat], ry = [58, 84, 110, 136], out = convResult(), unit = c.u[convTo];
+    var c = CATS[convCat], ry = [40, 66, 92, 118], out = convResult(), unit = c.u[convTo];
     var rows = [["CATEGORY", c.name], ["FROM", c.u[convFrom]], ["TO", c.u[convTo]], ["VALUE", convFmt(convVal)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
-    section("OUTPUT", 164);
-    miniRow("RAW =", rawFmt(out) + " " + unit, 192);
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 218);
-    miniRow("SCI", sci(out, 8) + " " + unit, 240);
-    miniRow("ENG", eng(out, 8) + " " + unit, 264);
+    section("OUTPUT", 146);
+    miniRow("RAW =", rawFmt(out) + " " + unit, 174);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 200);
+    miniRow("SCI", sci(out, 8) + " " + unit, 222);
+    miniRow("ENG", eng(out, 8) + " " + unit, 246);
     var m = ST.msg || "";
-    if (m) h.setFontAlign(0, -1).drawString(m, W / 2, 276);
+    if (m) h.setFontAlign(0, -1).drawString(m, W / 2, 266);
     footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
   }
 
@@ -108,7 +107,7 @@
 
   function press() {
     convVal = ST.ans;
-    ST.msg = "Ans imported";
+    ST.msg = "ANS IMPORTED";
   }
 
   initState();

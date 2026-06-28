@@ -4,7 +4,7 @@
   //  CALC (scientific) -- one of nine independent Pip apps, each its
   //  own APPINFO/*.info launcher tile. There is no in-app mode menu:
   //  CALC authors the shared f(x) and Ans, the other apps read them.
-  //  Shared f(x)/Ans/mem/angle/theme/history live in the CALCST card
+  //  Shared f(x)/Ans/mem/angle/history live in the CALCST card
   //  file; a constant/tape value staged for CALC arrives as ST.ins.
   //  Source lives in src/; APPS/ ships the minified build. Helpers +
   //  evaluator are inlined from _LIB.JS / _EVAL.JS at build time.
@@ -21,7 +21,7 @@
   var shift = false, msg = "";
 
   var GRID = [
-    ["2nd", "THM",  "DRG", "AC",  "DEL", ">f"],
+    ["2nd", "MC",   "DRG", "AC",  "DEL", ">f"],
     ["sin", "cos", "tan", "asin", "acos", "atan"],
     ["sinh","cosh","tanh","ln",   "log",  "exp"],
     ["sqrt","cbrt","abs", "pi",   "e",    "x"],
@@ -50,7 +50,7 @@
     }
     switch (label) {
       case "2nd":  shift = !shift; return;
-      case "THM":  toggleTheme(); return;
+      case "MC":   ST.mem = 0; msg = "M=0"; return;
       case "DRG":  ST.ang = ST.ang === "RAD" ? "DEG" : "RAD"; return;
       case "AC":   expr = ""; justEval = false; return;
       case "DEL":  if (justEval) { expr = ""; justEval = false; } else expr = expr.slice(0, -1); return;
@@ -84,20 +84,20 @@
   // ">f": set the shared f(x) so the GRAPH and CALCULUS apps pick it up.
   function doSetF() {
     setF(expr === "" ? ST.fx : expr);
-    justEval = false; msg = "f(x) set";
+    justEval = false; msg = "F(X) SET";
   }
   function safeEval() { try { return expr ? evaluate(expr) : 0; } catch (e) { return NaN; } }
 
   function drawCalc() {
-    beginScreen("CALC", ST.ang + (shift ? "  2nd" : ""));
+    beginScreen("CALC", ST.ang + (shift ? "  2ND" : ""));
     var shown = expr === "" ? "0" : expr;
     if (shown.length > 26) shown = "<" + shown.slice(shown.length - 25);
-    panel(CONTENT_L, 36, CONTENT_R, 82, "EVALUATOR");
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("EXPR", TEXT_L, 40);
+    panel(CONTENT_L, 36, CONTENT_R, 82, "");
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("ENTRY", TEXT_L, 40);
     h.setColor(FG).setFontAlign(1, -1).drawString(shown, TEXT_R, 40);
     var pv = safeEval();
     h.setColor(DIM).drawLine(TEXT_L, 60, TEXT_R, 60);
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("LIVE", TEXT_L, 62);
+    h.setColor(DIM).setFontAlign(-1, -1).drawString("READ", TEXT_L, 62);
     h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), TEXT_R, 62);
     var KX = CONTENT_L + 4, KY = 91, KW = (CONTENT_R - CONTENT_L - 8) / COLS, KH = 23;
     panel(CONTENT_L, 86, CONTENT_R, 278, "");
@@ -107,7 +107,7 @@
       if (lbl === "DRG") lbl = ST.ang;
       var x0 = KX + c * KW, y0 = KY + r * KH;
       if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 2, y0 + 2, x0 + KW - 4, y0 + KH - 4); h.setColor(BG); } else h.setColor(FG);
-      h.setFontAlign(0, 0).drawString(lbl, x0 + KW / 2, y0 + KH / 2);
+      h.setFontAlign(0, 0).drawString(caps(lbl), x0 + KW / 2, y0 + KH / 2);
     }
     footer("WHEEL:MOVE  PRESS:ENTER");
   }

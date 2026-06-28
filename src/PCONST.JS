@@ -78,28 +78,27 @@
 
   function draw(field) {
     beginScreen("CONSTANTS", "DATA");
-    drawTab();
-    row("GROUP", CONST_GROUPS[constGroup], 58, field === 1);
-    row("FIND", CONST_SEARCHES[constSearch], 82, field === 2);
+    row("GROUP", CONST_GROUPS[constGroup], 40, field === 1);
+    row("FIND", caps(CONST_SEARCHES[constSearch]), 64, field === 2);
     var list = constEnsure(), e = constCurrent(), pos = list.indexOf(constSel), y;
-    section("", 112);
+    section("", 94);
     if (!e) {
-      h.setFontAlign(-1, -1).drawString("NO MATCHES", TEXT_L, 128);
-      h.setFontAlign(-1, -1).drawString("Try GROUP=ALL or FIND=ALL", TEXT_L, 154);
+      h.setFontAlign(-1, -1).drawString("NO MATCHES", TEXT_L, 110);
+      h.setFontAlign(-1, -1).drawString("TRY GROUP=ALL OR FIND=ALL", TEXT_L, 136);
       footer("WHEEL:FIELD  THUMB:FILTER");
       return;
     }
-    h.setFontAlign(-1, -1).drawString("MATCH " + (pos + 1) + "/" + list.length, TEXT_L, 122);
-    h.setFontAlign(1, -1).drawString(fitLeft(constGroupOf(e) + " " + e[0], 18), TEXT_R, 122);
-    h.setFontAlign(-1, -1).drawString(fitRight(e[1], 22), TEXT_L, 146);
-    h.setFontAlign(1, -1).drawString(constValueText(e), TEXT_R, 146);
-    h.setColor(DIM).drawLine(CONTENT_L, 178, CONTENT_R, 178);
+    h.setFontAlign(-1, -1).drawString("MATCH " + (pos + 1) + "/" + list.length, TEXT_L, 104);
+    h.setFontAlign(1, -1).drawString(fitLeft(constGroupOf(e) + " " + e[0], 18), TEXT_R, 104);
+    h.setFontAlign(-1, -1).drawString(fitRight(caps(e[1]), 22), TEXT_L, 128);
+    h.setFontAlign(1, -1).drawString(constValueText(e), TEXT_R, 128);
+    h.setColor(DIM).drawLine(CONTENT_L, 160, CONTENT_R, 160);
     var vis = 4, lh = 24, top = Math.max(0, Math.min(pos - 1, list.length - vis));
     for (var i = 0; i < vis && top + i < list.length; i++) {
       var idx = list[top + i], ce = CONSTS[idx];
-      y = 190 + i * lh;
+      y = 172 + i * lh;
       if (idx === constSel && field === 3) { h.setColor(FG).fillRect(CONTENT_L, y - 2, CONTENT_R, y + 20); h.setColor(BG); } else h.setColor(FG);
-      h.setFontAlign(-1, -1).drawString(fitRight(ce[0] + " " + ce[1], 19), TEXT_L, y);
+      h.setFontAlign(-1, -1).drawString(fitRight(caps(ce[0] + " " + ce[1]), 19), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 19), TEXT_R, y);
     }
     footer("WHEEL:FIELD  THUMB:FIND  PRESS:INS");
@@ -112,7 +111,7 @@
   }
 
   function press(field) {
-    if (field) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "staged for CALC"; } }
+    if (field) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "STAGED FOR CALC"; } }
   }
 
   initState();

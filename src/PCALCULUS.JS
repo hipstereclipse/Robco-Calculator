@@ -49,38 +49,37 @@
 
   function draw(field) {
     beginScreen("CALCULUS", "NUM");
-    drawTab();
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
-    var ry = [58, 84, 110, 136];
+    var ry = [40, 66, 92, 118];
     var fx = ST.fx;
     var rows = [["f(x)", fx.length > 18 ? fx.slice(0, 18) : fx], ["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
-    section("READOUT", 164);
+    section("READOUT", 146);
     if (calcuOp === 0) {
       var fa = fAt(calcuA), fb = fAt(calcuB), dx = calcuB - calcuA;
-      miniRow("f(A)", fmt(fa), 198);
-      miniRow("d/dx", fmt(deriv(calcuA)), 222);
-      miniRow("f(B)", fmt(fb), 246);
-      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 270);
+      miniRow("f(A)", fmt(fa), 174);
+      miniRow("d/dx", fmt(deriv(calcuA)), 198);
+      miniRow("f(B)", fmt(fb), 222);
+      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 246);
     } else if (calcuOp === 1) {
       var area = integ(calcuA, calcuB), w = calcuB - calcuA;
-      miniRow("area", fmt(area), 198);
-      miniRow("width", fmt(w), 222);
-      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 246);
-      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 270);
+      miniRow("area", fmt(area), 174);
+      miniRow("width", fmt(w), 198);
+      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 222);
+      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 246);
     } else if (calcuOp === 2) {
       var rz = rootSpan(calcuA, calcuB), fr = fAt(rz);
-      miniRow("root", fmt(rz), 198);
-      miniRow("f(root)", fmt(fr), 222);
-      miniRow("slope", fmt(deriv(rz)), 246);
-      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 270);
+      miniRow("root", fmt(rz), 174);
+      miniRow("f(root)", fmt(fr), 198);
+      miniRow("slope", fmt(deriv(rz)), 222);
+      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 246);
     } else {
       var cx = critical(calcuA), cy = fAt(cx), d1 = deriv(cx), d2 = secondDeriv(cx);
-      miniRow("x*", fmt(cx), 198);
-      miniRow("f(x*)", fmt(cy), 222);
-      miniRow("d/dx", fmt(d1), 246);
-      miniRow("type", Math.abs(d1) > 1e-5 ? "check guess" : d2 > 0 ? "local min" : d2 < 0 ? "local max" : "flat", 270);
+      miniRow("x*", fmt(cx), 174);
+      miniRow("f(x*)", fmt(cy), 198);
+      miniRow("d/dx", fmt(d1), 222);
+      miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 246);
     }
     footer("WHEEL:FIELD  THUMB:SET");
   }
@@ -92,7 +91,7 @@
   }
 
   function press(field) {
-    if (field === 1) ST.msg = "set f(x) in CALC";
+    if (field === 1) ST.msg = "SET F(X) IN CALC";
   }
 
   initState();

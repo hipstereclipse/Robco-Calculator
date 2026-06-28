@@ -8,9 +8,9 @@
 //  Each mode now ships as its OWN independent Pip launcher app (its
 //  own APPINFO/*.info tile); there is no in-app MODE menu and no
 //  cross-app load() navigation. Apps only share values (f(x), Ans,
-//  mem, angle, theme, history, a staged insert) through the CALCST
-//  card file. Provides: palette/geometry constants, number
-//  formatting, Pip-Boy drawing helpers, theming, the shared-state
+//  mem, angle, history, a staged insert) through the CALCST
+//  card file. Provides: geometry constants, number
+//  formatting, Pip-Boy drawing helpers, the shared-state
 //  file, and the app bootstrap. Apps that also do math additionally
 //  inject _EVAL.JS.
 // ============================================================
@@ -21,8 +21,9 @@ var CONTENT_L = SAFE_L + 8, CONTENT_R = SAFE_R - 8;
 var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 
 var ST;                               // shared state (see initState); lives in CALCST
-var field = 0;                        // selected field on a mode screen (0 = THEME tab)
+var field = 1;                        // selected field on a mode screen
 var curMode = "CALC";                 // which mode THIS app is
+var PREV_PAL = null;                  // runtime palette, if getPalette() exists
 var APP_IDS = {
   CALC: "PIPCALC",
   GRAPH: "PGRAPH",
@@ -70,6 +71,7 @@ function plainNum(s) {
 }
 function fitLeft(s, n) { s = "" + s; return s.length > n ? "<" + s.slice(s.length - n + 1) : s; }
 function fitRight(s, n) { s = "" + s; return s.length > n ? s.slice(0, n - 1) + ">" : s; }
+function caps(s) { return ("" + s).toUpperCase(); }
 function fmt(n) {
   if (typeof n === "string") return n;
   if (isNaN(n)) return "ERR";
@@ -100,7 +102,8 @@ function rawFmt(n) {
   return s;
 }
 
-// ---------- theming (best-effort; verify palette format on device) ----------
+// Runtime palettes default to white on some Pip builds unless an app provides
+// indexed colors. Use the Pip-Boy setting when discoverable; fall back to green.
 function buildPalette(rr, gg, bb) {
   var out = [];
   for (var p = 0; p < 4; p++) {
@@ -113,11 +116,67 @@ function buildPalette(rr, gg, bb) {
   }
   return out;
 }
-function applyTheme() {
-  try { Pip.setPalette(ST.th === "AMBER" ? buildPalette(1, 0.6, 0) : buildPalette(0.1, 1, 0.25)); } catch (e) {}
+function themeColor(v) {
+  var s, n, r, g, b, x;
+  if (!v && v !== 0) return null;
+  if (typeof v === "string") {
+    s = v.toUpperCase();
+    if (s.indexOf("AMBER") >= 0 || s.indexOf("ORANGE") >= 0) return [1, 0.714, 0.259];
+    if (s.indexOf("BLUE") >= 0) return [0.18, 0.812, 1];
+    if (s.indexOf("WHITE") >= 0) return [0.773, 1, 1];
+    if (s.indexOf("GREEN") >= 0) return [0.102, 1, 0.502];
+    if (s[0] === "#") s = s.slice(1);
+    if (s.indexOf("0X") === 0) s = s.slice(2);
+    if (/^[0-9]+$/.test(s)) return themeColor(parseInt(s, 10));
+    if (s.length >= 6) {
+      n = parseInt(s.slice(0, 6), 16);
+      if (!isNaN(n)) return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    }
+    return null;
+  }
+  if (typeof v === "number") {
+    x = v < 0 ? v + 4294967296 : v;
+    r = (x >>> 24) & 255; g = (x >>> 16) & 255; b = (x >>> 8) & 255;
+    if (r || g || b) return [r / 255, g / 255, b / 255];
+    return null;
+  }
+  if (v.length >= 3 && typeof v[0] === "number" && typeof v[1] === "number" && typeof v[2] === "number") {
+    r = v[0]; g = v[1]; b = v[2];
+    if (r > 1 || g > 1 || b > 1) { r /= 255; g /= 255; b /= 255; }
+    return [r, g, b];
+  }
+  if (typeof v === "object") {
+    return themeColor(v.uPipboyColor || v.pipboyColor || v.pipBoyColor || v.hudColor || v.uiColor || v.color || v.theme || v.phosphor || v.settings || v.config || v.options || v.prefs || v.preferences || v.display || v.hud || v.ui || v.colors || v.colours || v.pipboy || v.pipBoy || (v.r != null ? [v.r, v.g, v.b] : null));
+  }
+  return null;
 }
-function toggleTheme() { ST.th = ST.th === "GREEN" ? "AMBER" : "GREEN"; applyTheme(); }
-
+function settingColor() {
+  var S, names, i, raw, c;
+  try {
+    if (Pip.getPalette && !PREV_PAL) PREV_PAL = Pip.getPalette();
+    names = ["uPipboyColor", "pipboyColor", "pipBoyColor", "hudColor", "uiColor", "color", "theme", "phosphor", "settings", "config", "options", "prefs", "preferences"];
+    for (i = 0; i < names.length; i++) { c = themeColor(Pip[names[i]]); if (c) return c; }
+    if (Pip.getTheme) { c = themeColor(Pip.getTheme()); if (c) return c; }
+    if (Pip.getColor) { c = themeColor(Pip.getColor()); if (c) return c; }
+  } catch (e) {}
+  try {
+    S = require("Storage");
+    names = ["PIPST", "PIPSET", "PIPCFG", "PIPCONF", "PIPSETTINGS", "CONFIG", "SETTINGS", "settings"];
+    for (i = 0; i < names.length; i++) {
+      raw = S.read(names[i]);
+      if (raw) { try { raw = JSON.parse(raw); } catch (_) {} c = themeColor(raw); if (c) return c; }
+    }
+  } catch (e2) {}
+  return null;
+}
+function applyPipPalette() {
+  var c = settingColor();
+  try {
+    if (c) Pip.setPalette(buildPalette(c[0], c[1], c[2]));
+    else if (PREV_PAL) Pip.setPalette(PREV_PAL);
+    else Pip.setPalette(buildPalette(0.102, 1, 0.502));
+  } catch (e) {}
+}
 // ---------- shared state (survives across apps via the CALCST card file) ----------
 function loadState() { try { var s = require("Storage").read("CALCST"); if (s) return JSON.parse(s); } catch (e) {} return null; }
 function saveState() { try { require("Storage").write("CALCST", JSON.stringify(ST)); } catch (e) {} }
@@ -127,74 +186,79 @@ function initState() {
   if (ST.ans == null) ST.ans = 0;
   if (ST.mem == null) ST.mem = 0;
   if (ST.ang == null) ST.ang = "RAD";
-  if (ST.th == null) ST.th = "GREEN";
   if (ST.msg == null) ST.msg = "";
   if (!ST.hist) ST.hist = [];
-  applyTheme();
+  applyPipPalette();
   return ST;
 }
 
 // ============================================================
 //  DRAWING
 // ============================================================
-function drawScanlines() { h.setColor(FG); }
+function drawScanlines() {
+  h.setColor(FG);
+}
 function drawCorners(x0, y0, x1, y1, n) {
   h.drawLine(x0, y0 + n, x0, y0); h.drawLine(x0, y0, x0 + n, y0);
   h.drawLine(x1 - n, y0, x1, y0); h.drawLine(x1, y0, x1, y0 + n);
   h.drawLine(x0, y1 - n, x0, y1); h.drawLine(x0, y1, x0 + n, y1);
   h.drawLine(x1 - n, y1, x1, y1); h.drawLine(x1, y1 - n, x1, y1);
 }
+function rivet(x, y) {
+  h.drawRect(x - 2, y - 2, x + 2, y + 2);
+  h.drawLine(x - 3, y, x + 3, y);
+}
+function drawHardware() {
+  h.setColor(DIM);
+  rivet(SAFE_L + 8, SAFE_T + 8); rivet(SAFE_R - 8, SAFE_T + 8);
+  rivet(SAFE_L + 8, SAFE_B - 8); rivet(SAFE_R - 8, SAFE_B - 8);
+  for (var y = SAFE_T + 52; y < SAFE_B - 42; y += 34) {
+    h.drawLine(SAFE_L + 3, y, SAFE_L + 11, y);
+    h.drawLine(SAFE_R - 11, y, SAFE_R - 3, y);
+  }
+}
+function drawGlassWear() {
+}
 function beginScreen(title, status) {
   h.reset().clear().setColor(FG).setFont("Monofonto23");
   drawScanlines();
+  h.setColor(DIM).drawRect(SAFE_L - 4, SAFE_T - 4, SAFE_R + 4, SAFE_B + 4);
   h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
   drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
-  h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO", CONTENT_L, SAFE_T);
-  h.setColor(DIM).setFontAlign(-1, -1).drawString("PIP-OS", CONTENT_L + 68, SAFE_T);
-  h.setColor(FG).setFontAlign(0, -1).drawString(title, W / 2, SAFE_T);
-  h.setFontAlign(1, -1).drawString(status || curMode, CONTENT_R, SAFE_T);
+  drawHardware();
+  h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
+  h.setColor(MID).setFontAlign(0, -1).drawString(caps(title), W / 2, SAFE_T);
+  h.setFontAlign(1, -1).drawString(caps(status || curMode), CONTENT_R, SAFE_T);
   h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
 }
 function panel(x0, y0, x1, y1, label) {
   h.setColor(DIM).drawRect(x0, y0, x1, y1);
   drawCorners(x0, y0, x1, y1, 8);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, x0 + 10, y0 + 4);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", x0 + 10, y0 + 4);
   h.setColor(FG);
 }
 function section(label, y) {
   h.setColor(DIM).drawLine(CONTENT_L, y, CONTENT_R, y);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString(label, TEXT_L, y + 8);
-  h.setColor(FG);
-}
-// Field 0 of every mode app is the THEME toggle, drawn as the top tab.
-function drawTab() {
-  var sel = field === 0;
-  h.setColor(DIM).drawLine(CONTENT_L, 56, CONTENT_R, 56);
-  if (sel) { h.setColor(FG).fillRect(CONTENT_L, 34, CONTENT_R, 54); h.setColor(BG); }
-  else h.setColor(MID);
-  h.setFontAlign(-1, -1).drawString("THEME", TEXT_L, 35);
-  if (!sel) h.setColor(FG);
-  h.setFontAlign(1, -1).drawString(ST.th, TEXT_R, 35);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", TEXT_L, y + 8);
   h.setColor(FG);
 }
 function footer(s) {
-  h.setColor(DIM).drawLine(CONTENT_L, H - 38, CONTENT_R, H - 38);
-  h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(s, 38), W / 2, H - 22);
+  h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(caps(s), 42), W / 2, H - 20);
 }
 function row(label, val, y, sel) {
   if (sel) {
-    h.setColor(FG).fillRect(CONTENT_L, y - 1, CONTENT_R, y + 21);
-    h.setColor(BG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
-    h.setFontAlign(-1, -1).drawString(fitRight(label, 12), TEXT_L + 16, y);
+    h.setColor(DIM).drawRect(CONTENT_L, y - 1, CONTENT_R, y + 21);
+    h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
+    h.setFontAlign(-1, -1).drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
     h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
-    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 13), TEXT_L, y);
+    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
     h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
   }
   h.setColor(FG);
 }
 function miniRow(label, val, y) {
-  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(label, 8), TEXT_L, y);
+  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
   h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
 }
 
@@ -202,7 +266,7 @@ function miniRow(label, val, y) {
 //  BOOTSTRAP
 //  finishBoot wires knob handlers + draw + remove and returns the Pip
 //  app object. bootMode is the generic shell every NON-CALC mode uses:
-//  field 0 is the THEME toggle, fields 1..N are the mode's controls;
+//  fields 1..N are the mode's controls;
 //  it delegates to the mode's draw/knob2/press. CALC supplies its own
 //  keypad handlers and calls finishBoot directly.
 // ============================================================
@@ -229,21 +293,22 @@ function finishBoot(k1, k2, redraw) {
       saveState();                                                    // flush shared state on close
       Pip.removeListener("knob1", h1);
       Pip.removeListener("knob2", h2);
-      try { Pip.setPalette(buildPalette(0.1, 1, 0.25)); } catch (e) {} // restore green on true exit
       collect();
     }
   };
 }
 function bootMode(spec) {
-  curMode = spec.mode; field = 0;
+  curMode = spec.mode; field = 1;
   function redraw() { spec.draw(field); }
+  function maxField() { return Math.max(1, spec.fieldCount() - 1); }
+  function wrapField(v) { return 1 + wrap(v - 1, maxField()); }
   function k1(dir) {
-    if (dir === 0) { if (field === 0) toggleTheme(); else { spec.press(field); ok(); } }
-    else { field = wrap(field + dir, spec.fieldCount()); click(); }
+    if (dir === 0) { spec.press(field); ok(); }
+    else { field = wrapField(field + dir); click(); }
   }
   function k2(dir) {
     if (!dir) return;
-    if (field !== 0) spec.knob2(field, dir);
+    spec.knob2(field, dir);
     click();
   }
   return finishBoot(k1, k2, redraw);

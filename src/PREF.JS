@@ -121,7 +121,7 @@
   function drawSolid3D(item) {
     var names = ["ISO", "TOP", "SIDE"], groups = [item.iso, item.top, item.side];
     for (var r = 0; r < 3; r++) {
-      var y0 = 150 + r * 46, cy = y0 + 22;
+      var y0 = 132 + r * 46, cy = y0 + 22;
       if (r > 0) h.setColor(DIM).drawLine(CONTENT_L, y0 - 2, CONTENT_R, y0 - 2);
       h.setColor(FG).setFontAlign(-1, 0).drawString(names[r], TEXT_L, cy);
       drawSolidView(r, item.shape, 122, cy);
@@ -132,18 +132,17 @@
   }
   function draw(field) {
     beginScreen("RULES", "REF");
-    drawTab();
     var sec = refCurSec(), item = refCurItem();
-    row("TOPIC", sec.name, 58, field === 1);
-    row("CARD", item.name, 82, field === 2);
-    section("", 112);
-    h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, TEXT_L, 122);
-    h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 18), TEXT_R, 122);
-    var x = 34, y = 150, max = 34;
+    row("TOPIC", sec.name, 40, field === 1);
+    row("CARD", item.name, 64, field === 2);
+    section("", 94);
+    h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, TEXT_L, 104);
+    h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 18), TEXT_R, 104);
+    var x = 34, y = 132, max = 34;
     if (item.solid) { drawSolid3D(item); footer("WHEEL:FIELD  THUMB:SET"); return; }
     if (item.shape) {
-      drawShape(item.shape, CONTENT_L, 144);
-      x = 178; y = 146; max = 25;
+      drawShape(item.shape, CONTENT_L, 126);
+      x = 178; y = 128; max = 25;
     }
     for (var i = 0; i < item.lines.length && i < 6; i++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(item.lines[i], max), x, y + i * 22);

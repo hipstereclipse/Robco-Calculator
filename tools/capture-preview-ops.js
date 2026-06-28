@@ -68,7 +68,7 @@ function runApp(name, storage) {
 }
 
 const GRID = [
-  ["2nd", "THM", "DRG", "AC", "DEL", ">f"],
+  ["2nd", "MC", "DRG", "AC", "DEL", ">f"],
   ["sin", "cos", "tan", "asin", "acos", "atan"],
   ["sinh", "cosh", "tanh", "ln", "log", "exp"],
   ["sqrt", "cbrt", "abs", "pi", "e", "x"],
@@ -107,7 +107,6 @@ function seedState(extra = {}) {
       ans: 14,
       mem: 0,
       ang: "RAD",
-      th: "GREEN",
       msg: "",
       hist: [{ s: "2+3*4 = 14", v: 14 }, { s: "sqrt(2) = 1.41421356", v: 1.41421356 }],
     }, extra)),
@@ -128,7 +127,7 @@ capture("05-converter", "CONVERT", "Engineering unit conversion with raw, scient
 capture("06-constants", "CONSTANTS", "Filtered math, physics, unit, and material constants.", runApp("PCONST.JS", seedState()));
 capture("07-rules", "RULES", "Reference formulas and geometry cards.", runApp("PREF.JS", seedState()));
 capture("08-vacuum", "VAC", "Nitrogen vacuum telemetry with Pip-OS readouts.", runApp("PVAC.JS", seedState({ ans: 1234.5 })));
-capture("09-tape", "TAPE", "Calculation history and theme controls.", runApp("PTAPE.JS", seedState()));
+capture("09-tape", "TAPE", "Calculation history and staged-value recall.", runApp("PTAPE.JS", seedState()));
 
 const duplicateIds = appIds.filter((id, index) => appIds.indexOf(id) !== index);
 if (duplicateIds.length) {
