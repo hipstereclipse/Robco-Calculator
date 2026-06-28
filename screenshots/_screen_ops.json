@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T19:22:36.833Z",
+  "generatedAt": "2026-06-28T20:04:53.668Z",
   "appIds": [
     "pipcalc",
     "pipgraph",
@@ -4186,7 +4186,7 @@
           "text": "X RANGE",
           "x": 38,
           "y": 250,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4206,7 +4206,7 @@
           "text": "Y RANGE",
           "x": 38,
           "y": 268,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4418,7 +4418,7 @@
           "text": "TASK",
           "x": 38,
           "y": 66,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4438,7 +4438,7 @@
           "text": "X POINT",
           "x": 38,
           "y": 92,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4458,7 +4458,7 @@
           "text": "2ND POINT B",
           "x": 38,
           "y": 118,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4478,7 +4478,7 @@
           "text": "STEP",
           "x": 38,
           "y": 144,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4516,7 +4516,7 @@
           "text": "F(A)",
           "x": 38,
           "y": 210,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4536,7 +4536,7 @@
           "text": "SLOPE F'(A)",
           "x": 38,
           "y": 228,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4556,7 +4556,7 @@
           "text": "F(B)",
           "x": 38,
           "y": 246,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4576,7 +4576,7 @@
           "text": "SECANT A..B",
           "x": 38,
           "y": 264,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4788,7 +4788,7 @@
           "text": "VIN",
           "x": 38,
           "y": 68,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4808,7 +4808,7 @@
           "text": "RTOP",
           "x": 38,
           "y": 92,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4828,7 +4828,7 @@
           "text": "RBOT",
           "x": 38,
           "y": 116,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4848,7 +4848,7 @@
           "text": "LOAD",
           "x": 38,
           "y": 140,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4886,7 +4886,7 @@
           "text": "UNLOADED VOUT",
           "x": 38,
           "y": 194,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4906,7 +4906,7 @@
           "text": "LOADED VOUT",
           "x": 38,
           "y": 216,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4926,7 +4926,7 @@
           "text": "LOAD CURRENT",
           "x": 38,
           "y": 238,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -4946,7 +4946,7 @@
           "text": "OUTPUT SAG",
           "x": 38,
           "y": 260,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -5158,7 +5158,7 @@
           "text": "FROM",
           "x": 38,
           "y": 66,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5178,7 +5178,7 @@
           "text": "TO",
           "x": 38,
           "y": 92,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5198,7 +5198,7 @@
           "text": "VALUE",
           "x": 38,
           "y": 118,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5236,7 +5236,7 @@
           "text": "RESULT",
           "x": 38,
           "y": 176,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5266,7 +5266,7 @@
           "text": "SCI",
           "x": 38,
           "y": 224,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5286,7 +5286,7 @@
           "text": "ENG",
           "x": 38,
           "y": 248,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5498,7 +5498,7 @@
           "text": "FIND",
           "x": 38,
           "y": 64,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5846,7 +5846,7 @@
           "text": "CARD",
           "x": 38,
           "y": 64,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6136,7 +6136,7 @@
           "text": "TEMP",
           "x": 38,
           "y": 68,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6156,7 +6156,7 @@
           "text": "MOL DIAM",
           "x": 38,
           "y": 96,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6176,7 +6176,7 @@
           "text": "CHAR LEN",
           "x": 38,
           "y": 124,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6196,7 +6196,7 @@
           "text": "CONVERTER",
           "x": 38,
           "y": 152,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6234,7 +6234,7 @@
           "text": "MEAN FREE PATH",
           "x": 38,
           "y": 210,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -6254,7 +6254,7 @@
           "text": "NUMBER DENSITY",
           "x": 38,
           "y": 228,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -6274,7 +6274,7 @@
           "text": "KNUDSEN NO",
           "x": 38,
           "y": 246,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"
@@ -6294,7 +6294,7 @@
           "text": "MEAN SPEED",
           "x": 38,
           "y": 264,
-          "color": 2,
+          "color": 3,
           "alignX": -1,
           "alignY": -1,
           "font": "6x8"

@@ -79,28 +79,37 @@ function tokenize(s) {
   return toks;
 }
 
+// Recursive-descent parser. The state (token array + cursor) lives in two
+// module-level vars and the grammar functions are defined ONCE here rather
+// than as closures inside evalToks. That matters: GRAPH evaluates f(x) ~390x
+// per frame (one per plot column) and CALCULUS up to ~1000x (the Simpson
+// integral), so closing over `toks`/`pos` per call allocated thousands of
+// short-lived closures every redraw and OOM-crashed those two apps on the
+// device (LOW_MEMORY/CALLBACK). Evaluation never re-enters itself, so a single
+// shared cursor is safe.
+var _toks = null, _pos = 0;
+function _peek() { return _toks[_pos]; }
+function _nx() { return _toks[_pos++]; }
+function _eat(t) { var k = _nx(); if (!k || k.t !== t) throw "syntax"; }
+function _pE() { var v = _pT();
+  while (_peek() && _peek().t === "op" && (_peek().v === "+" || _peek().v === "-")) { var o = _nx().v, r = _pT(); v = o === "+" ? v + r : v - r; } return v; }
+function _pT() { var v = _pU();
+  while (_peek() && _peek().t === "op" && (_peek().v === "*" || _peek().v === "/")) { var o = _nx().v, r = _pU(); v = o === "*" ? v * r : v / r; } return v; }
+function _pU() { if (_peek() && _peek().t === "op" && (_peek().v === "+" || _peek().v === "-")) { var o = _nx().v; return o === "-" ? -_pU() : _pU(); } return _pF(); }
+function _pF() { var b = _pP(); if (_peek() && _peek().t === "op" && _peek().v === "^") { _nx(); return Math.pow(b, _pU()); } return b; }
+function _pP() { var v = _pPrim(); while (_peek() && _peek().t === "fact") { _nx(); v = fact(v); } return v; }
+function _pPrim() {
+  var k = _peek(); if (!k) throw "syntax";
+  if (k.t === "num")   { _nx(); return k.v; }
+  if (k.t === "const") { _nx(); return constVal(k.v); }
+  if (k.t === "fn")    { _nx(); _eat("lp"); var a = _pE(); _eat("rp"); return applyFn(k.v, a); }
+  if (k.t === "lp")    { _nx(); var v = _pE(); _eat("rp"); return v; }
+  throw "syntax";
+}
 function evalToks(toks) {
-  var pos = 0;
-  function peek() { return toks[pos]; }
-  function nx() { return toks[pos++]; }
-  function eat(t) { var k = nx(); if (!k || k.t !== t) throw "syntax"; }
-  function pE() { var v = pT();
-    while (peek() && peek().t === "op" && (peek().v === "+" || peek().v === "-")) { var o = nx().v, r = pT(); v = o === "+" ? v + r : v - r; } return v; }
-  function pT() { var v = pU();
-    while (peek() && peek().t === "op" && (peek().v === "*" || peek().v === "/")) { var o = nx().v, r = pU(); v = o === "*" ? v * r : v / r; } return v; }
-  function pU() { if (peek() && peek().t === "op" && (peek().v === "+" || peek().v === "-")) { var o = nx().v; return o === "-" ? -pU() : pU(); } return pF(); }
-  function pF() { var b = pP(); if (peek() && peek().t === "op" && peek().v === "^") { nx(); return Math.pow(b, pU()); } return b; }
-  function pP() { var v = pPrim(); while (peek() && peek().t === "fact") { nx(); v = fact(v); } return v; }
-  function pPrim() {
-    var k = peek(); if (!k) throw "syntax";
-    if (k.t === "num")   { nx(); return k.v; }
-    if (k.t === "const") { nx(); return constVal(k.v); }
-    if (k.t === "fn")    { nx(); eat("lp"); var a = pE(); eat("rp"); return applyFn(k.v, a); }
-    if (k.t === "lp")    { nx(); var v = pE(); eat("rp"); return v; }
-    throw "syntax";
-  }
-  var res = pE();
-  if (pos !== toks.length) throw "syntax";
+  _toks = toks; _pos = 0;
+  var res = _pE();
+  if (_pos !== toks.length) throw "syntax";
   return res;
 }
 function evaluate(s) { return evalToks(tokenize(s)); }

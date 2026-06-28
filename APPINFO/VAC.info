@@ -1,7 +1,7 @@
 {
   "id": "pipvac",
   "name": "RobCo Vacuum",
-  "version": "3.49",
+  "version": "3.50",
   "files": "APPS/PVAC.JS,APPINFO/VAC.info,APPINFO/VAC.img",
   "src": "APPS/PVAC.JS",
   "icon": "APPINFO/VAC.img"

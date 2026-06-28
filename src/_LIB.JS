@@ -23,6 +23,10 @@ var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 var ST;                               // shared state (see initState); lives in CALCST
 var field = 1;                        // selected field on a mode screen
 var curMode = "CALC";                 // which mode THIS app is
+var blinkOn = true;                   // cursor-style blink phase for the selected
+                                      // row's editable value (toggled by a timer in
+                                      // finishBoot on device; stays true off-device
+                                      // so previews/verify render the value steadily)
 var DRAW_R = 0.102, DRAW_G = 1, DRAW_B = 0.502;
 var ORIG_SET_COLOR = null, ORIG_SET_FONT = null;
 var APP_IDS = {
@@ -358,28 +362,36 @@ function footer(s) {
   h.setColor(MID).setFontAlign(0, 0).drawString(fitRight(caps(s), 56), W / 2, H - 21);
   bigFont();
 }
+// A label/value field row. The label (context) is ALWAYS drawn bright so every
+// row is readable whether or not it is selected -- earlier builds dimmed the
+// label of unselected rows to MID, which on the device read as "blank until you
+// land on it". Selection adds a ">" caret, an underline, and blinks the value
+// (drawn only on the lit phase) so the user can see which number THUMB edits.
 function row(label, val, y, sel) {
   if (sel) {
     h.setColor(DIM).drawLine(CONTENT_L, y + 21, CONTENT_R, y + 21);
     h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
     h.setFontAlign(-1, -1).drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
-    h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
+    if (blinkOn) h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
-    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
-    h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
+    h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
+    h.setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
   }
   h.setColor(FG);
 }
 function miniRow(label, val, y) {
-  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
-  h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
+  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
+  h.setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
 }
 // Label/value readout row meant to be drawn in the small font (caller switches
 // with smallFont()): the small glyphs let the full label and a long value
 // share one line without the 8-char truncation miniRow needs at heading size.
+// Both halves are drawn bright -- the readout label is the only context for the
+// number on the right, so dimming it (as older builds did) left the value
+// looking unlabelled on the device.
 function outRow(label, val, y) {
-  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
-  h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 30), TEXT_R, y);
+  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
+  h.setFontAlign(1, -1).drawString(fitLeft(val, 30), TEXT_R, y);
 }
 
 // ============================================================
@@ -391,7 +403,7 @@ function outRow(label, val, y) {
 //  keypad handlers and calls finishBoot directly.
 // ============================================================
 function finishBoot(k1, k2, redraw) {
-  var removed = false;
+  var removed = false, blinkTimer = null;
   function paint() {
     try { redraw(); }
     catch (e) {
@@ -404,16 +416,23 @@ function finishBoot(k1, k2, redraw) {
     if (onDevice()) { try { if (h.flip) h.flip(); } catch (e2) {} }
   }
   paint();
-  var h1 = function (d) { k1(d); paint(); };
-  var h2 = function (d) { k2(d); paint(); };
+  var h1 = function (d) { blinkOn = true; k1(d); paint(); };   // any input relights the
+  var h2 = function (d) { blinkOn = true; k2(d); paint(); };   // value so it never edits while dark
   Pip.on("knob1", h1);
   Pip.on("knob2", h2);
+  // Cursor-style blink for the selected row's editable value: toggle the phase
+  // and repaint on a timer. Device-only (guarded by onDevice) so the headless
+  // preview/verify harness keeps blinkOn=true and renders a steady value.
+  if (onDevice()) {
+    try { blinkTimer = setInterval(function () { blinkOn = !blinkOn; paint(); }, 520); } catch (e3) { blinkTimer = null; }
+  }
   collect();
   return {
     id: APP_IDS[curMode] || "pipcalc", notDefault: true, fullscreen: true,
     remove: function () {
       if (removed) return;
       removed = true;
+      if (blinkTimer) { try { clearInterval(blinkTimer); } catch (e4) {} blinkTimer = null; }
       saveState();                                                    // flush shared state on close
       Pip.removeListener("knob1", h1);
       Pip.removeListener("knob2", h2);
@@ -429,13 +448,16 @@ function bootMode(spec) {
   function redraw() { spec.draw(field); }
   function maxField() { return Math.max(1, spec.fieldCount()); }
   function wrapField(v) { return 1 + wrap(v - 1, maxField()); }
+  // press/knob2 run arithmetic on user-dialled inputs; guard them so a stray
+  // throw (e.g. a degenerate solve) surfaces in the footer instead of bubbling
+  // out of the Pip event handler and wedging the app.
   function k1(dir) {
-    if (dir === 0) { spec.press(field); ok(); }
+    if (dir === 0) { try { spec.press(field); } catch (e) { ST.msg = "ERR"; } ok(); }
     else { field = wrapField(field + dir); click(); }
   }
   function k2(dir) {
     if (!dir) return;
-    spec.knob2(field, dir);
+    try { spec.knob2(field, dir); } catch (e) { ST.msg = "ERR"; }
     click();
   }
   return finishBoot(k1, k2, redraw);
