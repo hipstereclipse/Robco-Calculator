@@ -1,7 +1,7 @@
 {
   "id": "piptape",
   "name": "RobCo Tape",
-  "version": "3.45",
+  "version": "3.46",
   "files": "APPS/PTAPE.JS,APPINFO/TAPE.info",
   "src": "APPS/PTAPE.JS"
 }

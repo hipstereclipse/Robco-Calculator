@@ -1,7 +1,7 @@
 {
   "id": "pipcirc",
   "name": "RobCo Circuit",
-  "version": "3.45",
+  "version": "3.46",
   "files": "APPS/PCIRC.JS,APPINFO/CIRC.info",
   "src": "APPS/PCIRC.JS"
 }
