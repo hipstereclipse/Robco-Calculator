@@ -1,6 +1,6 @@
 {
   "name": "pip-calc",
-  "version": "3.40",
+  "version": "3.41",
   "private": true,
   "description": "Pip-Boy Engineer's Calculator for the Espruino-based Pip runtime. Readable source in src/; minified device files built into APPS/.",
   "scripts": {
