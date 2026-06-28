@@ -58,7 +58,7 @@
     return fitLeft(s, 25);
   }
   function draw(field) {
-    beginScreen("CIRCUIT", "WORK");
+    beginScreen("CIRCUIT");
     var t = CIRC_TOOLS[circTool];
     row("WORKBENCH", t.name, 40, field === 1);
     var y = 68, vals = [];
@@ -68,10 +68,10 @@
     }
     section("READOUT", 164);
     var outs = t.out.apply(null, vals);
-    y = 192;
+    y = 194;                                         // clear the legend; pitch matches the font
     for (var j = 0; j < outs.length && j < 4; j++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(outs[j][0], 10), TEXT_L, y);
-      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 18;
+      h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 24;
     }
     footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }

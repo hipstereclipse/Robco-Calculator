@@ -1,6 +1,6 @@
 {
   "id": "pipvac",
-  "name": "Vacuum",
+  "name": "RobCo Vacuum",
   "version": "3.45",
   "files": "APPS/PVAC.JS,APPINFO/VAC.info",
   "src": "APPS/PVAC.JS"

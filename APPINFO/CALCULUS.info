@@ -1,6 +1,6 @@
 {
   "id": "pipcalculus",
-  "name": "Calculus",
+  "name": "RobCo Calculus",
   "version": "3.45",
   "files": "APPS/PCALCULUS.JS,APPINFO/CALCULUS.info",
   "src": "APPS/PCALCULUS.JS"

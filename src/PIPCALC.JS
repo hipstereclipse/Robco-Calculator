@@ -77,7 +77,10 @@
     try {
       var r = evaluate(expr);
       if (isNaN(r)) { msg = "MATH ERR"; return; }
-      ST.ans = r; pushHist(expr + " = " + fmt(r), r);
+      ST.ans = r;
+      var rec = expr + " = " + fmt(r);
+      pushHist(rec, r);                       // in-RAM mirror (fallback view)
+      tapeLog(rec, r);                        // durable log read by the TAPE app
       expr = fmt(r); justEval = true;
     } catch (e) { msg = "SYNTAX ERR"; }
   }

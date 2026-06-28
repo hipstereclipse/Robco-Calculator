@@ -15,7 +15,7 @@
   }
 
   function draw(field) {
-    beginScreen("GRAPH", "TRACE");
+    beginScreen("GRAPH");
     var ctl = ["AUTO-Y", "ZOOM", "PAN X", "PAN Y"][field - 1];
     var cv = field === 1 ? "PRESS" : field === 2 ? "SPAN " + fmt(gxs) : field === 3 ? fmt(gxc) : fmt(gyc);
     var fxs = "f(x)=" + ST.fx; if (fxs.length > 24) fxs = fxs.slice(0, 24);

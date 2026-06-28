@@ -1,6 +1,6 @@
 {
   "id": "pipconv",
-  "name": "Convert",
+  "name": "RobCo Convert",
   "version": "3.45",
   "files": "APPS/PCONV.JS,APPINFO/CONV.info",
   "src": "APPS/PCONV.JS"

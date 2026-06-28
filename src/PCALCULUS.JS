@@ -66,7 +66,7 @@
   }
 
   function draw(field) {
-    beginScreen("CALCULUS", "NUM");
+    beginScreen("CALCULUS");
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
     var fx = ST.fx;
@@ -78,31 +78,30 @@
     section("READOUT", 164);
     if (calcuOp === 0) {
       var fa = fAt(calcuA), fb = fAt(calcuB), dx = calcuB - calcuA;
-      miniRow("f(A)", fmt(fa), 186);
-      miniRow("d/dx", fmt(deriv(calcuA)), 208);
-      miniRow("f(B)", fmt(fb), 230);
-      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 252);
+      miniRow("f(A)", fmt(fa), 194);
+      miniRow("d/dx", fmt(deriv(calcuA)), 218);
+      miniRow("f(B)", fmt(fb), 242);
+      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 266);
     } else if (calcuOp === 1) {
       var area = integ(calcuA, calcuB), w = calcuB - calcuA;
-      miniRow("area", fmt(area), 186);
-      miniRow("width", fmt(w), 208);
-      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 230);
-      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 252);
+      miniRow("area", fmt(area), 194);
+      miniRow("width", fmt(w), 218);
+      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 242);
+      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 266);
     } else if (calcuOp === 2) {
       var rz = rootSpan(calcuA, calcuB), fr = fAt(rz);
-      miniRow("root", fmt(rz), 186);
-      miniRow("f(root)", fmt(fr), 208);
-      miniRow("slope", fmt(deriv(rz)), 230);
-      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 252);
+      miniRow("root", fmt(rz), 194);
+      miniRow("f(root)", fmt(fr), 218);
+      miniRow("slope", fmt(deriv(rz)), 242);
+      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 266);
     } else {
       var cx = critical(calcuA), cy = fAt(cx), d1 = deriv(cx), d2 = secondDeriv(cx);
-      miniRow("x*", fmt(cx), 186);
-      miniRow("f(x*)", fmt(cy), 208);
-      miniRow("d/dx", fmt(d1), 230);
-      miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 252);
+      miniRow("x*", fmt(cx), 194);
+      miniRow("f(x*)", fmt(cy), 218);
+      miniRow("d/dx", fmt(d1), 242);
+      miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 266);
     }
-    if (calcuMsg) h.setColor(FG).setFontAlign(0, -1).drawString(fitRight(caps(calcuMsg), 38), W / 2, 274);
-    footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
+    footer(calcuMsg ? caps(calcuMsg) : "WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }
 
   function knob2(field, dir) {

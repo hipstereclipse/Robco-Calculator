@@ -131,7 +131,7 @@
     }
   }
   function draw(field) {
-    beginScreen("RULES", "REF");
+    beginScreen("RULES");
     var sec = refCurSec(), item = refCurItem();
     row("TOPIC", sec.name, 40, field === 1);
     row("CARD", item.name, 64, field === 2);

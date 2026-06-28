@@ -257,6 +257,38 @@ function initState() {
   return ST;
 }
 
+// ---------- durable calculation tape (survives power-off / OOM crashes) ----------
+// An append-only StorageFile on the device card. CALC appends one line per "="
+// the instant it is evaluated, so results are persisted immediately rather than
+// only when the app closes cleanly; TAPE reads them back across reboots. Every
+// call is guarded -- if the file API is unavailable the apps still run and fall
+// back to the in-RAM ST.hist. Lines are "expr\tvalue".
+var TAPE_FILE = "CALCTAPE", TAPE_MAX = 100;
+function tapeLog(s, v) {
+  try { require("Storage").open(TAPE_FILE, "a").write(s + "\t" + v + "\n"); } catch (e) {}
+}
+function tapeReadAll() {                                 // -> oldest-first array of {s, v}
+  var out = [], f, line, t;
+  try {
+    f = require("Storage").open(TAPE_FILE, "r");
+    line = f.readLine();
+    while (line) {
+      t = line.indexOf("\t");
+      if (t >= 0) out.push({ s: line.slice(0, t), v: parseFloat(line.slice(t + 1)) });
+      line = f.readLine();
+    }
+  } catch (e) {}
+  return out;
+}
+function tapeTrim(list) {                                // rewrite the log to `list` (oldest-first)
+  try {
+    require("Storage").open(TAPE_FILE, "r").erase();
+    var f = require("Storage").open(TAPE_FILE, "a");
+    for (var i = 0; i < list.length; i++) f.write(list[i].s + "\t" + list[i].v + "\n");
+  } catch (e) {}
+}
+function tapeErase() { try { require("Storage").open(TAPE_FILE, "r").erase(); } catch (e) {} }
+
 // ============================================================
 //  DRAWING
 // ============================================================
@@ -291,9 +323,11 @@ function beginScreen(title, status) {
   h.setColor(DIM).drawRect(SAFE_L, SAFE_T, SAFE_R, SAFE_B);
   drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
   drawHardware();
+  // Two zones only: brand left, mode/status right. A centred title here
+  // collided with the brand on the device's wide font, so the mode name is
+  // shown right-aligned (status when the mode supplies one, else the title).
   h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
-  h.setColor(FG).setFontAlign(0, -1).drawString(caps(title), W / 2, SAFE_T);
-  h.setFontAlign(1, -1).drawString(caps(status || curMode), CONTENT_R, SAFE_T);
+  h.setColor(FG).setFontAlign(1, -1).drawString(caps(status || title || curMode), CONTENT_R, SAFE_T);
   h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
 }
 function panel(x0, y0, x1, y1, label) {
@@ -302,9 +336,12 @@ function panel(x0, y0, x1, y1, label) {
   if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", x0 + 10, y0 + 4);
   h.setColor(FG);
 }
+// A section divider with an optional legend below it. The legend occupies a
+// full ~23px text line, so callers must start their first content row at least
+// ~30px below y (see the readout blocks in the mode apps).
 function section(label, y) {
   h.setColor(DIM).drawLine(CONTENT_L, y, CONTENT_R, y);
-  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", TEXT_L, y + 8);
+  if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", TEXT_L, y + 6);
   h.setColor(FG);
 }
 function footer(s) {

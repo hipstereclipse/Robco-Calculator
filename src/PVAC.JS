@@ -14,17 +14,17 @@
   function meanSpeed() { return Math.sqrt(8 * KB * vacT / (Math.PI * MN2)); }
 
   function draw(field) {
-    beginScreen("VACUUM N2", "GAS");
+    beginScreen("VACUUM N2");
     var ry = [40, 72, 104, 136];
     var rows = [["P (Pa)", fmt(vacP)], ["T (K)", fmt(vacT)], ["d (m)", fmt(vacD)], ["L (m)", fmt(vacL)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
     var mfp = meanFreePath(), Kn = mfp / vacL, reg = Kn < 0.01 ? "VISCOUS" : Kn < 1 ? "TRANSITIONAL" : "MOLECULAR";
     section("READOUT", 160);
     h.setColor(FG);
-    h.setFontAlign(-1, -1).drawString("MEAN FREE", TEXT_L, 184); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 20), TEXT_R, 184);
-    h.setFontAlign(-1, -1).drawString("DENSITY", TEXT_L, 202); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 20), TEXT_R, 202);
-    h.setFontAlign(-1, -1).drawString("KNUDSEN", TEXT_L, 220); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 23), TEXT_R, 220);
-    h.setFontAlign(-1, -1).drawString("MEAN SPEED", TEXT_L, 238); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 20), TEXT_R, 238);
+    h.setFontAlign(-1, -1).drawString("MEAN FREE", TEXT_L, 190); h.setFontAlign(1, -1).drawString(fitLeft(fmt(mfp) + " m", 20), TEXT_R, 190);
+    h.setFontAlign(-1, -1).drawString("DENSITY", TEXT_L, 214); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 20), TEXT_R, 214);
+    h.setFontAlign(-1, -1).drawString("KNUDSEN", TEXT_L, 238); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 23), TEXT_R, 238);
+    h.setFontAlign(-1, -1).drawString("MEAN SPEED", TEXT_L, 262); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 20), TEXT_R, 262);
     footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }
 

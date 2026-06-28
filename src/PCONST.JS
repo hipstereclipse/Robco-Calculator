@@ -78,7 +78,7 @@
   }
 
   function draw(field) {
-    beginScreen("CONSTANTS", "DATA");
+    beginScreen("CONSTANTS");
     row("GROUP", CONST_GROUPS[constGroup], 40, field === 1);
     row("FIND", caps(CONST_SEARCHES[constSearch]), 64, field === 2);
     var list = constEnsure(), e = constCurrent(), pos = list.indexOf(constSel), y;
@@ -102,8 +102,7 @@
       h.setFontAlign(-1, -1).drawString(fitRight(caps(ce[0] + " " + ce[1]), 19), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 19), TEXT_R, y);
     }
-    if (constMsg) h.setColor(FG).setFontAlign(0, -1).drawString(fitRight(caps(constMsg), 34), W / 2, 268);
-    footer("WHEEL SELECT  THUMB CHANGE  PRESS INSERT");
+    footer(constMsg ? caps(constMsg) : "WHEEL SELECT  THUMB CHANGE  PRESS INSERT");
   }
 
   function knob2(field, dir) {
