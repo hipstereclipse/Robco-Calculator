@@ -316,6 +316,12 @@ function drawHardware() {
 }
 function drawGlassWear() {
 }
+// Font helpers. Monofonto23 is the only font we rely on for headings/rows;
+// the footer and compact readouts drop to a small font so they stop colliding
+// with the rounded bezel. setFont is wrapped on device (installRenderCompat),
+// so an unavailable name degrades gracefully instead of throwing.
+function bigFont() { h.setFont("Monofonto23"); }
+function smallFont() { h.setFont("6x8"); }
 function beginScreen(title, status) {
   h.reset().clear().setColor(FG).setFont("Monofonto23");
   drawScanlines();
@@ -326,8 +332,10 @@ function beginScreen(title, status) {
   // Two zones only: brand left, mode/status right. A centred title here
   // collided with the brand on the device's wide font, so the mode name is
   // shown right-aligned (status when the mode supplies one, else the title).
-  h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
-  h.setColor(FG).setFontAlign(1, -1).drawString(caps(status || title || curMode), CONTENT_R, SAFE_T);
+  h.setColor(MID).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
+  // Right-align to TEXT_R, not CONTENT_R: CONTENT_R sits on the corner rivet
+  // column, so a long mode name used to print straight through the rivet.
+  h.setColor(FG).setFontAlign(1, -1).drawString(caps(status || title || curMode), TEXT_R, SAFE_T);
   h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
 }
 function panel(x0, y0, x1, y1, label) {
@@ -344,8 +352,14 @@ function section(label, y) {
   if (label) h.setColor(FG).setFontAlign(-1, -1).drawString("[" + caps(label) + "]", TEXT_L, y + 6);
   h.setColor(FG);
 }
+// Control legend, drawn as a dim status strip in the small font so it clears
+// the rounded bottom corners instead of overflowing into them. A thin rule
+// separates it from the readout above.
 function footer(s) {
-  h.setColor(FG).setFontAlign(0, 0).drawString(fitRight(caps(s), 42), W / 2, H - 20);
+  h.setColor(DIM).drawLine(CONTENT_L, H - 32, CONTENT_R, H - 32);
+  smallFont();
+  h.setColor(MID).setFontAlign(0, 0).drawString(fitRight(caps(s), 52), W / 2, H - 21);
+  bigFont();
 }
 function row(label, val, y, sel) {
   if (sel) {
@@ -362,6 +376,13 @@ function row(label, val, y, sel) {
 function miniRow(label, val, y) {
   h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
   h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
+}
+// Label/value readout row meant to be drawn in the small font (caller switches
+// with smallFont()): the small glyphs let the full label and a long value
+// share one line without the 8-char truncation miniRow needs at heading size.
+function outRow(label, val, y) {
+  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
+  h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 30), TEXT_R, y);
 }
 
 // ============================================================

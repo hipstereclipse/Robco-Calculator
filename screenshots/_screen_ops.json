@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T15:05:53.205Z",
+  "generatedAt": "2026-06-28T15:45:06.564Z",
   "appIds": [
     "pipcalc",
     "pipgraph",
@@ -268,7 +268,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -276,7 +276,7 @@
         {
           "type": "text",
           "text": "RAD",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -972,14 +972,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL ROW  THUMB COLUMN  PRESS KEY",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -1238,7 +1246,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -1246,7 +1254,7 @@
         {
           "type": "text",
           "text": "GRAPH",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -4594,14 +4602,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL SELECT  THUMB CHANGE  PRESS AUTO",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -4860,7 +4876,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4868,7 +4884,7 @@
         {
           "type": "text",
           "text": "CALCULUS",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -4884,9 +4900,17 @@
           "color": 1
         },
         {
+          "type": "drawRect",
+          "x0": 32,
+          "y0": 39,
+          "x1": 448,
+          "y1": 61,
+          "color": 1
+        },
+        {
           "type": "text",
-          "text": "F(X)",
-          "x": 38,
+          "text": ">",
+          "x": 34,
           "y": 40,
           "color": 3,
           "alignX": -1,
@@ -4895,7 +4919,17 @@
         },
         {
           "type": "text",
-          "text": "sin(x)",
+          "text": "F(X)",
+          "x": 54,
+          "y": 40,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "SIN(X)",
           "x": 442,
           "y": 40,
           "color": 3,
@@ -4904,28 +4938,10 @@
           "font": "Monofonto23"
         },
         {
-          "type": "drawRect",
-          "x0": 32,
-          "y0": 63,
-          "x1": 448,
-          "y1": 85,
-          "color": 1
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 64,
-          "color": 3,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
           "type": "text",
           "text": "TASK",
-          "x": 54,
-          "y": 64,
+          "x": 38,
+          "y": 66,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4933,9 +4949,9 @@
         },
         {
           "type": "text",
-          "text": "VALUE/SLOPE",
+          "text": "VALUE & SLOPE",
           "x": 442,
-          "y": 64,
+          "y": 66,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4945,7 +4961,7 @@
           "type": "text",
           "text": "X POINT",
           "x": 38,
-          "y": 88,
+          "y": 92,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4955,7 +4971,7 @@
           "type": "text",
           "text": "0",
           "x": 442,
-          "y": 88,
+          "y": 92,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4963,9 +4979,9 @@
         },
         {
           "type": "text",
-          "text": "COMPARE B",
+          "text": "2ND POINT B",
           "x": 38,
-          "y": 112,
+          "y": 118,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4975,7 +4991,7 @@
           "type": "text",
           "text": "1",
           "x": 442,
-          "y": 112,
+          "y": 118,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -4985,7 +5001,7 @@
           "type": "text",
           "text": "STEP",
           "x": 38,
-          "y": 136,
+          "y": 144,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -4995,7 +5011,7 @@
           "type": "text",
           "text": "0.25",
           "x": 442,
-          "y": 136,
+          "y": 144,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -5004,16 +5020,16 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 164,
+          "y0": 176,
           "x1": 448,
-          "y1": 164,
+          "y1": 176,
           "color": 1
         },
         {
           "type": "text",
           "text": "[READOUT]",
           "x": 38,
-          "y": 170,
+          "y": 182,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -5023,91 +5039,99 @@
           "type": "text",
           "text": "F(A)",
           "x": 38,
-          "y": 194,
+          "y": 210,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "0",
           "x": 442,
-          "y": 194,
+          "y": 210,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "D/DX",
+          "text": "SLOPE F'(A)",
           "x": 38,
-          "y": 218,
+          "y": 228,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "1",
           "x": 442,
-          "y": 218,
+          "y": 228,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "F(B)",
           "x": 38,
-          "y": 242,
+          "y": 246,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "0.84147098",
           "x": 442,
-          "y": 242,
+          "y": 246,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "SECANT",
+          "text": "SECANT A..B",
           "x": 38,
-          "y": 266,
+          "y": 264,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "0.84147098",
           "x": 442,
-          "y": 266,
+          "y": 264,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
+        },
+        {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
         },
         {
           "type": "text",
-          "text": "WHEEL SELECT  THUMB CHANGE  PRESS ANS",
+          "text": "WHEEL PICK   THUMB CHANGE   PUSH USE",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -5366,7 +5390,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5374,7 +5398,7 @@
         {
           "type": "text",
           "text": "CIRCUIT",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -5606,14 +5630,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL SELECT  THUMB CHANGE  PRESS ANS",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -5872,7 +5904,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5880,7 +5912,7 @@
         {
           "type": "text",
           "text": "CONVERT",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -6082,14 +6114,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL SELECT  THUMB CHANGE  PRESS VALUE",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -6348,7 +6388,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6356,7 +6396,7 @@
         {
           "type": "text",
           "text": "CONSTANTS",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -6566,14 +6606,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL SELECT  THUMB CHANGE  PRESS INSERT",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -6832,7 +6880,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6840,7 +6888,7 @@
         {
           "type": "text",
           "text": "RULES",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -6992,14 +7040,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "WHEEL SELECT  THUMB CHANGE",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -7258,7 +7314,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7266,7 +7322,7 @@
         {
           "type": "text",
           "text": "VACUUM N2",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -7301,7 +7357,7 @@
         },
         {
           "type": "text",
-          "text": "P (PA)",
+          "text": "PRESSURE",
           "x": 54,
           "y": 40,
           "color": 3,
@@ -7311,7 +7367,7 @@
         },
         {
           "type": "text",
-          "text": "1",
+          "text": "1 Pa",
           "x": 442,
           "y": 40,
           "color": 3,
@@ -7321,9 +7377,9 @@
         },
         {
           "type": "text",
-          "text": "T (K)",
+          "text": "TEMP",
           "x": 38,
-          "y": 72,
+          "y": 68,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -7331,9 +7387,9 @@
         },
         {
           "type": "text",
-          "text": "293.15",
+          "text": "293.15 K",
           "x": 442,
-          "y": 72,
+          "y": 68,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -7341,9 +7397,9 @@
         },
         {
           "type": "text",
-          "text": "D (M)",
+          "text": "MOL DIAM",
           "x": 38,
-          "y": 104,
+          "y": 96,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -7351,9 +7407,9 @@
         },
         {
           "type": "text",
-          "text": "3.7e-10",
+          "text": "3.7 A",
           "x": 442,
-          "y": 104,
+          "y": 96,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -7361,9 +7417,9 @@
         },
         {
           "type": "text",
-          "text": "L (M)",
+          "text": "CHAR LEN",
           "x": 38,
-          "y": 136,
+          "y": 124,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -7371,9 +7427,29 @@
         },
         {
           "type": "text",
-          "text": "0.1",
+          "text": "0.1 m",
           "x": 442,
-          "y": 136,
+          "y": 124,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "CONVERTER",
+          "x": 38,
+          "y": 152,
+          "color": 3,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "Monofonto23"
+        },
+        {
+          "type": "text",
+          "text": "OPEN >",
+          "x": 442,
+          "y": 152,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
@@ -7382,16 +7458,16 @@
         {
           "type": "drawLine",
           "x0": 32,
-          "y0": 160,
+          "y0": 176,
           "x1": 448,
-          "y1": 160,
+          "y1": 176,
           "color": 1
         },
         {
           "type": "text",
           "text": "[READOUT]",
           "x": 38,
-          "y": 166,
+          "y": 182,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
@@ -7399,93 +7475,101 @@
         },
         {
           "type": "text",
-          "text": "MEAN FREE",
+          "text": "MEAN FREE PATH",
           "x": 38,
-          "y": 190,
+          "y": 210,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "0.00665434 m",
+          "text": "6.65433809 mm",
           "x": 442,
-          "y": 190,
+          "y": 210,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "DENSITY",
+          "text": "NUMBER DENSITY",
           "x": 38,
-          "y": 214,
+          "y": 228,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "2.47074e20 /m3",
           "x": 442,
-          "y": 214,
+          "y": 228,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "KNUDSEN",
+          "text": "KNUDSEN NO",
           "x": 38,
-          "y": 238,
+          "y": 246,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "0.06654338 TRANSITIONAL",
+          "text": "0.06654338  TRANSITIONAL",
           "x": 442,
-          "y": 238,
+          "y": 246,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "MEAN SPEED",
           "x": 38,
-          "y": 262,
+          "y": 264,
           "color": 3,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "470.70715368 m/s",
           "x": 442,
-          "y": 262,
+          "y": 264,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
+        },
+        {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
         },
         {
           "type": "text",
-          "text": "WHEEL SELECT  THUMB CHANGE  PRESS ANS",
+          "text": "WHEEL PICK   THUMB DIAL   PUSH UNIT/OPEN",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     },
@@ -7744,7 +7828,7 @@
           "text": "ROBCO TERMLINK",
           "x": 38,
           "y": 12,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -7752,7 +7836,7 @@
         {
           "type": "text",
           "text": "1/2",
-          "x": 448,
+          "x": 442,
           "y": 12,
           "color": 3,
           "alignX": 1,
@@ -7796,14 +7880,22 @@
           "font": "Monofonto23"
         },
         {
+          "type": "drawLine",
+          "x0": 32,
+          "y0": 288,
+          "x1": 448,
+          "y1": 288,
+          "color": 1
+        },
+        {
           "type": "text",
           "text": "THUMB SCROLL  PRESS USE",
           "x": 240,
-          "y": 300,
-          "color": 3,
+          "y": 299,
+          "color": 2,
           "alignX": 0,
           "alignY": 0,
-          "font": "Monofonto23"
+          "font": "6x8"
         }
       ]
     }

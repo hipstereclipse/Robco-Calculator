@@ -56,13 +56,17 @@ function Render-Screen($screen, $path) {
   $bmp = [System.Drawing.Bitmap]::new($w * $Scale, $h * $Scale)
   $g = [System.Drawing.Graphics]::FromImage($bmp)
   $font = $null
+  $fontSmall = $null
 
   try {
     $g.Clear($bg)
     $g.ScaleTransform($Scale, $Scale)
     $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
     $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+    # Two sizes: the device draws headings/rows in Monofonto23 and the footer
+    # plus compact readouts in a small font, so map "6x8" ops to a smaller face.
     $font = [System.Drawing.Font]::new("Consolas", 18, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
+    $fontSmall = [System.Drawing.Font]::new("Consolas", 12, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
 
     foreach ($op in $screen.ops) {
       switch ($op.type) {
@@ -103,7 +107,8 @@ function Render-Screen($screen, $path) {
           $brush = New-Brush (Get-PipColor $op.color)
           try {
             $text = [string]$op.text
-            $size = $g.MeasureString($text, $font)
+            $useFont = if ([string]$op.font -eq "6x8") { $fontSmall } else { $font }
+            $size = $g.MeasureString($text, $useFont)
             $x = [single]$op.x
             $y = [single]$op.y
 
@@ -119,7 +124,7 @@ function Render-Screen($screen, $path) {
               $y -= $size.Height
             }
 
-            $g.DrawString($text, $font, $brush, $x, $y)
+            $g.DrawString($text, $useFont, $brush, $x, $y)
           } finally {
             $brush.Dispose()
           }
@@ -130,6 +135,7 @@ function Render-Screen($screen, $path) {
     $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
   } finally {
     if ($font) { $font.Dispose() }
+    if ($fontSmall) { $fontSmall.Dispose() }
     $g.Dispose()
     $bmp.Dispose()
   }
