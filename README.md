@@ -108,7 +108,11 @@ To regenerate previews on Windows with Node.js and PowerShell:
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/render-previews.ps1 -Scale 2
 powershell -ExecutionPolicy Bypass -File tools/render-holotapes.ps1
+powershell -ExecutionPolicy Bypass -File tools/render-icons.ps1
 ```
+
+`render-holotapes.ps1` draws the cartoon `APPINFO/*.png` art; `render-icons.ps1` then
+downsamples that art into the `APPINFO/*.img` Espruino image strings the launcher draws.
 
 The capture script evaluates the app in a small mocked Pip environment, records drawing operations, and renders PNG files plus `screenshots/preview-contact-sheet.png`.
 
@@ -119,7 +123,8 @@ src/_LIB.JS              Shared helpers (drawing, theming, CALCST state, bootstr
 src/_EVAL.JS             Shared expression evaluator inlined into the math apps
 src/P*.JS                Readable source for each app (built into APPS/ by tools/build.js)
 APPINFO/*.info           One launcher manifest per app (CALC, GRAPH, CALCULUS, CIRC, CONV, CONST, REF, VAC, TAPE)
-APPINFO/*.png            Cartoon holotape launcher icons referenced by the app manifests
+APPINFO/*.img            Espruino image-string launcher icons drawn by the Pip-Boy menu (referenced by the manifests)
+APPINFO/*.png            Source art for those icons (web preview / contact sheet only; not installed to the device)
 APPS/PIPCALC.JS          Calc — scientific keypad (home app)
 APPS/PGRAPH.JS           Graph — function plotter
 APPS/PCALCULUS.JS        Calculus — numeric value/slope/area/roots/extrema
@@ -135,4 +140,5 @@ tools/capture-preview-ops.js
 tools/verify-build.js    Confirms APPS/ renders identically to src/
 tools/render-previews.ps1
 tools/render-holotapes.ps1
+tools/render-icons.ps1    Builds APPINFO/*.img launcher icons from the *.png art
 ```

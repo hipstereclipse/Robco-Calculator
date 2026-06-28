@@ -42,8 +42,10 @@
         } else pjx = null;
       } else pjx = null;
     }
-    h.setColor(FG).setFontAlign(-1, -1).drawString(fmt(gxc - gxs), px0, py1 + 8);
-    h.setFontAlign(1, -1).drawString(fmt(gxc + gxs), px1, py1 + 8);
+    smallFont();                                     // labelled window readout below the plot
+    outRow("X RANGE", fmt(gxc - gxs) + " .. " + fmt(gxc + gxs), py1 + 6);
+    outRow("Y RANGE", fmt(gyc - gys) + " .. " + fmt(gyc + gys), py1 + 24);
+    bigFont();
     footer("WHEEL SELECT  THUMB CHANGE  PRESS AUTO");
   }
 

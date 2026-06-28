@@ -1,8 +1,8 @@
 {
   "id": "pipgraph",
   "name": "RobCo Graph",
-  "version": "3.48",
-  "files": "APPS/PGRAPH.JS,APPINFO/GRAPH.info,APPINFO/GRAPH.png",
+  "version": "3.49",
+  "files": "APPS/PGRAPH.JS,APPINFO/GRAPH.info,APPINFO/GRAPH.img",
   "src": "APPS/PGRAPH.JS",
-  "icon": "APPINFO/GRAPH.png"
+  "icon": "APPINFO/GRAPH.img"
 }

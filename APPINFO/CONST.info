@@ -1,8 +1,8 @@
 {
   "id": "pipconst",
   "name": "RobCo Constants",
-  "version": "3.48",
-  "files": "APPS/PCONST.JS,APPINFO/CONST.info,APPINFO/CONST.png",
+  "version": "3.49",
+  "files": "APPS/PCONST.JS,APPINFO/CONST.info,APPINFO/CONST.img",
   "src": "APPS/PCONST.JS",
-  "icon": "APPINFO/CONST.png"
+  "icon": "APPINFO/CONST.img"
 }

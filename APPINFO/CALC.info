@@ -1,8 +1,8 @@
 {
   "id": "pipcalc",
   "name": "RobCo Calc",
-  "version": "3.48",
-  "files": "APPS/PIPCALC.JS,APPINFO/CALC.info,APPINFO/CALC.png",
+  "version": "3.49",
+  "files": "APPS/PIPCALC.JS,APPINFO/CALC.info,APPINFO/CALC.img",
   "src": "APPS/PIPCALC.JS",
-  "icon": "APPINFO/CALC.png"
+  "icon": "APPINFO/CALC.img"
 }

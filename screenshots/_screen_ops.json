@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T16:23:46.649Z",
+  "generatedAt": "2026-06-28T19:22:36.833Z",
   "appIds": [
     "pipcalc",
     "pipgraph",
@@ -193,7 +193,7 @@
         },
         {
           "type": "text",
-          "text": "RD>",
+          "text": "OUT",
           "x": 38,
           "y": 62,
           "color": 2,
@@ -4183,23 +4183,43 @@
         },
         {
           "type": "text",
-          "text": "-6.28318531",
-          "x": 58,
-          "y": 252,
-          "color": 3,
+          "text": "X RANGE",
+          "x": 38,
+          "y": 250,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "6.28318531",
-          "x": 448,
-          "y": 252,
+          "text": "-6.28318531 .. 6.28318531",
+          "x": 442,
+          "y": 250,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
+        },
+        {
+          "type": "text",
+          "text": "Y RANGE",
+          "x": 38,
+          "y": 268,
+          "color": 2,
+          "alignX": -1,
+          "alignY": -1,
+          "font": "6x8"
+        },
+        {
+          "type": "text",
+          "text": "-2 .. 2",
+          "x": 442,
+          "y": 268,
+          "color": 3,
+          "alignX": 1,
+          "alignY": -1,
+          "font": "6x8"
         },
         {
           "type": "drawLine",
@@ -4863,13 +4883,13 @@
         },
         {
           "type": "text",
-          "text": "V open",
+          "text": "UNLOADED VOUT",
           "x": 38,
           "y": 194,
-          "color": 3,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
@@ -4879,67 +4899,67 @@
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "V load",
+          "text": "LOADED VOUT",
           "x": 38,
-          "y": 218,
-          "color": 3,
+          "y": 216,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "2.38095238 V",
           "x": 442,
-          "y": 218,
+          "y": 216,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "I load",
+          "text": "LOAD CURRENT",
           "x": 38,
-          "y": 242,
-          "color": 3,
+          "y": 238,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "2.38095e-5 A",
           "x": 442,
-          "y": 242,
+          "y": 238,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
-          "text": "Err",
+          "text": "OUTPUT SAG",
           "x": 38,
-          "y": 266,
-          "color": 3,
+          "y": 260,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "text",
           "text": "4.76190476 %",
           "x": 442,
-          "y": 266,
+          "y": 260,
           "color": 3,
           "alignX": 1,
           "alignY": -1,
-          "font": "Monofonto23"
+          "font": "6x8"
         },
         {
           "type": "drawLine",
@@ -5213,7 +5233,7 @@
         },
         {
           "type": "text",
-          "text": "RAW =",
+          "text": "RESULT",
           "x": 38,
           "y": 176,
           "color": 2,

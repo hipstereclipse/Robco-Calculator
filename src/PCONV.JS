@@ -73,7 +73,7 @@
     var rows = [["CATEGORY", catName(convCat)], ["FROM", units[convFrom]], ["TO", units[convTo]], ["VALUE", convFmt(convVal)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
     section("OUTPUT", 146);
-    miniRow("RAW =", rawFmt(out) + " " + unit, 176);
+    miniRow("RESULT", rawFmt(out) + " " + unit, 176);
     h.setColor(FG).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 200);
     miniRow("SCI", sci(out, 8) + " " + unit, 224);
     miniRow("ENG", eng(out, 8) + " " + unit, 248);

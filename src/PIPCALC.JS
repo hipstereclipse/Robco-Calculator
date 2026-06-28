@@ -100,7 +100,7 @@
     h.setColor(FG).setFontAlign(1, -1).drawString(shown, TEXT_R, 40);
     var pv = safeEval();
     h.setColor(DIM).drawLine(TEXT_L, 60, TEXT_R, 60);
-    h.setColor(MID).setFontAlign(-1, -1).drawString("RD>", TEXT_L, 62);
+    h.setColor(MID).setFontAlign(-1, -1).drawString("OUT", TEXT_L, 62);
     h.setColor(FG).setFontAlign(1, -1).drawString(msg ? msg : (isNaN(pv) ? "" : "= " + fmt(pv)), TEXT_R, 62);
     var KX = CONTENT_L + 4, KY = 91, KW = (CONTENT_R - CONTENT_L - 8) / COLS, KH = 23;
     panel(CONTENT_L, 86, CONTENT_R, 278, "");
