@@ -109,7 +109,7 @@
       if (calcCur.r === r && calcCur.c === c) { h.setColor(FG).fillRect(x0 + 2, y0 + 2, x0 + KW - 4, y0 + KH - 4); h.setColor(BG); } else h.setColor(FG);
       h.setFontAlign(0, 0).drawString(caps(lbl), x0 + KW / 2, y0 + KH / 2);
     }
-    footer("WHEEL:MOVE  PRESS:ENTER");
+    footer("WHEEL ROW  THUMB COLUMN  PRESS KEY");
   }
 
   function redraw() { drawCalc(); }

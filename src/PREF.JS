@@ -139,7 +139,7 @@
     h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, TEXT_L, 104);
     h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 18), TEXT_R, 104);
     var x = 34, y = 132, max = 34;
-    if (item.solid) { drawSolid3D(item); footer("WHEEL:FIELD  THUMB:SET"); return; }
+    if (item.solid) { drawSolid3D(item); footer("WHEEL SELECT  THUMB CHANGE"); return; }
     if (item.shape) {
       drawShape(item.shape, CONTENT_L, 126);
       x = 178; y = 128; max = 25;
@@ -147,7 +147,7 @@
     for (var i = 0; i < item.lines.length && i < 6; i++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(item.lines[i], max), x, y + i * 22);
     }
-    footer("WHEEL:FIELD  THUMB:SET");
+    footer("WHEEL SELECT  THUMB CHANGE");
   }
 
   function knob2(field, dir) {
@@ -158,5 +158,5 @@
   function press() { ST.msg = ""; }
 
   initState();
-  return bootMode({ mode: "REF", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "REF", fieldCount: function() { return 2; }, draw: draw, knob2: knob2, press: press });
 })

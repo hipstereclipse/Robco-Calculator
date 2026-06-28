@@ -1,7 +1,7 @@
 {
   "id": "pipconst",
   "name": "Constants",
-  "version": "3.44",
+  "version": "3.45",
   "files": "APPS/PCONST.JS,APPINFO/CONST.info",
   "src": "APPS/PCONST.JS"
 }

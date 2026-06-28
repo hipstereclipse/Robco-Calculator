@@ -85,7 +85,7 @@
     if (!e) {
       h.setFontAlign(-1, -1).drawString("NO MATCHES", TEXT_L, 110);
       h.setFontAlign(-1, -1).drawString("TRY GROUP=ALL OR FIND=ALL", TEXT_L, 136);
-      footer("WHEEL:FIELD  THUMB:FILTER");
+      footer("WHEEL SELECT  THUMB CHANGE");
       return;
     }
     h.setFontAlign(-1, -1).drawString("MATCH " + (pos + 1) + "/" + list.length, TEXT_L, 104);
@@ -101,7 +101,7 @@
       h.setFontAlign(-1, -1).drawString(fitRight(caps(ce[0] + " " + ce[1]), 19), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 19), TEXT_R, y);
     }
-    footer("WHEEL:FIELD  THUMB:FIND  PRESS:INS");
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS INSERT");
   }
 
   function knob2(field, dir) {
@@ -111,9 +111,9 @@
   }
 
   function press(field) {
-    if (field) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "STAGED FOR CALC"; } }
+    if (field === 3) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "STAGED FOR CALC"; } }
   }
 
   initState();
-  return bootMode({ mode: "CONST", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CONST", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
 })

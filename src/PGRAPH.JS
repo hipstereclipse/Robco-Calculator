@@ -16,11 +16,12 @@
 
   function draw(field) {
     beginScreen("GRAPH", "TRACE");
-    var ctl = ["", "AUTO", "ZOOM", "PAN-X", "PAN-Y"][field];
+    var ctl = ["AUTO-Y", "ZOOM", "PAN X", "PAN Y"][field - 1];
+    var cv = field === 1 ? "PRESS" : field === 2 ? "SPAN " + fmt(gxs) : field === 3 ? fmt(gxc) : fmt(gyc);
     var fxs = "f(x)=" + ST.fx; if (fxs.length > 24) fxs = fxs.slice(0, 24);
     h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, TEXT_L, 40);
-    h.setFontAlign(1, -1).drawString("[" + ctl + "]", TEXT_R, 40);
-    var px0 = 58, py0 = 68, px1 = CONTENT_R, py1 = H - 76;
+    row("CONTROL", ctl + "  " + cv, 62, true);
+    var px0 = 58, py0 = 92, px1 = CONTENT_R, py1 = H - 76;
     h.setColor(DIM).drawRect(px0, py0, px1, py1);
     drawCorners(px0, py0, px1, py1, 8);
     for (var gx = 1; gx < 4; gx++) h.drawLine(px0 + (px1 - px0) * gx / 4, py0, px0 + (px1 - px0) * gx / 4, py1);
@@ -43,7 +44,7 @@
     }
     h.setColor(FG).setFontAlign(-1, -1).drawString(fmt(gxc - gxs), px0, py1 + 8);
     h.setFontAlign(1, -1).drawString(fmt(gxc + gxs), px1, py1 + 8);
-    footer("WHEEL:SEL  THUMB:ADJ  PRESS:EDIT/AUTO");
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS AUTO");
   }
 
   function knob2(field, dir) {
@@ -53,10 +54,10 @@
   }
 
   function press(field) {
-    if (field >= 1) { autoY(); ST.msg = "AUTO-Y"; }
+    if (field === 1) { autoY(); ST.msg = "AUTO-Y"; }
   }
 
   initState();
   setF(ST.fx);
-  return bootMode({ mode: "GRAPH", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "GRAPH", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
 })

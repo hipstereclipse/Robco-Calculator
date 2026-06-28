@@ -23,7 +23,8 @@ var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 var ST;                               // shared state (see initState); lives in CALCST
 var field = 1;                        // selected field on a mode screen
 var curMode = "CALC";                 // which mode THIS app is
-var PREV_PAL = null;                  // runtime palette, if getPalette() exists
+var DRAW_R = 0.102, DRAW_G = 1, DRAW_B = 0.502;
+var ORIG_SET_COLOR = null, ORIG_SET_FONT = null;
 var APP_IDS = {
   CALC: "PIPCALC",
   GRAPH: "PGRAPH",
@@ -41,6 +42,7 @@ function wrap(v, n) { return ((v % n) + n) % n; }
 function click() { try { Pip.audioBuiltin("COLUMN"); } catch (e) {} }
 function ok()    { try { Pip.audioBuiltin("OK"); } catch (e) {} }
 function collect() { try { if (typeof global !== "undefined" && global.gc) global.gc(); } catch (e) {} }
+function onDevice() { return typeof setInterval !== "undefined"; }
 
 function sci(n, digits) {
   return n.toExponential(digits).replace(/(\.\d*?)0+e/, "$1e").replace(/\.e/, "e").replace(/e\+/, "e");
@@ -102,20 +104,9 @@ function rawFmt(n) {
   return s;
 }
 
-// Runtime palettes default to white on some Pip builds unless an app provides
-// indexed colors. Use the Pip-Boy setting when discoverable; fall back to green.
-function buildPalette(rr, gg, bb) {
-  var out = [];
-  for (var p = 0; p < 4; p++) {
-    var arr = new Uint16Array(16), dim = p >= 2 ? 0.7 : 1.0;
-    for (var i = 0; i < 16; i++) {
-      var f = Math.min(1, i / 3) * dim;
-      arr[i] = h.toColor(rr * f, gg * f, bb * f);
-    }
-    out.push(arr);
-  }
-  return out;
-}
+// Some Pip builds treat h.setColor(0..3) as greyscale rather than palette
+// indices. Keep drawing indexed in source, but map those four levels to the
+// active Pip-Boy color while this app is resident.
 function themeColor(v) {
   var s, n, r, g, b, x;
   if (!v && v !== 0) return null;
@@ -153,7 +144,6 @@ function themeColor(v) {
 function settingColor() {
   var S, names, i, raw, c;
   try {
-    if (Pip.getPalette && !PREV_PAL) PREV_PAL = Pip.getPalette();
     names = ["uPipboyColor", "pipboyColor", "pipBoyColor", "hudColor", "uiColor", "color", "theme", "phosphor", "settings", "config", "options", "prefs", "preferences"];
     for (i = 0; i < names.length; i++) { c = themeColor(Pip[names[i]]); if (c) return c; }
     if (Pip.getTheme) { c = themeColor(Pip.getTheme()); if (c) return c; }
@@ -171,11 +161,35 @@ function settingColor() {
 }
 function applyPipPalette() {
   var c = settingColor();
-  try {
-    if (c) Pip.setPalette(buildPalette(c[0], c[1], c[2]));
-    else if (PREV_PAL) Pip.setPalette(PREV_PAL);
-    else Pip.setPalette(buildPalette(0.102, 1, 0.502));
-  } catch (e) {}
+  if (!c) c = [0.102, 1, 0.502];
+  DRAW_R = c[0]; DRAW_G = c[1]; DRAW_B = c[2];
+}
+function installRenderCompat() {
+  if (!onDevice() || typeof h === "undefined" || !h) return;
+  if (h.setColor && !ORIG_SET_COLOR) {
+    ORIG_SET_COLOR = h.setColor;
+    h.setColor = function (a) {
+      if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
+        var k = a | 0, l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
+        try { return ORIG_SET_COLOR.call(h, DRAW_R * l, DRAW_G * l, DRAW_B * l); } catch (e) {}
+      }
+      try { return ORIG_SET_COLOR.apply(h, arguments); } catch (e2) { return h; }
+    };
+  }
+  if (h.setFont && !ORIG_SET_FONT) {
+    ORIG_SET_FONT = h.setFont;
+    h.setFont = function (name, size) {
+      try { return ORIG_SET_FONT.call(h, name, size); }
+      catch (e) {
+        try { return ORIG_SET_FONT.call(h, "6x8"); }
+        catch (e2) { try { return h.setFontVector ? h.setFontVector(22) : h; } catch (e3) { return h; } }
+      }
+    };
+  }
+}
+function restoreRenderCompat() {
+  try { if (ORIG_SET_COLOR) { h.setColor = ORIG_SET_COLOR; ORIG_SET_COLOR = null; } } catch (e) {}
+  try { if (ORIG_SET_FONT) { h.setFont = ORIG_SET_FONT; ORIG_SET_FONT = null; } } catch (e2) {}
 }
 // ---------- shared state (survives across apps via the CALCST card file) ----------
 function loadState() { try { var s = require("Storage").read("CALCST"); if (s) return JSON.parse(s); } catch (e) {} return null; }
@@ -188,6 +202,7 @@ function initState() {
   if (ST.ang == null) ST.ang = "RAD";
   if (ST.msg == null) ST.msg = "";
   if (!ST.hist) ST.hist = [];
+  installRenderCompat();
   applyPipPalette();
   return ST;
 }
@@ -280,6 +295,7 @@ function finishBoot(k1, k2, redraw) {
         h.drawString("ERR: " + ("" + ((e && e.message) || e)).slice(0, 36), TEXT_L, 40);
       } catch (_) {}
     }
+    if (onDevice()) { try { if (h.flip) h.flip(); } catch (e2) {} }
   }
   paint();
   var h1 = function (d) { k1(d); paint(); };
@@ -293,6 +309,9 @@ function finishBoot(k1, k2, redraw) {
       saveState();                                                    // flush shared state on close
       Pip.removeListener("knob1", h1);
       Pip.removeListener("knob2", h2);
+      restoreRenderCompat();
+      h1 = h2 = k1 = k2 = redraw = null;
+      ST = null;
       collect();
     }
   };
@@ -300,7 +319,7 @@ function finishBoot(k1, k2, redraw) {
 function bootMode(spec) {
   curMode = spec.mode; field = 1;
   function redraw() { spec.draw(field); }
-  function maxField() { return Math.max(1, spec.fieldCount() - 1); }
+  function maxField() { return Math.max(1, spec.fieldCount()); }
   function wrapField(v) { return 1 + wrap(v - 1, maxField()); }
   function k1(dir) {
     if (dir === 0) { spec.press(field); ok(); }

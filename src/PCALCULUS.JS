@@ -51,10 +51,12 @@
     beginScreen("CALCULUS", "NUM");
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
-    var ry = [40, 66, 92, 118];
     var fx = ST.fx;
-    var rows = [["f(x)", fx.length > 18 ? fx.slice(0, 18) : fx], ["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
-    for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
+    h.setColor(MID).setFontAlign(-1, -1).drawString("F(X)", TEXT_L, 40);
+    h.setColor(FG).setFontAlign(1, -1).drawString(fx.length > 24 ? fx.slice(0, 24) : fx, TEXT_R, 40);
+    var ry = [66, 92, 118];
+    var rows = [["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
+    for (var i = 0; i < 3; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
     section("READOUT", 146);
     if (calcuOp === 0) {
       var fa = fAt(calcuA), fb = fAt(calcuB), dx = calcuB - calcuA;
@@ -81,20 +83,20 @@
       miniRow("d/dx", fmt(d1), 222);
       miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 246);
     }
-    footer("WHEEL:FIELD  THUMB:SET");
+    footer("WHEEL SELECT  THUMB CHANGE");
   }
 
   function knob2(field, dir) {
-    if (field === 2) calcuOp = wrap(calcuOp + dir, 4);
-    else if (field === 3) calcuA += dir * 0.25;
-    else if (field === 4) calcuB += dir * 0.25;
+    if (field === 1) calcuOp = wrap(calcuOp + dir, 4);
+    else if (field === 2) calcuA += dir * 0.25;
+    else if (field === 3) calcuB += dir * 0.25;
   }
 
   function press(field) {
-    if (field === 1) ST.msg = "SET F(X) IN CALC";
+    ST.msg = "";
   }
 
   initState();
   setF(ST.fx);
-  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
 })

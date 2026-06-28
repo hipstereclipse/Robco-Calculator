@@ -94,7 +94,7 @@
     miniRow("ENG", eng(out, 8) + " " + unit, 246);
     var m = ST.msg || "";
     if (m) h.setFontAlign(0, -1).drawString(m, W / 2, 266);
-    footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS VALUE");
   }
 
   function knob2(field, dir) {
@@ -105,11 +105,10 @@
     else if (field === 4) convVal *= (dir > 0 ? 10 : 0.1);
   }
 
-  function press() {
-    convVal = ST.ans;
-    ST.msg = "ANS IMPORTED";
+  function press(field) {
+    if (field === 4) { convVal = ST.ans; ST.msg = "ANS IMPORTED"; }
   }
 
   initState();
-  return bootMode({ mode: "CONV", fieldCount: function() { return 5; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CONV", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
 })

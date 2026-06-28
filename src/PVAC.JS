@@ -1,9 +1,9 @@
 (function() {
   // ============================================================
-  //  VACUUM TOOLS (N2)  -- standalone load()-swap app.
+  //  VACUUM TOOLS (N2)  -- standalone launcher app.
   //  mean free path, density, Knudsen, regime. Shared helpers are
   //  inlined from _LIB.JS at build time; Ans comes from the shared
-  //  CALCST state file. Reached from CALC via the MODE menu.
+  //  CALCST state file.
   // ============================================================
   //@inject _LIB.JS
 
@@ -25,7 +25,7 @@
     h.setFontAlign(-1, -1).drawString("DENSITY", TEXT_L, 202); h.setFontAlign(1, -1).drawString(fitLeft(fmt(numberDensity()) + " /m3", 20), TEXT_R, 202);
     h.setFontAlign(-1, -1).drawString("KNUDSEN", TEXT_L, 220); h.setFontAlign(1, -1).drawString(fitLeft(fmt(Kn) + " " + reg, 23), TEXT_R, 220);
     h.setFontAlign(-1, -1).drawString("MEAN SPEED", TEXT_L, 238); h.setFontAlign(1, -1).drawString(fitLeft(fmt(meanSpeed()) + " m/s", 20), TEXT_R, 238);
-    footer("WHEEL:FIELD  THUMB:X10/STEP  PRESS:ANS");
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }
 
   function knob2(field, dir) {
@@ -40,5 +40,5 @@
   }
 
   initState();
-  return bootMode({ mode: "VAC", fieldCount: function () { return 5; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "VAC", fieldCount: function () { return 4; }, draw: draw, knob2: knob2, press: press });
 })

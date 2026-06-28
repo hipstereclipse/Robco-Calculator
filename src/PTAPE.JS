@@ -17,7 +17,7 @@
       if (sel) { h.setColor(DIM).drawRect(CONTENT_L, y - 2, CONTENT_R, y + 24); h.setColor(FG); } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(line, TEXT_L, y); h.setColor(FG); y += 30;
     }
-    footer("WHEEL:FIELD  THUMB:SET  PRESS:USE");
+    footer("WHEEL SELECT  THUMB SCROLL  PRESS USE");
   }
 
   function knob2(field, dir) {
@@ -30,5 +30,5 @@
   }
 
   initState();
-  return bootMode({ mode: "TAPE", fieldCount: function() { return 2; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "TAPE", fieldCount: function() { return 1; }, draw: draw, knob2: knob2, press: press });
 })

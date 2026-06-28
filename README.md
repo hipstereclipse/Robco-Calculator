@@ -22,9 +22,8 @@ RobCo Calculator is a Pip-Boy style engineer's calculator suite for the Pip runt
 
 Each app uses the Pip runtime's two rotary inputs:
 
-- **Knob 1 / wheel** moves through rows or editable fields.
-- **Knob 1 press** activates the selected calculator key, field action, insertion, or import.
-- **Knob 2 / thumb** moves through columns in `Calc` or changes the selected field in the tool apps.
+- **Calc**: wheel selects keypad rows, thumb selects keypad columns, press activates the highlighted key.
+- **Tool applets**: wheel selects the highlighted row, thumb changes that row, press runs the row's explicit action such as import `Ans`, insert a constant, use a tape value, or auto-scale the graph.
 
 The apps use the Pip runtime's current display color; there is no in-app theme control.
 

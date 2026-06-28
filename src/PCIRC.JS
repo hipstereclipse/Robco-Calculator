@@ -73,7 +73,7 @@
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(outs[j][0], 10), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(circOutputText(outs[j]), TEXT_R, y); y += 18;
     }
-    footer("WHEEL:FIELD  THUMB:SET  PRESS:ANS");
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }
 
   function knob2(field, dir) {
@@ -86,5 +86,5 @@
   }
 
   initState();
-  return bootMode({ mode: "CIRC", fieldCount: function() { return 2 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CIRC", fieldCount: function() { return 1 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press });
 })
