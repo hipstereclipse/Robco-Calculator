@@ -11,8 +11,8 @@
 //  mem, angle, theme, history, a staged insert) through the CALCST
 //  card file. Provides: palette/geometry constants, number
 //  formatting, Pip-Boy drawing helpers, theming, the shared-state
-//  file, on-device render compat, and the app bootstrap. Apps that
-//  also do math additionally inject _EVAL.JS.
+//  file, and the app bootstrap. Apps that also do math additionally
+//  inject _EVAL.JS.
 // ============================================================
 var W = 480, H = 320;                 // working coordinate space (tune to device)
 var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
@@ -23,13 +23,23 @@ var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 var ST;                               // shared state (see initState); lives in CALCST
 var field = 0;                        // selected field on a mode screen (0 = THEME tab)
 var curMode = "CALC";                 // which mode THIS app is
+var APP_IDS = {
+  CALC: "PIPCALC",
+  GRAPH: "PGRAPH",
+  CALCULUS: "PCALCULUS",
+  CIRC: "PCIRC",
+  CONV: "PCONV",
+  CONST: "PCONST",
+  REF: "PREF",
+  VAC: "PVAC",
+  TAPE: "PTAPE"
+};
 
 // ---------- helpers ----------
 function wrap(v, n) { return ((v % n) + n) % n; }
 function click() { try { Pip.audioBuiltin("COLUMN"); } catch (e) {} }
 function ok()    { try { Pip.audioBuiltin("OK"); } catch (e) {} }
 function collect() { try { if (typeof global !== "undefined" && global.gc) global.gc(); } catch (e) {} }
-function onDevice() { return typeof setInterval !== "undefined"; } // false under the Node harness
 
 function sci(n, digits) {
   return n.toExponential(digits).replace(/(\.\d*?)0+e/, "$1e").replace(/\.e/, "e").replace(/e\+/, "e");
@@ -108,46 +118,6 @@ function applyTheme() {
 }
 function toggleTheme() { ST.th = ST.th === "GREEN" ? "AMBER" : "GREEN"; applyTheme(); }
 
-// ---------- on-device render compatibility ----------
-//  On the real Pip framebuffer the graphics helper `h` takes RGB colours and
-//  a single small index reads as near-black, so palette-index draws come out
-//  blank. We capture the active theme colour from setPalette and remap
-//  setColor(0..3) to scaled RGB in software, with a font fallback. Skipped
-//  entirely under the Node preview harness (no setInterval there), so the
-//  src/ and APPS/ renders stay byte-identical for verify-build.js.
-var devBase = { r: 0.1, g: 1.0, b: 0.25 };
-function dec565(v) { v = v | 0; return { r: ((v >> 11) & 31) / 31, g: ((v >> 5) & 63) / 63, b: (v & 31) / 31 }; }
-function installDeviceCompat() {
-  if (!onDevice() || typeof h === "undefined" || !h) return;
-  if (h.setColor && !h.$c) {
-    var s = h.setColor;
-    h.setColor = function (a) {
-      if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
-        var L = [0, 0.34, 0.67, 1][a | 0];
-        try { return s.call(h, devBase.r * L, devBase.g * L, devBase.b * L); } catch (e) { return h; }
-      }
-      try { return s.apply(h, arguments); } catch (e) { return h; }
-    };
-    h.$c = 1;
-  }
-  if (typeof Pip !== "undefined" && Pip && Pip.setPalette && !Pip.$c) {
-    var p = Pip.setPalette;
-    Pip.setPalette = function (a) {
-      try { if (a && a[0] && a[0].length > 3) { var c = dec565(a[0][a[0].length - 1]); devBase.r = c.r; devBase.g = c.g; devBase.b = c.b; } } catch (e) {}
-      try { if (p) return p.call(Pip, a); } catch (e) {}
-    };
-    Pip.$c = 1;
-  }
-  if (h.setFont && !h.$f) {
-    var f = h.setFont;
-    h.setFont = function (n, z) {
-      try { return f.call(h, n, z); }
-      catch (e) { try { return f.call(h, "6x8"); } catch (e2) { try { return h.setFontVector ? h.setFontVector(22) : h; } catch (e3) { return h; } } }
-    };
-    h.$f = 1;
-  }
-}
-
 // ---------- shared state (survives across apps via the CALCST card file) ----------
 function loadState() { try { var s = require("Storage").read("CALCST"); if (s) return JSON.parse(s); } catch (e) {} return null; }
 function saveState() { try { require("Storage").write("CALCST", JSON.stringify(ST)); } catch (e) {} }
@@ -160,7 +130,6 @@ function initState() {
   if (ST.th == null) ST.th = "GREEN";
   if (ST.msg == null) ST.msg = "";
   if (!ST.hist) ST.hist = [];
-  installDeviceCompat();
   applyTheme();
   return ST;
 }
@@ -232,8 +201,7 @@ function miniRow(label, val, y) {
 // ============================================================
 //  BOOTSTRAP
 //  finishBoot wires knob handlers + draw + remove and returns the Pip
-//  app object; on the device it also flips the framebuffer (initial +
-//  ~20fps). bootMode is the generic shell every NON-CALC mode uses:
+//  app object. bootMode is the generic shell every NON-CALC mode uses:
 //  field 0 is the THEME toggle, fields 1..N are the mode's controls;
 //  it delegates to the mode's draw/knob2/press. CALC supplies its own
 //  keypad handlers and calls finishBoot directly.
@@ -248,20 +216,16 @@ function finishBoot(k1, k2, redraw) {
         h.drawString("ERR: " + ("" + ((e && e.message) || e)).slice(0, 36), TEXT_L, 40);
       } catch (_) {}
     }
-    if (onDevice()) { try { if (h.flip) h.flip(); } catch (e) {} }
   }
   paint();
   var h1 = function (d) { k1(d); paint(); };
   var h2 = function (d) { k2(d); paint(); };
   Pip.on("knob1", h1);
   Pip.on("knob2", h2);
-  var flipId = null;
-  if (onDevice()) { try { flipId = setInterval(function () { try { if (h.flip) h.flip(); } catch (e) {} }, 50); } catch (e) {} }
   collect();
   return {
-    id: "PIPCALC", notDefault: true, fullscreen: true,
+    id: APP_IDS[curMode] || "PIPCALC", notDefault: true, fullscreen: true,
     remove: function () {
-      try { if (flipId !== null) clearInterval(flipId); } catch (e) {}
       saveState();                                                    // flush shared state on close
       Pip.removeListener("knob1", h1);
       Pip.removeListener("knob2", h2);

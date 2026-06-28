@@ -1,7 +1,7 @@
 {
   "id": "pipcirc",
   "name": "Circuit",
-  "version": "3.43",
+  "version": "3.44",
   "files": "APPS/PCIRC.JS,APPINFO/CIRC.info",
   "src": "APPS/PCIRC.JS"
 }

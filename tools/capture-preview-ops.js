@@ -61,7 +61,9 @@ function runApp(name, storage) {
   const rt = makeRuntime(storage);
   const factory = vm.runInNewContext(appSource(name), rt.context, { filename: name });
   if (typeof factory !== "function") throw new Error(name + " did not evaluate to an app factory function.");
-  factory();
+  const app = factory();
+  if (!app || typeof app.id !== "string") throw new Error(name + " did not return an app object with an id.");
+  rt.app = app;
   return rt;
 }
 
@@ -92,7 +94,9 @@ function calcDriver(handlers) {
 }
 
 const screens = [];
+const appIds = [];
 function capture(name, title, description, rt) {
+  appIds.push(rt.app.id);
   screens.push({ name, title, description, width: 480, height: 320, ops: rt.getOps() });
 }
 
@@ -126,6 +130,11 @@ capture("07-rules", "RULES", "Reference formulas and geometry cards.", runApp("P
 capture("08-vacuum", "VAC", "Nitrogen vacuum telemetry with Pip-OS readouts.", runApp("PVAC.JS", seedState({ ans: 1234.5 })));
 capture("09-tape", "TAPE", "Calculation history and theme controls.", runApp("PTAPE.JS", seedState()));
 
+const duplicateIds = appIds.filter((id, index) => appIds.indexOf(id) !== index);
+if (duplicateIds.length) {
+  throw new Error("App ids must be unique across launcher tiles; duplicated: " + Array.from(new Set(duplicateIds)).join(", "));
+}
+
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(
   outputPath,
@@ -133,6 +142,7 @@ fs.writeFileSync(
     {
       generatedFrom: baseDir + "/ (standalone apps)",
       generatedAt: new Date().toISOString(),
+      appIds,
       screens,
     },
     null,

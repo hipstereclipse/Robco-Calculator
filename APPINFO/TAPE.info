@@ -1,7 +1,7 @@
 {
   "id": "piptape",
   "name": "Tape",
-  "version": "3.43",
+  "version": "3.44",
   "files": "APPS/PTAPE.JS,APPINFO/TAPE.info",
   "src": "APPS/PTAPE.JS"
 }

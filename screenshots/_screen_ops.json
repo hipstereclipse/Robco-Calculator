@@ -1,6 +1,17 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T04:59:46.428Z",
+  "generatedAt": "2026-06-28T05:09:51.038Z",
+  "appIds": [
+    "PIPCALC",
+    "PGRAPH",
+    "PCALCULUS",
+    "PCIRC",
+    "PCONV",
+    "PCONST",
+    "PREF",
+    "PVAC",
+    "PTAPE"
+  ],
   "screens": [
     {
       "name": "01-calc-result",

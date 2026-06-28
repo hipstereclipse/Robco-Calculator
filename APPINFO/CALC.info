@@ -1,7 +1,7 @@
 {
   "id": "pipcalc",
   "name": "Calc",
-  "version": "3.43",
+  "version": "3.44",
   "files": "APPS/PIPCALC.JS,APPINFO/CALC.info",
   "src": "APPS/PIPCALC.JS"
 }
