@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-06-28T00:46:04.553Z",
+  "generatedAt": "2026-06-28T01:00:00.862Z",
   "screens": [
     {
       "name": "01-calc-result",
@@ -981,11 +981,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -995,7 +1003,7 @@
           "text": "GRAPH",
           "x": 442,
           "y": 35,
-          "color": 3,
+          "color": 0,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -1012,7 +1020,7 @@
         },
         {
           "type": "text",
-          "text": "[EDIT]",
+          "text": "[MODE]",
           "x": 442,
           "y": 62,
           "color": 3,
@@ -4463,11 +4471,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4477,35 +4493,17 @@
           "text": "CALCULUS",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 57,
-          "x1": 448,
-          "y1": 79,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 58,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "f(x)",
-          "x": 54,
+          "x": 38,
           "y": 58,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4515,7 +4513,7 @@
           "text": "sin(x)",
           "x": 442,
           "y": 58,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4837,11 +4835,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4851,35 +4857,17 @@
           "text": "CIRC",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 59,
-          "x1": 448,
-          "y1": 81,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 60,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "WORKBENCH",
-          "x": 54,
+          "x": 38,
           "y": 60,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -4889,7 +4877,7 @@
           "text": "DIVIDER LOAD",
           "x": 442,
           "y": 60,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5231,11 +5219,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5245,35 +5241,17 @@
           "text": "CONV",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 57,
-          "x1": 448,
-          "y1": 79,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 58,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "CATEGORY",
-          "x": 54,
+          "x": 38,
           "y": 58,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5283,7 +5261,7 @@
           "text": "COOK VOL",
           "x": 442,
           "y": 58,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5595,11 +5573,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5609,35 +5595,17 @@
           "text": "CONST",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 57,
-          "x1": 448,
-          "y1": 79,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 58,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "GROUP",
-          "x": 54,
+          "x": 38,
           "y": 58,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5647,7 +5615,7 @@
           "text": "ALL",
           "x": 442,
           "y": 58,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5967,11 +5935,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -5981,35 +5957,17 @@
           "text": "REF",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 57,
-          "x1": 448,
-          "y1": 79,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 58,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "TOPIC",
-          "x": 54,
+          "x": 38,
           "y": 58,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6019,7 +5977,7 @@
           "text": "LOG/EXP",
           "x": 442,
           "y": 58,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6281,11 +6239,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6295,35 +6261,17 @@
           "text": "VAC",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 59,
-          "x1": 448,
-          "y1": 81,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 60,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "P (Pa)",
-          "x": 54,
+          "x": 38,
           "y": 60,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6333,7 +6281,7 @@
           "text": "1",
           "x": 442,
           "y": 60,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6655,11 +6603,19 @@
           "color": 1
         },
         {
+          "type": "fillRect",
+          "x0": 32,
+          "y0": 34,
+          "x1": 448,
+          "y1": 54,
+          "color": 3
+        },
+        {
           "type": "text",
           "text": "MODE",
           "x": 38,
           "y": 35,
-          "color": 2,
+          "color": 0,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6669,35 +6625,17 @@
           "text": "TAPE",
           "x": 442,
           "y": 35,
-          "color": 3,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "Monofonto23"
-        },
-        {
-          "type": "fillRect",
-          "x0": 32,
-          "y0": 63,
-          "x1": 448,
-          "y1": 85,
-          "color": 3
-        },
-        {
-          "type": "text",
-          "text": ">",
-          "x": 34,
-          "y": 64,
           "color": 0,
-          "alignX": -1,
+          "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "THEME",
-          "x": 54,
+          "x": 38,
           "y": 64,
-          "color": 0,
+          "color": 2,
           "alignX": -1,
           "alignY": -1,
           "font": "Monofonto23"
@@ -6707,7 +6645,7 @@
           "text": "GREEN",
           "x": 442,
           "y": 64,
-          "color": 0,
+          "color": 3,
           "alignX": 1,
           "alignY": -1,
           "font": "Monofonto23"

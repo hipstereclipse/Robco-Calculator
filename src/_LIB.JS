@@ -271,9 +271,9 @@ function bootCtxMode(mode, factory) {
 //  finishBoot directly.
 // ============================================================
 function finishBoot(k1, k2, redraw) {
+  redraw();
   Pip.on("knob1", k1);
   Pip.on("knob2", k2);
-  redraw();
   collect();
   return {
     id: "PIPCALC", notDefault: true, fullscreen: true,
@@ -287,7 +287,7 @@ function finishBoot(k1, k2, redraw) {
   };
 }
 function bootMode(spec) {
-  curMode = spec.mode; field = spec.fieldCount() > 1 ? 1 : 0;
+  curMode = spec.mode; field = 0;
   function redraw() { if (menuOpen) drawMenu(); else spec.draw(field); }
   function k1(dir) {
     if (menuOpen) { menuK1(dir); redraw(); return; }
