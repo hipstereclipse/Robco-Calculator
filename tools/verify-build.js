@@ -26,6 +26,15 @@ function grab(baseDir) {
 const a = grab("src");
 const b = grab("APPS");
 let bad = 0;
+for (const file of fs.readdirSync(path.join(root, "APPS")).filter((f) => /\.JS$/i.test(f))) {
+  const code = fs.readFileSync(path.join(root, "APPS", file), "utf8");
+  for (const name of ["toExponential", "toPrecision"]) {
+    if (code.indexOf(name) >= 0) {
+      console.log(`UNSUPPORTED FORMATTER in ${file}: ${name}`);
+      bad++;
+    }
+  }
+}
 if (a.length !== b.length) { console.log(`screen count differs: src=${a.length} APPS=${b.length}`); bad++; }
 for (let i = 0; i < Math.max(a.length, b.length); i++) {
   const x = a[i] || {}, y = b[i] || {};

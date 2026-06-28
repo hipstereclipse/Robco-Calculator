@@ -43,6 +43,7 @@
     ["pc","parsec",3.0856775814913673e16,"m","SPACE","length"]
   ];
   var constGroup = 0, constSearch = 0, constSel = 0;
+  var constMsg = "";
 
   function constGroupOf(e) { return e[4] || "UNIT"; }
   function constHay(e) { return (e[0] + " " + e[1] + " " + e[3] + " " + constGroupOf(e) + " " + (e[5] || "")).toLowerCase(); }
@@ -101,6 +102,7 @@
       h.setFontAlign(-1, -1).drawString(fitRight(caps(ce[0] + " " + ce[1]), 19), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 19), TEXT_R, y);
     }
+    if (constMsg) h.setColor(FG).setFontAlign(0, -1).drawString(fitRight(caps(constMsg), 34), W / 2, 268);
     footer("WHEEL SELECT  THUMB CHANGE  PRESS INSERT");
   }
 
@@ -111,7 +113,15 @@
   }
 
   function press(field) {
-    if (field === 3) { var ce = constCurrent(); if (ce) { ST.ins = "" + ce[2]; ST.msg = "STAGED FOR CALC"; } }
+    if (field === 3) {
+      var ce = constCurrent();
+      if (ce) {
+        ST.ins = "" + ce[2];
+        ST.msg = "STAGED FOR CALC";
+        constMsg = "STAGED " + ce[0];
+        saveState();
+      }
+    }
   }
 
   initState();

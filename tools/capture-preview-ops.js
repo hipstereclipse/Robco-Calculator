@@ -58,11 +58,23 @@ function makeRuntime(storage) {
 }
 
 function runApp(name, storage) {
+  const expectedIds = {
+    "PIPCALC.JS": "pipcalc",
+    "PGRAPH.JS": "pipgraph",
+    "PCALCULUS.JS": "pipcalculus",
+    "PCIRC.JS": "pipcirc",
+    "PCONV.JS": "pipconv",
+    "PCONST.JS": "pipconst",
+    "PREF.JS": "pipref",
+    "PVAC.JS": "pipvac",
+    "PTAPE.JS": "piptape",
+  };
   const rt = makeRuntime(storage);
   const factory = vm.runInNewContext(appSource(name), rt.context, { filename: name });
   if (typeof factory !== "function") throw new Error(name + " did not evaluate to an app factory function.");
   const app = factory();
   if (!app || typeof app.id !== "string") throw new Error(name + " did not return an app object with an id.");
+  if (expectedIds[name] && app.id !== expectedIds[name]) throw new Error(name + " returned app id " + app.id + ", expected " + expectedIds[name] + ".");
   rt.app = app;
   return rt;
 }

@@ -89,7 +89,7 @@
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
     section("OUTPUT", 146);
     miniRow("RAW =", rawFmt(out) + " " + unit, 174);
-    h.setColor(DIM).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 200);
+    h.setColor(FG).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 200);
     miniRow("SCI", sci(out, 8) + " " + unit, 222);
     miniRow("ENG", eng(out, 8) + " " + unit, 246);
     var m = ST.msg || "";

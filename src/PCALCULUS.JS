@@ -7,7 +7,8 @@
   //  numeric routines live here and evaluate f(x) via fAt (inlined
   //  evaluator). Helpers/evaluator inlined at build.
   // ============================================================
-  var calcuOp = 0, calcuA = 0, calcuB = 1;
+  var calcuOp = 0, calcuA = 0, calcuB = 1, calcuStep = 2, calcuMsg = "";
+  var CALCU_STEPS = [0.01, 0.1, 0.25, 1, 10, 100];
 
   function deriv(x0) { var h2 = 1e-5 * (Math.abs(x0) + 1); return (fAt(x0 + h2) - fAt(x0 - h2)) / (2 * h2); }
   function secondDeriv(x0) { var h2 = 1e-4 * (Math.abs(x0) + 1); return (fAt(x0 + h2) - 2 * fAt(x0) + fAt(x0 - h2)) / (h2 * h2); }
@@ -46,57 +47,100 @@
     }
     return x;
   }
+  function stepSize() { return CALCU_STEPS[calcuStep]; }
+  function syncCalcState() {
+    ST.calculus = { op: calcuOp, a: calcuA, b: calcuB, step: calcuStep };
+  }
+  function loadCalcState() {
+    var c = ST.calculus || {};
+    if (typeof c.op === "number") calcuOp = wrap(c.op | 0, 4);
+    if (typeof c.a === "number" && isFinite(c.a)) calcuA = c.a;
+    if (typeof c.b === "number" && isFinite(c.b)) calcuB = c.b;
+    if (typeof c.step === "number") calcuStep = wrap(c.step | 0, CALCU_STEPS.length);
+  }
+  function primaryResult() {
+    if (calcuOp === 0) return { label: "f(A)", value: fAt(calcuA) };
+    if (calcuOp === 1) return { label: "area", value: integ(calcuA, calcuB) };
+    if (calcuOp === 2) return { label: "root", value: rootSpan(calcuA, calcuB) };
+    return { label: "x*", value: critical(calcuA) };
+  }
 
   function draw(field) {
     beginScreen("CALCULUS", "NUM");
     var ops = ["VALUE/SLOPE", "AREA A..B", "ZERO NEAR A", "EXTREME @A"];
     var aLabs = ["X POINT", "FROM A", "GUESS A", "GUESS A"], bLabs = ["COMPARE B", "TO B", "SCAN +/-B", "CHECK B"];
     var fx = ST.fx;
-    h.setColor(MID).setFontAlign(-1, -1).drawString("F(X)", TEXT_L, 40);
+    h.setColor(FG).setFontAlign(-1, -1).drawString("F(X)", TEXT_L, 40);
     h.setColor(FG).setFontAlign(1, -1).drawString(fx.length > 24 ? fx.slice(0, 24) : fx, TEXT_R, 40);
-    var ry = [66, 92, 118];
-    var rows = [["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)]];
-    for (var i = 0; i < 3; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
-    section("READOUT", 146);
+    var ry = [64, 88, 112, 136];
+    var rows = [["TASK", ops[calcuOp]], [aLabs[calcuOp], fmt(calcuA)], [bLabs[calcuOp], fmt(calcuB)], ["STEP", fmt(stepSize())]];
+    for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
+    section("READOUT", 164);
     if (calcuOp === 0) {
       var fa = fAt(calcuA), fb = fAt(calcuB), dx = calcuB - calcuA;
-      miniRow("f(A)", fmt(fa), 174);
-      miniRow("d/dx", fmt(deriv(calcuA)), 198);
-      miniRow("f(B)", fmt(fb), 222);
-      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 246);
+      miniRow("f(A)", fmt(fa), 186);
+      miniRow("d/dx", fmt(deriv(calcuA)), 208);
+      miniRow("f(B)", fmt(fb), 230);
+      miniRow("secant", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 252);
     } else if (calcuOp === 1) {
       var area = integ(calcuA, calcuB), w = calcuB - calcuA;
-      miniRow("area", fmt(area), 174);
-      miniRow("width", fmt(w), 198);
-      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 222);
-      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 246);
+      miniRow("area", fmt(area), 186);
+      miniRow("width", fmt(w), 208);
+      miniRow("avg y", w === 0 ? "ERR" : fmt(area / w), 230);
+      miniRow("mid y", fmt(fAt((calcuA + calcuB) / 2)), 252);
     } else if (calcuOp === 2) {
       var rz = rootSpan(calcuA, calcuB), fr = fAt(rz);
-      miniRow("root", fmt(rz), 174);
-      miniRow("f(root)", fmt(fr), 198);
-      miniRow("slope", fmt(deriv(rz)), 222);
-      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 246);
+      miniRow("root", fmt(rz), 186);
+      miniRow("f(root)", fmt(fr), 208);
+      miniRow("slope", fmt(deriv(rz)), 230);
+      miniRow("scan", "+/- " + fmt(Math.abs(calcuB)), 252);
     } else {
       var cx = critical(calcuA), cy = fAt(cx), d1 = deriv(cx), d2 = secondDeriv(cx);
-      miniRow("x*", fmt(cx), 174);
-      miniRow("f(x*)", fmt(cy), 198);
-      miniRow("d/dx", fmt(d1), 222);
-      miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 246);
+      miniRow("x*", fmt(cx), 186);
+      miniRow("f(x*)", fmt(cy), 208);
+      miniRow("d/dx", fmt(d1), 230);
+      miniRow("type", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 252);
     }
-    footer("WHEEL SELECT  THUMB CHANGE");
+    if (calcuMsg) h.setColor(FG).setFontAlign(0, -1).drawString(fitRight(caps(calcuMsg), 38), W / 2, 274);
+    footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
   }
 
   function knob2(field, dir) {
+    calcuMsg = "";
+    ST.msg = "";
     if (field === 1) calcuOp = wrap(calcuOp + dir, 4);
-    else if (field === 2) calcuA += dir * 0.25;
-    else if (field === 3) calcuB += dir * 0.25;
+    else if (field === 2) calcuA += dir * stepSize();
+    else if (field === 3) calcuB += dir * stepSize();
+    else if (field === 4) calcuStep = wrap(calcuStep + dir, CALCU_STEPS.length);
+    syncCalcState();
   }
 
   function press(field) {
-    ST.msg = "";
+    var p;
+    if (field === 1) {
+      p = primaryResult();
+      if (isFinite(p.value)) {
+        ST.ans = p.value;
+        calcuMsg = "ANS " + p.label + "=" + fmt(p.value);
+      } else calcuMsg = "NO FINITE RESULT";
+    } else if (field === 2) {
+      if (isFinite(ST.ans)) { calcuA = ST.ans; calcuMsg = "A=ANS " + fmt(calcuA); }
+      else calcuMsg = "ANS NOT FINITE";
+    } else if (field === 3) {
+      if (isFinite(ST.ans)) { calcuB = ST.ans; calcuMsg = "B=ANS " + fmt(calcuB); }
+      else calcuMsg = "ANS NOT FINITE";
+    } else if (field === 4) {
+      calcuStep = wrap(calcuStep + 1, CALCU_STEPS.length);
+      calcuMsg = "STEP " + fmt(stepSize());
+    }
+    ST.msg = calcuMsg;
+    syncCalcState();
+    saveState();
   }
 
   initState();
+  loadCalcState();
+  syncCalcState();
   setF(ST.fx);
-  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
 })

@@ -26,15 +26,15 @@ var curMode = "CALC";                 // which mode THIS app is
 var DRAW_R = 0.102, DRAW_G = 1, DRAW_B = 0.502;
 var ORIG_SET_COLOR = null, ORIG_SET_FONT = null;
 var APP_IDS = {
-  CALC: "PIPCALC",
-  GRAPH: "PGRAPH",
-  CALCULUS: "PCALCULUS",
-  CIRC: "PCIRC",
-  CONV: "PCONV",
-  CONST: "PCONST",
-  REF: "PREF",
-  VAC: "PVAC",
-  TAPE: "PTAPE"
+  CALC: "pipcalc",
+  GRAPH: "pipgraph",
+  CALCULUS: "pipcalculus",
+  CIRC: "pipcirc",
+  CONV: "pipconv",
+  CONST: "pipconst",
+  REF: "pipref",
+  VAC: "pipvac",
+  TAPE: "piptape"
 };
 
 // ---------- helpers ----------
@@ -44,8 +44,37 @@ function ok()    { try { Pip.audioBuiltin("OK"); } catch (e) {} }
 function collect() { try { if (typeof global !== "undefined" && global.gc) global.gc(); } catch (e) {} }
 function onDevice() { return typeof setInterval !== "undefined"; }
 
+function fixed(n, digits) {
+  var neg = n < 0, scale, whole, frac, s;
+  if (neg) n = -n;
+  scale = Math.pow(10, digits);
+  whole = Math.floor(n);
+  frac = Math.round((n - whole) * scale);
+  if (frac >= scale) { whole++; frac -= scale; }
+  s = "" + whole;
+  if (digits > 0) {
+    frac = "" + frac;
+    while (frac.length < digits) frac = "0" + frac;
+    s += "." + frac;
+  }
+  return (neg ? "-" : "") + s;
+}
+function trimFrac(s) {
+  return s.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+}
 function sci(n, digits) {
-  return n.toExponential(digits).replace(/(\.\d*?)0+e/, "$1e").replace(/\.e/, "e").replace(/e\+/, "e");
+  var neg, exp, m;
+  if (typeof n === "string") return n;
+  if (isNaN(n)) return "ERR";
+  if (!isFinite(n)) return n > 0 ? "INF" : "-INF";
+  if (n === 0) return "0e0";
+  neg = n < 0;
+  n = Math.abs(n);
+  exp = Math.floor(Math.log(n) / Math.LN10);
+  m = n / Math.pow(10, exp);
+  m = Math.round(m * Math.pow(10, digits)) / Math.pow(10, digits);
+  if (m >= 10) { m /= 10; exp++; }
+  return (neg ? "-" : "") + trimFrac(fixed(m, digits)) + "e" + exp;
 }
 function eng(n, digits) {
   if (typeof n === "string") return n;
@@ -55,9 +84,9 @@ function eng(n, digits) {
   var exp = Math.floor(Math.log(Math.abs(n)) / Math.LN10), m, s;
   exp = Math.floor(exp / 3) * 3;
   m = n / Math.pow(10, exp);
-  s = m.toFixed(digits);
-  if (Math.abs(parseFloat(s)) >= 1000) { exp += 3; m /= 1000; s = m.toFixed(digits); }
-  return s.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "") + "e" + exp;
+  s = fixed(m, digits);
+  if (Math.abs(parseFloat(s)) >= 1000) { exp += 3; m /= 1000; s = fixed(m, digits); }
+  return trimFrac(s) + "e" + exp;
 }
 function plainNum(s) {
   var ep = s.indexOf("e");
@@ -99,8 +128,8 @@ function rawFmt(n) {
   if (!isFinite(n)) return n > 0 ? "INF" : "-INF";
   if (n === 0) return "0.000000000000";
   var a = Math.abs(n), s;
-  if (a < 1e-6 || a >= 1e9) s = plainNum(n.toPrecision(16));
-  else s = n.toFixed(12);
+  if (a < 1e-6 || a >= 1e9) s = plainNum(sci(n, 15));
+  else s = fixed(n, 12);
   return s;
 }
 
@@ -163,37 +192,58 @@ function applyPipPalette() {
   var c = settingColor();
   if (!c) c = [0.102, 1, 0.502];
   DRAW_R = c[0]; DRAW_G = c[1]; DRAW_B = c[2];
+  updateRenderCompatColor();
 }
 function installRenderCompat() {
   if (!onDevice() || typeof h === "undefined" || !h) return;
-  if (h.setColor && !ORIG_SET_COLOR) {
-    ORIG_SET_COLOR = h.setColor;
-    h.setColor = function (a) {
+  var compat = h._pipCalcCompat || (h._pipCalcCompat = {});
+  if (h.setColor && h.setColor !== compat.colorWrapper) {
+    compat.origColor = h.setColor;
+    compat.colorWrapper = function (a) {
+      var c = h._pipCalcCompat || compat;
       if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
         var k = a | 0, l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
-        try { return ORIG_SET_COLOR.call(h, DRAW_R * l, DRAW_G * l, DRAW_B * l); } catch (e) {}
+        try { return c.origColor.call(h, (c.r == null ? DRAW_R : c.r) * l, (c.g == null ? DRAW_G : c.g) * l, (c.b == null ? DRAW_B : c.b) * l); } catch (e) {}
       }
-      try { return ORIG_SET_COLOR.apply(h, arguments); } catch (e2) { return h; }
+      try { return c.origColor.apply(h, arguments); } catch (e2) { return h; }
     };
+    h.setColor = compat.colorWrapper;
   }
-  if (h.setFont && !ORIG_SET_FONT) {
-    ORIG_SET_FONT = h.setFont;
-    h.setFont = function (name, size) {
-      try { return ORIG_SET_FONT.call(h, name, size); }
+  if (h.setFont && h.setFont !== compat.fontWrapper) {
+    compat.origFont = h.setFont;
+    compat.fontWrapper = function (name, size) {
+      var c = h._pipCalcCompat || compat;
+      try { return c.origFont.call(h, name, size); }
       catch (e) {
-        try { return ORIG_SET_FONT.call(h, "6x8"); }
+        try { return c.origFont.call(h, "6x8"); }
         catch (e2) { try { return h.setFontVector ? h.setFontVector(22) : h; } catch (e3) { return h; } }
       }
     };
+    h.setFont = compat.fontWrapper;
   }
 }
+function updateRenderCompatColor() {
+  try {
+    if (typeof h !== "undefined" && h && h._pipCalcCompat) {
+      h._pipCalcCompat.r = DRAW_R;
+      h._pipCalcCompat.g = DRAW_G;
+      h._pipCalcCompat.b = DRAW_B;
+    }
+  } catch (e) {}
+}
 function restoreRenderCompat() {
-  try { if (ORIG_SET_COLOR) { h.setColor = ORIG_SET_COLOR; ORIG_SET_COLOR = null; } } catch (e) {}
-  try { if (ORIG_SET_FONT) { h.setFont = ORIG_SET_FONT; ORIG_SET_FONT = null; } } catch (e2) {}
+  var compat;
+  try {
+    if (typeof h === "undefined" || !h || !h._pipCalcCompat) return;
+    compat = h._pipCalcCompat;
+    if (compat.origColor && h.setColor === compat.colorWrapper) h.setColor = compat.origColor;
+    if (compat.origFont && h.setFont === compat.fontWrapper) h.setFont = compat.origFont;
+    try { delete h._pipCalcCompat; } catch (e2) { h._pipCalcCompat = null; }
+  } catch (e) {}
 }
 // ---------- shared state (survives across apps via the CALCST card file) ----------
 function loadState() { try { var s = require("Storage").read("CALCST"); if (s) return JSON.parse(s); } catch (e) {} return null; }
-function saveState() { try { require("Storage").write("CALCST", JSON.stringify(ST)); } catch (e) {} }
+function saveState() { try { if (ST) require("Storage").write("CALCST", JSON.stringify(ST)); } catch (e) {} }
 function initState() {
   ST = loadState() || {};
   if (ST.fx == null) ST.fx = "sin(x)";
@@ -201,7 +251,7 @@ function initState() {
   if (ST.mem == null) ST.mem = 0;
   if (ST.ang == null) ST.ang = "RAD";
   if (ST.msg == null) ST.msg = "";
-  if (!ST.hist) ST.hist = [];
+  if (!ST.hist || !ST.hist.unshift) ST.hist = [];
   installRenderCompat();
   applyPipPalette();
   return ST;
@@ -242,7 +292,7 @@ function beginScreen(title, status) {
   drawCorners(SAFE_L, SAFE_T, SAFE_R, SAFE_B, 14);
   drawHardware();
   h.setColor(FG).setFontAlign(-1, -1).drawString("ROBCO TERMLINK", TEXT_L, SAFE_T);
-  h.setColor(MID).setFontAlign(0, -1).drawString(caps(title), W / 2, SAFE_T);
+  h.setColor(FG).setFontAlign(0, -1).drawString(caps(title), W / 2, SAFE_T);
   h.setFontAlign(1, -1).drawString(caps(status || curMode), CONTENT_R, SAFE_T);
   h.setColor(DIM).drawLine(CONTENT_L, 32, CONTENT_R, 32);
 }
@@ -267,13 +317,13 @@ function row(label, val, y, sel) {
     h.setFontAlign(-1, -1).drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
     h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
-    h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
+    h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
     h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
   }
   h.setColor(FG);
 }
 function miniRow(label, val, y) {
-  h.setColor(MID).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
+  h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 8), TEXT_L, y);
   h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 27), TEXT_R, y);
 }
 
@@ -286,6 +336,7 @@ function miniRow(label, val, y) {
 //  keypad handlers and calls finishBoot directly.
 // ============================================================
 function finishBoot(k1, k2, redraw) {
+  var removed = false;
   function paint() {
     try { redraw(); }
     catch (e) {
@@ -304,8 +355,10 @@ function finishBoot(k1, k2, redraw) {
   Pip.on("knob2", h2);
   collect();
   return {
-    id: APP_IDS[curMode] || "PIPCALC", notDefault: true, fullscreen: true,
+    id: APP_IDS[curMode] || "pipcalc", notDefault: true, fullscreen: true,
     remove: function () {
+      if (removed) return;
+      removed = true;
       saveState();                                                    // flush shared state on close
       Pip.removeListener("knob1", h1);
       Pip.removeListener("knob2", h2);

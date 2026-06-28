@@ -5,6 +5,7 @@
   //  History lives in CALCST; this app renders it and drives the cursor.
   // ============================================================
   var tapeSel = 0;
+  var tapeMsg = "";
 
   function draw(field) {
     beginScreen("TAPE", "LOG");
@@ -17,6 +18,7 @@
       if (sel) { h.setColor(DIM).drawRect(CONTENT_L, y - 2, CONTENT_R, y + 24); h.setColor(FG); } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(line, TEXT_L, y); h.setColor(FG); y += 30;
     }
+    if (tapeMsg) h.setColor(FG).setFontAlign(0, -1).drawString(fitRight(caps(tapeMsg), 34), W / 2, 252);
     footer("WHEEL SELECT  THUMB SCROLL  PRESS USE");
   }
 
@@ -26,7 +28,12 @@
 
   function press(field) {
     var hist = ST.hist;
-    if (field === 1 && hist.length) { ST.ins = "" + hist[tapeSel].v; ST.msg = "STAGED FOR CALC"; }
+    if (field === 1 && hist.length) {
+      ST.ins = "" + hist[tapeSel].v;
+      ST.msg = "STAGED FOR CALC";
+      tapeMsg = "STAGED " + fmt(hist[tapeSel].v);
+      saveState();
+    } else tapeMsg = "NO HISTORY";
   }
 
   initState();
