@@ -69,9 +69,6 @@
     p = list.indexOf(constSel);
     constSel = list[wrap(p + dir, list.length)];
   }
-  function constValueText(e) {
-    return fitLeft(fmt(e[2]) + (e[3] ? " " + e[3] : ""), 22);
-  }
   function constCurrent() {
     var list = constEnsure();
     return list.length ? CONSTS[constSel] : null;
@@ -86,33 +83,40 @@
     if (!e) {
       h.setFontAlign(-1, -1).drawString("NO MATCHES", TEXT_L, 110);
       h.setFontAlign(-1, -1).drawString("TRY GROUP=ALL OR FIND=ALL", TEXT_L, 136);
-      footer("WHEEL SELECT  THUMB CHANGE");
+      footer(navHint());
       return;
     }
     h.setFontAlign(-1, -1).drawString("MATCH " + (pos + 1) + "/" + list.length, TEXT_L, 104);
     h.setFontAlign(1, -1).drawString(fitLeft(constGroupOf(e) + " " + e[0], 18), TEXT_R, 104);
-    h.setFontAlign(-1, -1).drawString(fitRight(caps(e[1]), 22), TEXT_L, 128);
-    h.setFontAlign(1, -1).drawString(constValueText(e), TEXT_R, 128);
+    // The constant list IS field 3 (push it to edit, then the wheel scrolls);
+    // INSERT (field 4) stages the highlighted value for CALC.
+    row("INSERT >CALC", caps(e[0]), 128, field === 4);
     h.setColor(DIM).drawLine(CONTENT_L, 160, CONTENT_R, 160);
     var vis = 4, lh = 24, top = Math.max(0, Math.min(pos - 1, list.length - vis));
     for (var i = 0; i < vis && top + i < list.length; i++) {
       var idx = list[top + i], ce = CONSTS[idx];
       y = 172 + i * lh;
-      if (idx === constSel && field === 3) { h.setColor(FG).fillRect(CONTENT_L, y - 2, CONTENT_R, y + 20); h.setColor(BG); } else h.setColor(FG);
+      if (idx === constSel) {
+        if (field === 3 && (!editing || blinkOn)) { h.setColor(FG).fillRect(CONTENT_L, y - 2, CONTENT_R, y + 20); h.setColor(BG); }
+        else { h.setColor(DIM).drawRect(CONTENT_L, y - 2, CONTENT_R, y + 20); h.setColor(FG); }
+      } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(fitRight(caps(ce[0] + " " + ce[1]), 19), TEXT_L, y);
       h.setFontAlign(1, -1).drawString(fitLeft(fmt(ce[2]) + (ce[3] ? " " + ce[3] : ""), 19), TEXT_R, y);
     }
-    footer(constMsg ? caps(constMsg) : "WHEEL SELECT  THUMB CHANGE  PRESS INSERT");
+    footer(constMsg ? caps(constMsg) : navHint());
   }
 
-  function knob2(field, dir) {
+  // 1 GROUP / 2 FIND / 3 the constant list are option lists; 4 INSERT is an action.
+  function kind(field) { return field === 4 ? "act" : "enum"; }
+  function edit(field, dir) {
+    constMsg = "";
     if (field === 1) { constGroup = wrap(constGroup + dir, CONST_GROUPS.length); constEnsure(); }
     else if (field === 2) { constSearch = wrap(constSearch + dir, CONST_SEARCHES.length); constEnsure(); }
     else if (field === 3) constMove(dir);
   }
 
-  function press(field) {
-    if (field === 3) {
+  function act(field) {
+    if (field === 4) {
       var ce = constCurrent();
       if (ce) {
         ST.ins = "" + ce[2];
@@ -124,5 +128,5 @@
   }
 
   initState();
-  return bootMode({ mode: "CONST", fieldCount: function() { return 3; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CONST", fieldCount: function() { return 4; }, draw: draw, kind: kind, edit: edit, act: act });
 })

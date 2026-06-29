@@ -10,7 +10,7 @@
   //  TAPE_MAX entries when it grows past ~120 lines.
   // ============================================================
   var tape = [], tapeSel = 0, tapeTop = 0, tapeMsg = "";
-  var VIS = 8, PITCH = 28, TOPY = 48;
+  var VIS = 7, PITCH = 28, TOPY = 48;
 
   function loadTape() {
     var log = tapeReadAll();                       // oldest-first from the card
@@ -26,7 +26,7 @@
     if (!n) {
       h.setColor(FG).setFontAlign(-1, -1).drawString("(NO HISTORY YET)", TEXT_L, 60);
       h.setFontAlign(-1, -1).drawString("CALC = WRITES HERE", TEXT_L, 92);
-      footer("THUMB SCROLL  PRESS USE");
+      footer(navHint());
       return;
     }
     if (tapeSel < tapeTop) tapeTop = tapeSel;
@@ -34,17 +34,25 @@
     for (var i = 0; i < VIS && tapeTop + i < n; i++) {
       var idx = tapeTop + i, line = tape[idx].s, y = TOPY + i * PITCH;
       if (line.length > 30) line = "<" + line.slice(line.length - 29);
-      if (idx === tapeSel) { h.setColor(DIM).drawRect(CONTENT_L, y - 3, CONTENT_R, y + 22); h.setColor(FG); } else h.setColor(FG);
+      if (idx === tapeSel) {
+        if (field === 1 && (!editing || blinkOn)) { h.setColor(FG).fillRect(CONTENT_L, y - 3, CONTENT_R, y + 22); h.setColor(BG); }
+        else { h.setColor(DIM).drawRect(CONTENT_L, y - 3, CONTENT_R, y + 22); h.setColor(FG); }
+      } else h.setColor(FG);
       h.setFontAlign(-1, -1).drawString(line, TEXT_L, y);
     }
-    footer(tapeMsg ? caps(tapeMsg) : "THUMB SCROLL  PRESS USE");
+    // Field 1 = the entry selector (push to edit, then wheel scrolls); field 2 =
+    // USE, which stages the highlighted result back into CALC.
+    row("USE >CALC", fmt(tape[tapeSel].v), TOPY + VIS * PITCH, field === 2);
+    footer(tapeMsg ? caps(tapeMsg) : navHint());
   }
 
-  function knob2(field, dir) {
-    if (dir && tape.length) { tapeSel = wrap(tapeSel + dir, tape.length); tapeMsg = ""; }
+  function kind(field) { return field === 1 ? "enum" : "act"; }
+  function edit(field, dir) {
+    if (field === 1 && tape.length) { tapeSel = wrap(tapeSel + dir, tape.length); tapeMsg = ""; }
   }
 
-  function press(field) {
+  function act(field) {
+    if (field !== 2) return;
     if (!tape.length) { tapeMsg = "NO HISTORY"; return; }
     var e = tape[tapeSel];
     ST.ins = "" + e.v;
@@ -55,5 +63,5 @@
 
   initState();
   loadTape();
-  return bootMode({ mode: "TAPE", fieldCount: function() { return 1; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "TAPE", fieldCount: function() { return tape.length ? 2 : 1; }, draw: draw, kind: kind, edit: edit, act: act });
 })

@@ -17,10 +17,13 @@
   function draw(field) {
     beginScreen("GRAPH");
     var ctl = ["AUTO-Y", "ZOOM", "PAN X", "PAN Y"][field - 1];
-    var cv = field === 1 ? "PRESS" : field === 2 ? "SPAN " + fmt(gxs) : field === 3 ? fmt(gxc) : fmt(gyc);
+    var cv = field === 1 ? "PRESS" : field === 2 ? "SPAN " + fmt(gxs) : field === 3 ? "X " + fmt(gxc) : "Y " + fmt(gyc);
     var fxs = "f(x)=" + ST.fx; if (fxs.length > 24) fxs = fxs.slice(0, 24);
     h.setColor(FG).setFontAlign(-1, -1).drawString(fxs, TEXT_L, 40);
-    row("CONTROL", ctl + "  " + cv, 62, true);
+    // One CONTROL row whose label IS the selected control: the wheel cycles it in
+    // NAV (the name blinks), and after a push the value blinks and the wheel/thumb
+    // fine/coarse it.
+    row(ctl, cv, 62, true);
     var px0 = 58, py0 = 92, px1 = CONTENT_R, py1 = H - 76;
     h.setColor(DIM).drawRect(px0, py0, px1, py1);
     drawCorners(px0, py0, px1, py1, 8);
@@ -46,20 +49,26 @@
     outRow("X RANGE", fmt(gxc - gxs) + " .. " + fmt(gxc + gxs), py1 + 6);
     outRow("Y RANGE", fmt(gyc - gys) + " .. " + fmt(gyc + gys), py1 + 24);
     bigFont();
-    footer("WHEEL SELECT  THUMB CHANGE  PRESS AUTO");
+    footer(ST.msg ? caps(ST.msg) : (editing ? "WHEEL FINE   THUMB COARSE   PUSH DONE" : navHint()));
   }
 
-  function knob2(field, dir) {
-    if (field === 2) { gxs *= (dir > 0 ? 0.8 : 1.25); gys *= (dir > 0 ? 0.8 : 1.25); }
+  // AUTO-Y is the action; ZOOM/PAN are numeric. Their magnitude is multiplicative
+  // (zoom factor) / fractional (pan), not a power-of-ten step, so GRAPH supplies
+  // its own thumb handler (mag) rather than using the generic editMag.
+  function kind(field) { return field === 1 ? "act" : "num"; }
+  function edit(field, dir) {              // WHEEL: fine zoom / pan
+    if (field === 2) { var f = dir > 0 ? 0.95 : 1 / 0.95; gxs *= f; gys *= f; }
+    else if (field === 3) gxc += dir * gxs * 0.05;
+    else if (field === 4) gyc += dir * gys * 0.05;
+  }
+  function mag(field, dir) {               // THUMB: coarse zoom / pan
+    if (field === 2) { var f = dir > 0 ? 0.8 : 1.25; gxs *= f; gys *= f; }
     else if (field === 3) gxc += dir * gxs * 0.25;
     else if (field === 4) gyc += dir * gys * 0.25;
   }
-
-  function press(field) {
-    if (field === 1) { autoY(); ST.msg = "AUTO-Y"; }
-  }
+  function act(field) { if (field === 1) { autoY(); ST.msg = "AUTO-Y"; } }
 
   initState();
   setF(ST.fx);
-  return bootMode({ mode: "GRAPH", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "GRAPH", fieldCount: function() { return 4; }, draw: draw, kind: kind, edit: edit, mag: mag, act: act });
 })

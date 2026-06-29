@@ -1,8 +1,8 @@
 (function() {
   //@inject _LIB.JS
   // ============================================================
-  //  UNIT CONVERTER  -- standalone app. Pulls the shared Ans (set in
-  //  the CALC app) into the value field via press.
+  //  UNIT CONVERTER  -- standalone app. The IMPORT ANS action row pulls
+  //  the shared Ans (set in the CALC app) into the value field.
   //
   //  Categories are stored as packed "NAME|units|factors" strings and
   //  parsed on demand. This is a RAM fix, not cosmetic: the previous
@@ -69,29 +69,33 @@
 
   function draw(field) {
     beginScreen("CONVERT");
-    var units = catUnits(convCat), ry = [40, 66, 92, 118], out = convResult(), unit = units[convTo];
+    var units = catUnits(convCat), ry = [40, 64, 88, 112], out = convResult(), unit = units[convTo];
     var rows = [["CATEGORY", catName(convCat)], ["FROM", units[convFrom]], ["TO", units[convTo]], ["VALUE", convFmt(convVal)]];
     for (var i = 0; i < 4; i++) row(rows[i][0], rows[i][1], ry[i], field === i + 1);
-    section("OUTPUT", 146);
-    miniRow("RESULT", rawFmt(out) + " " + unit, 176);
-    h.setColor(FG).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 200);
-    miniRow("SCI", sci(out, 8) + " " + unit, 224);
+    row("IMPORT ANS", "ANS=" + fmt(ST.ans), 136, field === 5);
+    section("OUTPUT", 160);
+    miniRow("RESULT", rawFmt(out) + " " + unit, 186);
+    h.setColor(FG).setFontAlign(-1, -1).drawString("ALSO =", TEXT_L, 208);
+    miniRow("SCI", sci(out, 8) + " " + unit, 228);
     miniRow("ENG", eng(out, 8) + " " + unit, 248);
-    footer(ST.msg ? caps(ST.msg) : "WHEEL SELECT  THUMB CHANGE  PRESS VALUE");
+    footer(ST.msg ? caps(ST.msg) : navHint());
   }
 
-  function knob2(field, dir) {
+  // 1 CATEGORY / 2 FROM / 3 TO are option lists; 4 VALUE is the number (wheel =
+  // fine, thumb = magnitude); 5 IMPORT ANS is a one-shot action row.
+  function kind(field) { return field === 4 ? "num" : field === 5 ? "act" : "enum"; }
+  function edit(field, dir) {
     var L = catCount(convCat);
     if (field === 1) { convCat = wrap(convCat + dir, CATS.length); var L2 = catCount(convCat); if (convFrom >= L2) convFrom = L2 - 1; if (convTo >= L2) convTo = L2 - 1; }
     else if (field === 2) convFrom = wrap(convFrom + dir, L);
     else if (field === 3) convTo = wrap(convTo + dir, L);
-    else if (field === 4) convVal *= (dir > 0 ? 10 : 0.1);
+    else if (field === 4) convVal += dir * magStep();
   }
 
-  function press(field) {
-    if (field === 4) { convVal = ST.ans; ST.msg = "ANS IMPORTED"; }
+  function act(field) {
+    if (field === 5) { convVal = ST.ans; ST.msg = "ANS IMPORTED"; }
   }
 
   initState();
-  return bootMode({ mode: "CONV", fieldCount: function() { return 4; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CONV", fieldCount: function() { return 5; }, draw: draw, kind: kind, edit: edit, act: act });
 })

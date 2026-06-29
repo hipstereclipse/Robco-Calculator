@@ -1,8 +1,8 @@
 (function() {
   //@inject _LIB.JS
   // ============================================================
-  //  CIRCUIT CALCULATORS (data-driven)  -- standalone app. Pulls the
-  //  shared Ans (set in the CALC app) into a field via press.
+  //  CIRCUIT CALCULATORS (data-driven)  -- standalone app. The IMPORT ANS
+  //  action row pulls the shared Ans (set in the CALC app) into an input.
   // ============================================================
   var COLORS = ["blk","brn","red","org","yel","grn","blu","vio","gry","wht"];
   var MULTS = ["x.01","x.1","x1","x10","x100","x1k","x10k","x100k","x1M","x10M"];
@@ -39,13 +39,14 @@
     { name: "R COLOR", in: [{ l:"Band1", u:"", v:1, opts:COLORS }, { l:"Band2", u:"", v:0, opts:COLORS }, { l:"Mult", u:"", v:2, opts:MULTS }, { l:"Tol", u:"", v:6, opts:TOLC }],
       out: function(d1, d2, m, t) { return [["Resistance", (d1*10+d2)*MULTF[m], "ohm"], ["Tolerance", TOLV[t], "%"], ["Digit bands", COLORS[d1]+"-"+COLORS[d2], ""], ["Mult + tol", MULTS[m]+" "+TOLC[t], ""]]; } }
   ];
-  var circTool = 0;
+  var circTool = 0, lastInput = 0;          // lastInput: input the IMPORT ANS row fills
+  // EDIT stepping: option lists cycle; numbers nudge by +/-1 * magStep() (the
+  // wheel's +/-1, magnified by the thumb); integers round and clamp.
   function stepInput(inp, dir) {
     if (inp.opts) inp.v = wrap(inp.v + dir, inp.opts.length);
     else if (inp.col) inp.v = wrap(inp.v + dir, 10);
-    else if (inp.intg) { inp.v += dir; if (inp.v < inp.min) inp.v = inp.min; if (inp.v > inp.max) inp.v = inp.max; }
-    else if (inp.dec) inp.v *= (dir > 0 ? 10 : 0.1);
-    else inp.v += dir * (inp.step || 1);
+    else if (inp.intg) { inp.v = Math.round(inp.v + dir * magStep()); if (inp.v < inp.min) inp.v = inp.min; if (inp.v > inp.max) inp.v = inp.max; }
+    else inp.v += dir * magStep();
   }
 
   function circInputText(inp) {
@@ -59,33 +60,49 @@
   }
   function draw(field) {
     beginScreen("CIRCUIT");
-    var t = CIRC_TOOLS[circTool];
+    var t = CIRC_TOOLS[circTool], n = t.in.length;
     row("WORKBENCH", t.name, 40, field === 1);
-    var y = 68, vals = [];
-    for (var i = 0; i < t.in.length; i++) {
+    var y = 66, vals = [];
+    for (var i = 0; i < n; i++) {
       var inp = t.in[i]; vals.push(inp.v);
       row(inp.l, circInputText(inp), y, field === i + 2); y += 24;
     }
-    section("READOUT", 164);
+    if (field >= 2 && field <= n + 1) lastInput = field - 2;
+    row("IMPORT ANS", "ANS=" + fmt(ST.ans), y, field === n + 2); y += 24;
+    section("READOUT", y);
     var outs = t.out.apply(null, vals);
     smallFont();                                     // full-word labels need the compact font
-    y = 194;                                         // clear the legend; pitch matches the font
+    var ry = y + 24;                                 // clear the legend; pitch matches the font
     for (var j = 0; j < outs.length && j < 4; j++) {
-      outRow(outs[j][0], circOutputText(outs[j]), y); y += 22;
+      outRow(outs[j][0], circOutputText(outs[j]), ry); ry += 18;
     }
     bigFont();
-    footer("WHEEL SELECT  THUMB CHANGE  PRESS ANS");
+    footer(ST.msg ? caps(ST.msg) : navHint());
   }
 
-  function knob2(field, dir) {
+  // 1 WORKBENCH + the option inputs are lists; numeric inputs are "num"; the last
+  // field is the IMPORT ANS action.
+  function kind(field) {
+    var t = CIRC_TOOLS[circTool], n = t.in.length;
+    if (field === 1) return "enum";
+    if (field === n + 2) return "act";
+    var inp = t.in[field - 2];
+    return inp && (inp.opts || inp.col) ? "enum" : "num";
+  }
+  function edit(field, dir) {
+    var n = CIRC_TOOLS[circTool].in.length;
     if (field === 1) circTool = wrap(circTool + dir, CIRC_TOOLS.length);
-    else stepInput(CIRC_TOOLS[circTool].in[field - 2], dir);
+    else if (field >= 2 && field <= n + 1) stepInput(CIRC_TOOLS[circTool].in[field - 2], dir);
   }
 
-  function press(field) {
-    if (field >= 2) { CIRC_TOOLS[circTool].in[field - 2].v = ST.ans; ST.msg = "ANS IMPORTED"; }
+  function act(field) {
+    var t = CIRC_TOOLS[circTool], n = t.in.length;
+    if (field === n + 2) {
+      var inp = t.in[lastInput] || t.in[0];
+      if (inp) { inp.v = ST.ans; ST.msg = "ANS -> " + caps(inp.l); }
+    }
   }
 
   initState();
-  return bootMode({ mode: "CIRC", fieldCount: function() { return 1 + CIRC_TOOLS[circTool].in.length; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "CIRC", fieldCount: function() { return CIRC_TOOLS[circTool].in.length + 2; }, draw: draw, kind: kind, edit: edit, act: act });
 })

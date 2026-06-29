@@ -139,7 +139,7 @@
     h.setFontAlign(-1, -1).drawString("CARD " + (refItem + 1) + "/" + sec.items.length, TEXT_L, 104);
     h.setFontAlign(1, -1).drawString(fitLeft(sec.name, 18), TEXT_R, 104);
     var x = 34, y = 132, max = 34;
-    if (item.solid) { drawSolid3D(item); footer("WHEEL SELECT  THUMB CHANGE"); return; }
+    if (item.solid) { drawSolid3D(item); footer(navHint()); return; }
     if (item.shape) {
       drawShape(item.shape, CONTENT_L, 126);
       x = 178; y = 128; max = 25;
@@ -147,16 +147,18 @@
     for (var i = 0; i < item.lines.length && i < 6; i++) {
       h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(item.lines[i], max), x, y + i * 22);
     }
-    footer("WHEEL SELECT  THUMB CHANGE");
+    footer(navHint());
   }
 
-  function knob2(field, dir) {
+  // TOPIC + CARD are both option lists: push a row to start editing, then the
+  // wheel (or thumb) cycles through the cards.
+  function kind() { return "enum"; }
+  function edit(field, dir) {
     if (field === 1) { refSection = wrap(refSection + dir, REF_SECTIONS.length); refItem = 0; }
     else if (field === 2) refItem = wrap(refItem + dir, refCurSec().items.length);
   }
-
-  function press() { ST.msg = ""; }
+  function act() { ST.msg = ""; }
 
   initState();
-  return bootMode({ mode: "REF", fieldCount: function() { return 2; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "REF", fieldCount: function() { return 2; }, draw: draw, kind: kind, edit: edit, act: act });
 })

@@ -21,12 +21,25 @@ var CONTENT_L = SAFE_L + 8, CONTENT_R = SAFE_R - 8;
 var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
 
 var ST;                               // shared state (see initState); lives in CALCST
-var field = 1;                        // selected field on a mode screen
+var field = 1;                        // selected field (row) on a mode screen
+var editing = false;                  // two-state field interaction (see bootMode):
+                                      //   false = NAV  -> wheel/thumb scroll rows, the
+                                      //                   selected row's LABEL blinks,
+                                      //                   push selects/runs the row
+                                      //   true  = EDIT -> wheel = +/-1 step / cycle,
+                                      //                   thumb = step magnitude,
+                                      //                   the selected row's VALUE blinks,
+                                      //                   push returns to NAV
+var editMag = 0;                      // EDIT numeric step exponent: the wheel adds
+                                      // +/-1 * 10^editMag; the thumb dials editMag.
+                                      // Reset to 0 (step 1) on entering EDIT.
+var fieldKind = "num";                // kind of the currently selected field, refreshed
+                                      // each redraw by bootMode: "num" | "enum" | "act"
 var curMode = "CALC";                 // which mode THIS app is
-var blinkOn = true;                   // cursor-style blink phase for the selected
-                                      // row's editable value (toggled by a timer in
-                                      // finishBoot on device; stays true off-device
-                                      // so previews/verify render the value steadily)
+var blinkOn = true;                   // cursor-style blink phase for the selected row
+                                      // (the LABEL in NAV, the editable VALUE in EDIT);
+                                      // toggled by a timer in finishBoot on device, stays
+                                      // true off-device so previews/verify render steadily
 var DRAW_R = 0.102, DRAW_G = 1, DRAW_B = 0.502;
 var ORIG_SET_COLOR = null, ORIG_SET_FONT = null;
 var APP_IDS = {
@@ -47,6 +60,29 @@ function click() { try { Pip.audioBuiltin("COLUMN"); } catch (e) {} }
 function ok()    { try { Pip.audioBuiltin("OK"); } catch (e) {} }
 function collect() { try { if (typeof global !== "undefined" && global.gc) global.gc(); } catch (e) {} }
 function onDevice() { return typeof setInterval !== "undefined"; }
+
+// ---------- numeric magnitude stepping (EDIT mode) ----------
+// The wheel adds +/-1 unit at the current magnitude; the thumb dials that
+// magnitude up/down by powers of ten. magStep() is the active step (10^editMag);
+// numeric modes nudge their value by `dir * magStep()` on the wheel, and editMag
+// resets to 0 (step 1) on entering EDIT so the wheel always starts at +/-1.
+function magStep() { return Math.pow(10, editMag); }
+function magBump(dir) {
+  editMag += dir;
+  if (editMag > 12) editMag = 12;
+  if (editMag < -9) editMag = -9;
+}
+
+// Footer control legend for the generic tool screens: reflects whether the
+// selected field is being navigated or edited, and (for numbers) the live step.
+function navHint() {
+  if (editing) {
+    if (fieldKind === "enum") return "WHEEL CYCLE   PUSH DONE";
+    if (fieldKind === "act") return "PUSH RUN";
+    return "WHEEL +/-" + fmt(magStep()) + "   THUMB STEP   PUSH DONE";
+  }
+  return "WHEEL PICK   PUSH EDIT/RUN";
+}
 
 function fixed(n, digits) {
   var neg = n < 0, scale, whole, frac, s;
@@ -365,14 +401,21 @@ function footer(s) {
 // A label/value field row. The label (context) is ALWAYS drawn bright so every
 // row is readable whether or not it is selected -- earlier builds dimmed the
 // label of unselected rows to MID, which on the device read as "blank until you
-// land on it". Selection adds a ">" caret, an underline, and blinks the value
-// (drawn only on the lit phase) so the user can see which number THUMB edits.
+// land on it". Selection adds a ">" caret and an underline. Which half blinks
+// signals the interaction state (see bootMode): in NAV the LABEL blinks (you are
+// choosing which row to act on); after a push the row is in EDIT and the VALUE
+// blinks (the wheel/thumb now change it). Off-device blinkOn stays true so both
+// halves render steadily for previews/verify.
 function row(label, val, y, sel) {
   if (sel) {
     h.setColor(DIM).drawLine(CONTENT_L, y + 21, CONTENT_R, y + 21);
-    h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
-    h.setFontAlign(-1, -1).drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
-    if (blinkOn) h.setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
+    var litLabel = editing || blinkOn;       // NAV: blink label; EDIT: keep it lit
+    var litVal = editing ? blinkOn : true;   // EDIT: blink value; NAV: keep it lit
+    if (litLabel) {
+      h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
+      h.drawString(fitRight(caps(label), 12), TEXT_L + 16, y);
+    }
+    if (litVal) h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 21), TEXT_R, y);
   } else {
     h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 13), TEXT_L, y);
     h.setFontAlign(1, -1).drawString(fitLeft(val, 22), TEXT_R, y);
@@ -397,10 +440,21 @@ function outRow(label, val, y) {
 // ============================================================
 //  BOOTSTRAP
 //  finishBoot wires knob handlers + draw + remove and returns the Pip
-//  app object. bootMode is the generic shell every NON-CALC mode uses:
-//  fields 1..N are the mode's controls;
-//  it delegates to the mode's draw/knob2/press. CALC supplies its own
-//  keypad handlers and calls finishBoot directly.
+//  app object. bootMode is the generic shell every NON-CALC mode uses.
+//  It runs a two-state interaction over fields 1..N (see `editing`):
+//    NAV   wheel/thumb scroll the selected field; PUSH selects it -- an
+//          "act" field runs its action immediately (spec.act), any other
+//          field enters EDIT.
+//    EDIT  wheel = spec.edit(field,dir) (a "num" field nudges by magStep(),
+//          an "enum" field cycles); thumb dials the step magnitude (editMag)
+//          for a "num" field, or cycles an "enum"; PUSH returns to NAV.
+//  spec: { mode, fieldCount(), draw(field), kind(field)->"num"|"enum"|"act",
+//          edit(field,dir), act(field), mag(field,dir)?, navThumb(field,dir)? }.
+//  mag (optional) overrides the thumb in EDIT for modes whose magnitude isn't a
+//  power-of-ten step (GRAPH dials zoom/pan coarsely). navThumb (optional) lets a
+//  mode use the thumb during NAV for a per-field toggle (VAC dials each row's
+//  display unit); without it the thumb just scrolls the selection like the
+//  wheel. CALC supplies its own keypad handlers and calls finishBoot directly.
 // ============================================================
 function finishBoot(k1, k2, redraw) {
   var removed = false, blinkTimer = null;
@@ -444,20 +498,33 @@ function finishBoot(k1, k2, redraw) {
   };
 }
 function bootMode(spec) {
-  curMode = spec.mode; field = 1;
-  function redraw() { spec.draw(field); }
+  curMode = spec.mode; field = 1; editing = false;
+  function kindOf(f) { return spec.kind ? spec.kind(f) : "num"; }
+  function redraw() { fieldKind = kindOf(field); spec.draw(field); }
   function maxField() { return Math.max(1, spec.fieldCount()); }
   function wrapField(v) { return 1 + wrap(v - 1, maxField()); }
-  // press/knob2 run arithmetic on user-dialled inputs; guard them so a stray
-  // throw (e.g. a degenerate solve) surfaces in the footer instead of bubbling
-  // out of the Pip event handler and wedging the app.
-  function k1(dir) {
-    if (dir === 0) { try { spec.press(field); } catch (e) { ST.msg = "ERR"; } ok(); }
-    else { field = wrapField(field + dir); click(); }
+  // edit/act run arithmetic on user-dialled inputs; guard them so a stray throw
+  // (e.g. a degenerate solve) surfaces in the footer instead of bubbling out of
+  // the Pip event handler and wedging the app.
+  function k1(dir) {                                   // WHEEL: scroll rows / +/-1 edit
+    if (dir === 0) {                                   // PUSH
+      if (editing) { editing = false; ok(); return; } // EDIT -> NAV
+      if (kindOf(field) === "act") { try { spec.act(field); } catch (e) { ST.msg = "ERR"; } ok(); }
+      else { editing = true; editMag = 0; ok(); }     // NAV -> EDIT (num/enum), step = 1
+    } else {
+      if (editing) { try { spec.edit(field, dir); } catch (e) { ST.msg = "ERR"; } }
+      else field = wrapField(field + dir);
+      click();
+    }
   }
-  function k2(dir) {
+  function k2(dir) {                                   // THUMB: step magnitude / nav helper
     if (!dir) return;
-    try { spec.knob2(field, dir); } catch (e) { ST.msg = "ERR"; }
+    if (editing) {
+      if (spec.mag) { try { spec.mag(field, dir); } catch (e) { ST.msg = "ERR"; } }
+      else if (kindOf(field) === "num") magBump(dir); // dial the wheel's step x10
+      else { try { spec.edit(field, dir); } catch (e) { ST.msg = "ERR"; } } // enum: cycle
+    } else if (spec.navThumb) { try { spec.navThumb(field, dir); } catch (e) { ST.msg = "ERR"; } }
+    else field = wrapField(field + dir);
     click();
   }
   return finishBoot(k1, k2, redraw);

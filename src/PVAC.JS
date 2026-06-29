@@ -4,10 +4,10 @@
   //  Mean free path, number density, Knudsen regime, and mean molecular
   //  speed for nitrogen. Everything is computed in SI internally, but
   //  every input is entered and shown in a unit the user picks:
-  //    WHEEL  selects a field
-  //    THUMB  dials the value (1-2-5 steps, or degrees for temperature)
-  //    PUSH   cycles + locks that field's unit (the physical value is
-  //           preserved, so it doubles as "show this in another unit")
+  //    NAV   WHEEL picks a field; THUMB cycles that field's display unit
+  //          (the physical value is preserved, so it doubles as "show this
+  //          in another unit"); PUSH enters EDIT (or opens the converter).
+  //    EDIT  WHEEL nudges +/-1 step, THUMB dials the step magnitude, PUSH = done.
   //  A built-in PRESSURE/LENGTH/TEMPERATURE converter is one push away on
   //  the CONVERTER row, so a value can be turned into the unit you know.
   //  Shared helpers are inlined from _LIB.JS at build time; Ans comes
@@ -38,17 +38,6 @@
   // ---- unit math ----------------------------------------------------------
   function toK(v, u) { return u === 1 ? v + 273.15 : u === 2 ? (v - 32) * 5 / 9 + 273.15 : v; }
   function fromK(k, u) { return u === 1 ? k - 273.15 : u === 2 ? (k - 273.15) * 9 / 5 + 32 : k; }
-  // 1-2-5 stepping on a positive value, so the dialled numbers stay round
-  // (1, 2, 5, 10, 20, 50, ...) regardless of the unit they are shown in.
-  function nudge(v, dir) {
-    if (!(v > 0)) return dir > 0 ? 1 : 0.000001;
-    var dec = Math.floor(Math.log(v) / Math.LN10 + 0.000000001);
-    var m = v / Math.pow(10, dec);                        // mantissa in [1,10)
-    var s = m < 1.5 ? 0 : m < 3.5 ? 1 : m < 7.5 ? 2 : 3;  // snap to 1 / 2 / 5 / 10
-    var n = dec * 3 + s + dir;
-    var nd = Math.floor(n / 3), nm = n - nd * 3;
-    return [1, 2, 5][nm] * Math.pow(10, nd);
-  }
   // Length readout that auto-picks a sensible unit instead of forcing metres.
   function lenAuto(m) {
     var a = Math.abs(m);
@@ -91,57 +80,76 @@
     outRow("KNUDSEN No", fmt(Kn) + "  " + reg, 246);
     outRow("MEAN SPEED", fmt(meanSpeed()) + " m/s", 264);
     bigFont();
-    footer("WHEEL PICK   THUMB DIAL   PUSH UNIT/OPEN");
+    // In NAV the thumb cycles the selected row's display unit (the value stays
+    // physically the same); push enters EDIT, where wheel = +/-1 step, thumb = magnitude.
+    footer(ST.msg ? caps(ST.msg) : (editing ? navHint() : "WHEEL PICK   THUMB UNIT   PUSH EDIT/OPEN"));
   }
 
   function drawConv(sel) {
     beginScreen("CONVERT");
     var U = cUnits();
     row("QUANTITY", ["PRESSURE", "LENGTH", "TEMPERATURE"][cQ], 40, sel === 1);
-    row("FROM", U[cFrom], 68, sel === 2);
-    row("TO", U[cTo], 96, sel === 3);
-    row("VALUE", fmt(cVal) + " " + U[cFrom], 124, sel === 4);
-    row("BACK", "MAIN >", 152, sel === 5);
+    row("FROM", U[cFrom], 64, sel === 2);
+    row("TO", U[cTo], 88, sel === 3);
+    row("VALUE", fmt(cVal) + " " + U[cFrom], 112, sel === 4);
+    row("IMPORT ANS", "ANS=" + fmt(ST.ans), 136, sel === 5);
+    row("BACK", "MAIN >", 160, sel === 6);
     var out = convOut();
-    section("RESULT", 176);
+    section("RESULT", 182);
     smallFont();
-    outRow(fmt(cVal) + " " + U[cFrom] + " =", fmt(out) + " " + U[cTo], 210);
-    outRow("SCI", sci(out, 8) + " " + U[cTo], 232);
-    outRow("ENG", eng(out, 8) + " " + U[cTo], 250);
+    outRow(fmt(cVal) + " " + U[cFrom] + " =", fmt(out) + " " + U[cTo], 206);
+    outRow("SCI", sci(out, 8) + " " + U[cTo], 226);
+    outRow("ENG", eng(out, 8) + " " + U[cTo], 244);
     bigFont();
-    footer("WHEEL PICK   THUMB DIAL   PUSH ANS/BACK");
+    footer(ST.msg ? caps(ST.msg) : navHint());
   }
 
   function draw(sel) { if (view === 0) drawMain(sel); else drawConv(sel); }
 
-  function knob2(sel, dir) {
+  // Field kinds. Main: 1-4 numeric, 5 CONVERTER action. Converter: 1-3 option
+  // lists, 4 numeric value, 5 IMPORT ANS + 6 BACK actions.
+  function kind(sel) {
+    if (view === 0) return sel === 5 ? "act" : "num";
+    return sel <= 3 ? "enum" : sel === 4 ? "num" : "act";
+  }
+
+  // THUMB during NAV: cycle the selected main-view field's display unit. (The
+  // converter sub-view has no per-field unit, so the thumb is idle there.)
+  function navThumb(sel, dir) {
+    if (view !== 0) return;
+    if (sel === 1) uP = wrap(uP + dir, P_U.length);
+    else if (sel === 2) uT = wrap(uT + dir, T_U.length);
+    else if (sel === 3) uD = wrap(uD + dir, D_U.length);
+    else if (sel === 4) uL = wrap(uL + dir, L_U.length);
+  }
+
+  // EDIT: wheel nudges +/-1 * magStep() in the shown unit, thumb dials the step's
+  // magnitude. Values are entered in the shown unit but kept in SI internally.
+  function edit(sel, dir) {
+    var s = magStep();
     if (view === 0) {
-      if (sel === 1) vacP = nudge(vacP / P_F[uP], dir) * P_F[uP];
-      else if (sel === 2) { var t = fromK(vacT, uT) + dir * (uT === 2 ? 9 : 5); vacT = toK(t, uT); if (vacT < 1) vacT = 1; }
-      else if (sel === 3) vacD = nudge(vacD / D_F[uD], dir) * D_F[uD];
-      else if (sel === 4) vacL = nudge(vacL / L_F[uL], dir) * L_F[uL];
+      if (sel === 1) vacP = (vacP / P_F[uP] + dir * s) * P_F[uP];
+      else if (sel === 2) { vacT = toK(fromK(vacT, uT) + dir * s, uT); if (vacT < 1) vacT = 1; }
+      else if (sel === 3) vacD = (vacD / D_F[uD] + dir * s) * D_F[uD];
+      else if (sel === 4) vacL = (vacL / L_F[uL] + dir * s) * L_F[uL];
     } else {
       var L = cUnits().length;
       if (sel === 1) { cQ = wrap(cQ + dir, 3); var L2 = cUnits().length; if (cFrom >= L2) cFrom = L2 - 1; if (cTo >= L2) cTo = L2 - 1; }
       else if (sel === 2) cFrom = wrap(cFrom + dir, L);
       else if (sel === 3) cTo = wrap(cTo + dir, L);
-      else if (sel === 4) cVal = cQ === 2 ? cVal + dir * 5 : nudge(cVal, dir);
+      else if (sel === 4) cVal += dir * s;
     }
   }
 
-  function press(sel) {
+  function act(sel) {
     if (view === 0) {
-      if (sel === 1) uP = wrap(uP + 1, P_U.length);
-      else if (sel === 2) uT = wrap(uT + 1, T_U.length);
-      else if (sel === 3) uD = wrap(uD + 1, D_U.length);
-      else if (sel === 4) uL = wrap(uL + 1, L_U.length);
-      else if (sel === 5) { view = 1; field = 1; }
+      if (sel === 5) { view = 1; field = 1; editing = false; }
     } else {
-      if (sel === 4) cVal = ST.ans;
-      else if (sel === 5) { view = 0; field = 1; }
+      if (sel === 5) { cVal = ST.ans; ST.msg = "ANS IMPORTED"; }
+      else if (sel === 6) { view = 0; field = 1; editing = false; ST.msg = ""; }
     }
   }
 
   initState();
-  return bootMode({ mode: "VAC", fieldCount: function () { return 5; }, draw: draw, knob2: knob2, press: press });
+  return bootMode({ mode: "VAC", fieldCount: function () { return view === 0 ? 5 : 6; }, draw: draw, kind: kind, edit: edit, act: act, navThumb: navThumb });
 })
