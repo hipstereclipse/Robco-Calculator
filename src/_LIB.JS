@@ -234,6 +234,16 @@ function applyPipPalette() {
   DRAW_R = c[0]; DRAW_G = c[1]; DRAW_B = c[2];
   updateRenderCompatColor();
 }
+// Espruino's Graphics.setColor(r,g,b) docs: "On devices with low flash
+// memory, r must be an integer representing the color in the current bit
+// depth ... g and b are ignored" -- passing 3 floats through (the old
+// approach) silently lost the theme color on any such build, and a
+// near-zero float r (DIM/MID levels) truncates straight to 0 = black. Avoid
+// the ambiguity entirely: precompute each of the 4 levels into a single
+// native packed-color integer via h.toColor() once (in updateRenderCompatColor,
+// whenever the theme changes) and have the wrapper hand that integer to
+// origColor as a single arg -- the one form the docs guarantee works on every
+// bit depth/flash configuration.
 function installRenderCompat() {
   if (!onDevice() || typeof h === "undefined" || !h) return;
   var compat = h._pipCalcCompat || (h._pipCalcCompat = {});
@@ -242,10 +252,13 @@ function installRenderCompat() {
     compat.colorWrapper = function (a) {
       var c = h._pipCalcCompat || compat;
       if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
-        var k = a | 0, l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
-        try { return c.origColor.call(h, (c.r == null ? DRAW_R : c.r) * l, (c.g == null ? DRAW_G : c.g) * l, (c.b == null ? DRAW_B : c.b) * l); } catch (e) {}
+        var k = a | 0;
+        if (c.levels && c.levels[k] != null) { try { return c.origColor.call(h, c.levels[k]); } catch (e) {} }
+        var l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
+        try { return c.origColor.call(h, (c.r == null ? DRAW_R : c.r) * l, (c.g == null ? DRAW_G : c.g) * l, (c.b == null ? DRAW_B : c.b) * l); } catch (e2) {}
+        try { return c.origColor.call(h, k); } catch (e3) {}
       }
-      try { return c.origColor.apply(h, arguments); } catch (e2) { return h; }
+      try { return c.origColor.apply(h, arguments); } catch (e4) { return h; }
     };
     h.setColor = compat.colorWrapper;
   }
@@ -264,12 +277,19 @@ function installRenderCompat() {
 }
 function updateRenderCompatColor() {
   try {
-    if (typeof h !== "undefined" && h && h._pipCalcCompat) {
-      h._pipCalcCompat.r = DRAW_R;
-      h._pipCalcCompat.g = DRAW_G;
-      h._pipCalcCompat.b = DRAW_B;
+    if (typeof h === "undefined" || !h || !h._pipCalcCompat) return;
+    var c = h._pipCalcCompat;
+    c.r = DRAW_R; c.g = DRAW_G; c.b = DRAW_B;
+    c.levels = null;
+    if (!h.toColor) return;                            // no native packer -- wrapper falls back to raw floats
+    var levels = [], ok = true;
+    for (var k = 0; k < 4; k++) {
+      var l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
+      try { levels[k] = h.toColor(DRAW_R * l, DRAW_G * l, DRAW_B * l); }
+      catch (e) { ok = false; break; }
     }
-  } catch (e) {}
+    if (ok) c.levels = levels;
+  } catch (e2) {}
 }
 function restoreRenderCompat() {
   var compat;

@@ -40,7 +40,7 @@ function makeRuntime(storage) {
     audioBuiltin() {}, setPalette() {},
   };
   const context = {
-    console, h, Pip, Math, Uint16Array, isNaN, isFinite,
+    console, h, Pip, Math, Uint16Array, Uint8Array, Float32Array, isNaN, isFinite,
     // load() hands off to another app; here we just record the requested file so
     // gotoMode() returns instead of actually swapping apps.
     load(file) { storage.__loaded = file; },

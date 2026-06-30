@@ -75,11 +75,29 @@
     return { label: "X*", value: critical(calcuA) };
   }
 
+  // Per-task labels AND a one-line plain-English hint for the A/B rows: the
+  // same two rows mean very different things across tasks (an eval point, an
+  // integration bound, a root guess, a search window) and earlier builds gave
+  // no in-app explanation of which -- confusing to enter blind. The hint
+  // shows in the footer while that row is selected (NAV, not yet editing).
+  var ops = ["VALUE & SLOPE", "AREA UNDER CURVE", "FIND A ROOT", "FIND MIN/MAX"];
+  var aLabs = ["EVAL AT X=A", "LOWER A", "GUESS X=A", "GUESS X=A"];
+  var bLabs = ["2ND PT X=B", "UPPER B", "+/- WIDTH B", "+/- WIDTH B"];
+  var aHints = [
+    "A: WHERE TO EVALUATE F(X)",
+    "A: INTEGRATE STARTING HERE",
+    "A: SEARCH STARTS NEAR HERE",
+    "A: SEARCH STARTS NEAR HERE"
+  ];
+  var bHints = [
+    "B: 2ND POINT FOR SLOPE A..B",
+    "B: INTEGRATE UP TO HERE",
+    "B: HOW FAR +/- OF A TO SCAN",
+    "B: HOW FAR +/- OF A TO SCAN"
+  ];
+
   function draw(sel) {
     beginScreen("CALCULUS");
-    var ops = ["VALUE & SLOPE", "AREA A..B", "ROOT NEAR A", "EXTREME @A"];
-    var aLabs = ["X POINT", "LOWER A", "GUESS A", "GUESS A"];
-    var bLabs = ["2ND POINT B", "UPPER B", "SCAN +/-B", "WINDOW B"];
     var pr = primaryResult();                            // computed once, reused below
     row("F(X)", caps(ST.fx), 40, sel === 1);
     row("TASK", ops[calcuOp], 66, sel === 2);
@@ -114,7 +132,16 @@
       outRow("TYPE", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 264);
     }
     bigFont();
-    footer(calcuMsg ? caps(calcuMsg) : navHint());
+    // While just browsing to the A/B row (not yet editing it), show what that
+    // field means for the current task instead of the generic "WHEEL PICK"
+    // hint -- the same two rows mean a different thing per task, so this is
+    // the one place that explanation fits without crowding the layout.
+    var hint = calcuMsg ? caps(calcuMsg)
+      : (!editing && sel === 3) ? aHints[calcuOp]
+      : (!editing && sel === 4) ? bHints[calcuOp]
+      : (!editing && sel === 5) ? "LIVE PREVIEW -- PUSH TO SAVE INTO ANS"
+      : navHint();
+    footer(hint);
   }
 
   // 1 F(X) / 2 TASK are option lists; 3 A / 4 B are numbers (wheel +/-1, thumb
