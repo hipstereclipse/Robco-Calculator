@@ -14,8 +14,14 @@
 //  file, and the app bootstrap. Apps that also do math additionally
 //  inject _EVAL.JS.
 // ============================================================
-var W = 480, H = 320;                 // working coordinate space (tune to device)
-var FG = 3, MID = 2, DIM = 1, BG = 0; // palette indices: bright / mid / dim / black
+var W = 480, H = 320;                   // working coordinate space (tune to device)
+// Palette indices into the firmware's native 16-step scanline ramp (index 0 =
+// black .. index 15 = full theme brightness; see jswrap_pipboy.c). We only
+// ever pass h.setColor() an INDEX, never RGB -- the ramp already encodes
+// whatever color the user picked in the device's own settings, so apps need
+// no theme-probing/RGB code at all. Earlier builds used 0..3 here, which sat
+// in the bottom ~20% of the ramp and rendered DIM/MID as near-invisible.
+var FG = 15, MID = 11, DIM = 7, BG = 0;
 var SAFE_L = 24, SAFE_T = 12, SAFE_R = W - 24, SAFE_B = H - 14;
 var CONTENT_L = SAFE_L + 8, CONTENT_R = SAFE_R - 8;
 var TEXT_L = CONTENT_L + 6, TEXT_R = CONTENT_R - 6;
@@ -40,8 +46,6 @@ var blinkOn = true;                   // cursor-style blink phase for the select
                                       // (the LABEL in NAV, the editable VALUE in EDIT);
                                       // toggled by a timer in finishBoot on device, stays
                                       // true off-device so previews/verify render steadily
-var DRAW_R = 0.102, DRAW_G = 1, DRAW_B = 0.502;
-var ORIG_SET_COLOR = null, ORIG_SET_FONT = null;
 var APP_IDS = {
   CALC: "pipcalc",
   GRAPH: "pipgraph",
@@ -173,95 +177,14 @@ function rawFmt(n) {
   return s;
 }
 
-// Some Pip builds treat h.setColor(0..3) as greyscale rather than palette
-// indices. Keep drawing indexed in source, but map those four levels to the
-// active Pip-Boy color while this app is resident.
-function themeColor(v) {
-  var s, n, r, g, b, x;
-  if (!v && v !== 0) return null;
-  if (typeof v === "string") {
-    s = v.toUpperCase();
-    if (s.indexOf("AMBER") >= 0 || s.indexOf("ORANGE") >= 0) return [1, 0.714, 0.259];
-    if (s.indexOf("BLUE") >= 0) return [0.18, 0.812, 1];
-    if (s.indexOf("WHITE") >= 0) return [0.773, 1, 1];
-    if (s.indexOf("GREEN") >= 0) return [0.102, 1, 0.502];
-    if (s[0] === "#") s = s.slice(1);
-    if (s.indexOf("0X") === 0) s = s.slice(2);
-    if (/^[0-9]+$/.test(s)) return themeColor(parseInt(s, 10));
-    if (s.length >= 6) {
-      n = parseInt(s.slice(0, 6), 16);
-      if (!isNaN(n)) return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-    }
-    return null;
-  }
-  if (typeof v === "number") {
-    x = v < 0 ? v + 4294967296 : v;
-    r = (x >>> 24) & 255; g = (x >>> 16) & 255; b = (x >>> 8) & 255;
-    if (r || g || b) return [r / 255, g / 255, b / 255];
-    return null;
-  }
-  if (v.length >= 3 && typeof v[0] === "number" && typeof v[1] === "number" && typeof v[2] === "number") {
-    r = v[0]; g = v[1]; b = v[2];
-    if (r > 1 || g > 1 || b > 1) { r /= 255; g /= 255; b /= 255; }
-    return [r, g, b];
-  }
-  if (typeof v === "object") {
-    return themeColor(v.uPipboyColor || v.pipboyColor || v.pipBoyColor || v.hudColor || v.uiColor || v.color || v.theme || v.phosphor || v.settings || v.config || v.options || v.prefs || v.preferences || v.display || v.hud || v.ui || v.colors || v.colours || v.pipboy || v.pipBoy || (v.r != null ? [v.r, v.g, v.b] : null));
-  }
-  return null;
-}
-function settingColor() {
-  var S, names, i, raw, c;
-  try {
-    names = ["uPipboyColor", "pipboyColor", "pipBoyColor", "hudColor", "uiColor", "color", "theme", "phosphor", "settings", "config", "options", "prefs", "preferences"];
-    for (i = 0; i < names.length; i++) { c = themeColor(Pip[names[i]]); if (c) return c; }
-    if (Pip.getTheme) { c = themeColor(Pip.getTheme()); if (c) return c; }
-    if (Pip.getColor) { c = themeColor(Pip.getColor()); if (c) return c; }
-  } catch (e) {}
-  try {
-    S = require("Storage");
-    names = ["PIPST", "PIPSET", "PIPCFG", "PIPCONF", "PIPSETTINGS", "CONFIG", "SETTINGS", "settings"];
-    for (i = 0; i < names.length; i++) {
-      raw = S.read(names[i]);
-      if (raw) { try { raw = JSON.parse(raw); } catch (_) {} c = themeColor(raw); if (c) return c; }
-    }
-  } catch (e2) {}
-  return null;
-}
-function applyPipPalette() {
-  var c = settingColor();
-  if (!c) c = [0.102, 1, 0.502];
-  DRAW_R = c[0]; DRAW_G = c[1]; DRAW_B = c[2];
-  updateRenderCompatColor();
-}
-// Espruino's Graphics.setColor(r,g,b) docs: "On devices with low flash
-// memory, r must be an integer representing the color in the current bit
-// depth ... g and b are ignored" -- passing 3 floats through (the old
-// approach) silently lost the theme color on any such build, and a
-// near-zero float r (DIM/MID levels) truncates straight to 0 = black. Avoid
-// the ambiguity entirely: precompute each of the 4 levels into a single
-// native packed-color integer via h.toColor() once (in updateRenderCompatColor,
-// whenever the theme changes) and have the wrapper hand that integer to
-// origColor as a single arg -- the one form the docs guarantee works on every
-// bit depth/flash configuration.
+// setFont is the only thing worth wrapping now: an unavailable font name
+// should degrade to a safe fallback instead of throwing inside a knob
+// handler. Color is never wrapped -- h.setColor(index) is native and the
+// firmware's own palette already encodes the user's theme (see FG/MID/DIM
+// above), so there is nothing for an app to probe or translate.
 function installRenderCompat() {
   if (!onDevice() || typeof h === "undefined" || !h) return;
   var compat = h._pipCalcCompat || (h._pipCalcCompat = {});
-  if (h.setColor && h.setColor !== compat.colorWrapper) {
-    compat.origColor = h.setColor;
-    compat.colorWrapper = function (a) {
-      var c = h._pipCalcCompat || compat;
-      if (arguments.length === 1 && typeof a === "number" && a >= 0 && a <= 3) {
-        var k = a | 0;
-        if (c.levels && c.levels[k] != null) { try { return c.origColor.call(h, c.levels[k]); } catch (e) {} }
-        var l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
-        try { return c.origColor.call(h, (c.r == null ? DRAW_R : c.r) * l, (c.g == null ? DRAW_G : c.g) * l, (c.b == null ? DRAW_B : c.b) * l); } catch (e2) {}
-        try { return c.origColor.call(h, k); } catch (e3) {}
-      }
-      try { return c.origColor.apply(h, arguments); } catch (e4) { return h; }
-    };
-    h.setColor = compat.colorWrapper;
-  }
   if (h.setFont && h.setFont !== compat.fontWrapper) {
     compat.origFont = h.setFont;
     compat.fontWrapper = function (name, size) {
@@ -275,28 +198,11 @@ function installRenderCompat() {
     h.setFont = compat.fontWrapper;
   }
 }
-function updateRenderCompatColor() {
-  try {
-    if (typeof h === "undefined" || !h || !h._pipCalcCompat) return;
-    var c = h._pipCalcCompat;
-    c.r = DRAW_R; c.g = DRAW_G; c.b = DRAW_B;
-    c.levels = null;
-    if (!h.toColor) return;                            // no native packer -- wrapper falls back to raw floats
-    var levels = [], ok = true;
-    for (var k = 0; k < 4; k++) {
-      var l = k === 0 ? 0 : k === 1 ? 0.34 : k === 2 ? 0.67 : 1;
-      try { levels[k] = h.toColor(DRAW_R * l, DRAW_G * l, DRAW_B * l); }
-      catch (e) { ok = false; break; }
-    }
-    if (ok) c.levels = levels;
-  } catch (e2) {}
-}
 function restoreRenderCompat() {
   var compat;
   try {
     if (typeof h === "undefined" || !h || !h._pipCalcCompat) return;
     compat = h._pipCalcCompat;
-    if (compat.origColor && h.setColor === compat.colorWrapper) h.setColor = compat.origColor;
     if (compat.origFont && h.setFont === compat.fontWrapper) h.setFont = compat.origFont;
     try { delete h._pipCalcCompat; } catch (e2) { h._pipCalcCompat = null; }
   } catch (e) {}
@@ -313,7 +219,6 @@ function initState() {
   if (ST.msg == null) ST.msg = "";
   if (!ST.hist || !ST.hist.unshift) ST.hist = [];
   installRenderCompat();
-  applyPipPalette();
   return ST;
 }
 
@@ -479,6 +384,7 @@ function outRow(label, val, y) {
 function finishBoot(k1, k2, redraw) {
   var removed = false, blinkTimer = null;
   function paint() {
+    if (removed || !redraw) return;   // a deferred first paint can fire after a fast close
     try { redraw(); }
     catch (e) {
       try {
@@ -489,7 +395,15 @@ function finishBoot(k1, k2, redraw) {
     }
     if (onDevice()) { try { if (h.flip) h.flip(); } catch (e2) {} }
   }
-  paint();
+  // Defer the FIRST paint off the launch spike on device. finishBoot runs
+  // synchronously inside the factory, which the firmware is still eval()-ing
+  // from the ~12KB source string -- the highest-memory instant of the launch.
+  // A heavy first paint (GRAPH traces 393 f(x) columns) on top of that eval
+  // spike is what tipped GRAPH alone into LOW_MEMORY at open. setTimeout(...,0)
+  // lets eval() return (freeing the parser's transient memory) before the first
+  // draw runs. Off-device we paint synchronously so the headless verify/preview
+  // harness still renders immediately.
+  if (onDevice()) { try { setTimeout(paint, 0); } catch (eP) { paint(); } } else { paint(); }
   var h1 = function (d) { blinkOn = true; k1(d); paint(); };   // any input relights the
   var h2 = function (d) { blinkOn = true; k2(d); paint(); };   // value so it never edits while dark
   Pip.on("knob1", h1);

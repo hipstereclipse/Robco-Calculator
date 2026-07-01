@@ -1,7 +1,7 @@
 {
   "id": "pipcalculus",
   "name": "RobCo Calculus",
-  "version": "3.51",
+  "version": "3.53",
   "files": "APPS/PCALCULUS.JS,APPINFO/CALCULUS.info,APPINFO/CALCULUS.img",
   "src": "APPS/PCALCULUS.JS",
   "icon": "APPINFO/CALCULUS.img"

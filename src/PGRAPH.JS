@@ -11,18 +11,38 @@
   // Plot-column cache: the curve only depends on f(x)/gxc/gxs/gyc/gys, none of
   // which change on a blink tick -- recomputing it every redraw was the GRAPH
   // OOM (391 fAt() calls every 520ms for as long as the app stayed open, on
-  // top of the initial-paint cost). plotY/plotFin are filled by tracePlot()
-  // and reused by draw() until the view or function actually changes.
-  var plotY = new Float32Array(px1 - px0 + 1), plotFin = new Uint8Array(px1 - px0 + 1);
-  var plotDirty = true;
+  // top of the initial-paint cost). plotY is filled by tracePlot() and reused
+  // by draw() until the view or function actually changes.
+  //
+  // Sampled every PLOT_STEP px (not every px): halves the fAt() calls per
+  // trace and, combined with a single Int16Array (sentinel PLOT_NAN for a
+  // non-finite sample) instead of two separate typed-array buffers, means
+  // only ONE contiguous allocation is needed instead of two -- Espruino's
+  // flat-buffer alloc needs a single contiguous free block, so two small
+  // buffers can fail under fragmentation even when total free memory looks
+  // fine. The buffer is allocated LAZILY (first tracePlot(), not here at
+  // factory scope) since GRAPH was the only app allocating typed arrays
+  // while the device was still eval()-ing the ~12KB source string -- the
+  // single highest-memory instant of the whole launch.
+  var PLOT_STEP = 2, PLOT_NAN = 0x7FFF;
+  var plotN = Math.floor((px1 - px0) / PLOT_STEP) + 1;
+  var plotY = null;
+  var plotDirty = true, plotFailed = false;
 
   function my(y) { return py1 - (y - (gyc - gys)) / (2 * gys) * (py1 - py0); }
 
   function tracePlot() {
-    for (var sx = px0; sx <= px1; sx++) {
-      var x = (gxc - gxs) + (sx - px0) / (px1 - px0) * (2 * gxs), y = fAt(x), i = sx - px0;
-      if (isFinite(y)) { plotY[i] = my(y); plotFin[i] = 1; } else plotFin[i] = 0;
+    if (!plotY) {
+      collect();
+      try { plotY = new Int16Array(plotN); }
+      catch (e) { plotFailed = true; plotDirty = false; return; }
     }
+    for (var i = 0; i < plotN; i++) {
+      var sx = px0 + i * PLOT_STEP;
+      var x = (gxc - gxs) + (sx - px0) / (px1 - px0) * (2 * gxs), y = fAt(x);
+      plotY[i] = isFinite(y) ? my(y) : PLOT_NAN;
+    }
+    plotFailed = false;
     plotDirty = false;
   }
 
@@ -52,22 +72,26 @@
     if (gyc - gys < 0 && gyc + gys > 0) { var ay = my(0); h.drawLine(px0, ay, px1, ay); }
     h.setColor(FG);
     if (plotDirty) tracePlot();                       // only re-walk f(x) when the view changed
-    var pjx = null, pjy = null;
-    for (var sx = px0; sx <= px1; sx++) {
-      var i = sx - px0;
-      if (plotFin[i]) {
-        var sy = plotY[i];
-        if (sy >= py0 && sy <= py1) {
-          if (pjx !== null && Math.abs(sy - pjy) < (py1 - py0)) h.drawLine(pjx, pjy, sx, sy); else h.fillRect(sx, sy, sx, sy);
-          pjx = sx; pjy = sy;
+    if (plotFailed) {
+      h.setFontAlign(0, 0).drawString("LOW MEMORY", (px0 + px1) / 2, (py0 + py1) / 2);
+    } else {
+      var pjx = null, pjy = null;
+      for (var i = 0; i < plotN; i++) {
+        var sx = px0 + i * PLOT_STEP;
+        if (plotY[i] !== PLOT_NAN) {
+          var sy = plotY[i];
+          if (sy >= py0 && sy <= py1) {
+            if (pjx !== null && Math.abs(sy - pjy) < (py1 - py0)) h.drawLine(pjx, pjy, sx, sy); else h.fillRect(sx, sy, sx, sy);
+            pjx = sx; pjy = sy;
+          } else pjx = null;
         } else pjx = null;
-      } else pjx = null;
+      }
     }
     smallFont();                                     // labelled window readout below the plot
     outRow("X RANGE", fmt(gxc - gxs) + " .. " + fmt(gxc + gxs), py1 + 6);
     outRow("Y RANGE", fmt(gyc - gys) + " .. " + fmt(gyc + gys), py1 + 24);
     bigFont();
-    footer(ST.msg ? caps(ST.msg) : (editing ? "WHEEL FINE   THUMB COARSE   PUSH DONE" : navHint()));
+    footer(plotFailed ? "LOW MEMORY -- CLOSE OTHER APPS" : ST.msg ? caps(ST.msg) : (editing ? "WHEEL FINE   THUMB COARSE   PUSH DONE" : navHint()));
   }
 
   // AUTO-Y is the action; ZOOM/PAN are numeric. Their magnitude is multiplicative

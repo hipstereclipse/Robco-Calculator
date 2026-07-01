@@ -1,7 +1,7 @@
 {
   "id": "pipref",
   "name": "RobCo Reference",
-  "version": "3.51",
+  "version": "3.53",
   "files": "APPS/PREF.JS,APPINFO/REF.info,APPINFO/REF.img",
   "src": "APPS/PREF.JS",
   "icon": "APPINFO/REF.img"

@@ -21,17 +21,18 @@ $data = Get-Content -Raw $OpsPath | ConvertFrom-Json
 
 $bg = [System.Drawing.Color]::FromArgb(0, 10, 5)
 $fg = [System.Drawing.Color]::FromArgb(26, 255, 128)
-$mid = [System.Drawing.Color]::FromArgb(109, 218, 118)
-$dim = [System.Drawing.Color]::FromArgb(0, 95, 0)
-$dark = [System.Drawing.Color]::FromArgb(0, 12, 3)
 
+# Device parity: apps draw with h.setColor(index) into the firmware's native
+# 16-step green scanline ramp (index 0 = black .. index 15 = full brightness;
+# see jswrap_pipboy.c). Approximate that whole ramp here rather than just the
+# four indices our draw code actually uses (0/7/11/15, i.e. BG/DIM/MID/FG),
+# so any future index still renders something sane.
 function Get-PipColor($Index) {
-  switch ([int]$Index) {
-    0 { return $script:dark }
-    1 { return $script:dim }
-    2 { return $script:mid }
-    default { return $script:fg }
-  }
+  $i = [int]$Index
+  if ($i -lt 0) { $i = 0 }
+  if ($i -gt 15) { $i = 15 }
+  $l = $i / 15.0
+  return [System.Drawing.Color]::FromArgb([int](26 * $l), [int](255 * $l), [int](128 * $l))
 }
 
 function New-Brush($Color) {

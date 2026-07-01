@@ -21,9 +21,13 @@ function makeRuntime(storage) {
   let ops = [];
   const handlers = {};
   function record(type, data) { ops.push(Object.assign({ type }, data)); }
+  // color starts at 15 (device parity: h.reset() leaves fg at the top of the
+  // native 16-step palette ramp, index 15 -- see jswrap_pipboy.c). No toColor
+  // or Pip.setPalette mock is provided: apps must never call the global
+  // palette API, so an app that does throws here instead of silently passing.
   const h = {
-    color: 3, font: "Monofonto23", alignX: -1, alignY: -1,
-    reset() { this.color = 3; this.font = "Monofonto23"; this.alignX = -1; this.alignY = -1; return this; },
+    color: 15, font: "Monofonto23", alignX: -1, alignY: -1,
+    reset() { this.color = 15; this.font = "Monofonto23"; this.alignX = -1; this.alignY = -1; return this; },
     clear() { ops = [{ type: "clear" }]; return this; },
     setColor(c) { this.color = c; return this; },
     setFont(f) { this.font = f; return this; },
@@ -32,15 +36,14 @@ function makeRuntime(storage) {
     fillRect(x0, y0, x1, y1) { record("fillRect", { x0, y0, x1, y1, color: this.color }); return this; },
     drawRect(x0, y0, x1, y1) { record("drawRect", { x0, y0, x1, y1, color: this.color }); return this; },
     drawLine(x0, y0, x1, y1) { record("drawLine", { x0, y0, x1, y1, color: this.color }); return this; },
-    toColor(r, g, b) { return [r, g, b]; },
   };
   const Pip = {
     on(name, handler) { handlers[name] = handler; },
     removeListener(name) { delete handlers[name]; },
-    audioBuiltin() {}, setPalette() {},
+    audioBuiltin() {},
   };
   const context = {
-    console, h, Pip, Math, Uint16Array, Uint8Array, Float32Array, isNaN, isFinite,
+    console, h, Pip, Math, Uint16Array, Uint8Array, Int16Array, Float32Array, isNaN, isFinite,
     // load() hands off to another app; here we just record the requested file so
     // gotoMode() returns instead of actually swapping apps.
     load(file) { storage.__loaded = file; },
