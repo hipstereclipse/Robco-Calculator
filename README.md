@@ -57,12 +57,14 @@ Each app has its own metadata file in `APPINFO/` (`CALC.info`, `GRAPH.info`, …
 ### Browser installer
 
 1. Open `install.html` in Chrome or Edge.
-2. Select the root of the microSD card used by your Pip runtime.
+2. Choose a target: either **Select microSD Root** (card removed and mounted via a card reader) or **Connect via USB** (leave the card in the Pip-Boy and plug it in directly; needs a browser with the Web Serial API and a data-capable USB-C cable). Only one target is active at a time — picking one clears the other.
 3. Click **Install**.
 
-The installer reads the payload list from all nine `APPINFO/*.info` manifests, downloads the files from this GitHub repository, and writes them into matching `APPS/` and `APPINFO/` folders on the selected card. If your browser does not offer folder write access, use the manual steps below.
+The installer reads the payload list from all nine `APPINFO/*.info` manifests, downloads the files from this GitHub repository, and writes them either into matching `APPS/` and `APPINFO/` folders on the selected card, or — for a USB target — directly onto the card through the Pip-Boy's own Espruino console over serial (the Pip-Boy 3000 does not expose its SD card as a USB mass-storage drive, so this is the only way to install without removing the card). If your browser does not offer folder write access or Web Serial support, use the manual steps below.
 
-**Purge any previous install** is on by default: before writing, the installer reads any of the nine `APPINFO/*.info` manifests already on the card, deletes every file those older versions listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
+**Purge any previous install** is on by default and works the same way for both targets: before writing, the installer reads any of the nine `APPINFO/*.info` manifests already on the card, deletes every file those older versions listed (plus the current payload), and then writes a clean copy. This avoids stale files from an earlier version conflicting with the new one. Uncheck it to install without clearing.
+
+USB install requires the device not be open in the Espruino IDE or the web updater at the same time — only one program can hold the serial port.
 
 If the direct install fails (some SD-card/OS combinations throw `NotReadableError` from the browser's File System Access API), click **Download .zip** instead. It bundles the same payload into `RobCo-Calculator.zip`; extract that to the microSD root and it creates the `APPS/` and `APPINFO/` folders for you. This path writes no files directly, so it works in any browser.
 

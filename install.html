@@ -538,6 +538,7 @@
         <div class="controls">
           <div class="target-row">
             <button type="button" id="selectTarget">Select microSD Root</button>
+            <button type="button" id="connectSerial">Connect via USB</button>
             <div class="selected-target" id="targetLabel">No target selected</div>
           </div>
 
@@ -549,7 +550,9 @@
 
           <p class="hint">Direct install failing (e.g. <strong>NotReadableError</strong> after selecting the card)? Use <strong>Download .zip</strong> and extract it to the microSD root &mdash; it works in any browser and writes no files directly.</p>
 
-          <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing (direct install only)</label>
+          <p class="hint">USB install requires Chrome or Edge with Web Serial support and a data-capable USB-C cable. If the Pip-Boy doesn't appear in the picker, make sure it isn't already open in the <strong>Espruino IDE</strong> or the web updater.</p>
+
+          <label class="opt"><input type="checkbox" id="cleanInstall" checked> Purge any previous install before writing</label>
 
           <div class="progress" aria-hidden="true">
             <div class="progress-bar" id="progressBar"></div>
@@ -604,6 +607,7 @@
     const installStatus = document.getElementById("installStatus");
     const refInput = document.getElementById("refInput");
     const selectTarget = document.getElementById("selectTarget");
+    const connectSerial = document.getElementById("connectSerial");
     const installButton = document.getElementById("installButton");
     const targetLabel = document.getElementById("targetLabel");
     const fileList = document.getElementById("fileList");
@@ -612,7 +616,24 @@
     const cleanInstall = document.getElementById("cleanInstall");
     const zipButton = document.getElementById("zipButton");
 
+    // -- USB-serial protocol constants --------------------------------------
+    // Ported from a proven working reference (pyserial-based) that installs
+    // files on this same class of device (Pip-Boy 3000, Espruino on STM32)
+    // over USB-CDC serial via require("fs"). Keep these in sync with that
+    // reference rather than re-deriving them.
+    const SERIAL_BAUD = 9600;        // USB-CDC ignores baud; the API needs a value
+    const CMD_TIMEOUT_MS = 4000;     // ms to wait for a device reply per command
+    const PROBE_TIMEOUT_MS = 1500;   // shorter timeout for the initial identify()
+    const IDLE_GAP_MS = 80;          // a reply is "done" after this long with no new bytes
+    const B64_CHUNK = 120;           // base64 chars per appendFileSync call (~90 raw
+                                      // bytes) -- keeps the wrapped command line under
+                                      // the device's console input-line limit. Do not
+                                      // raise without re-verifying that limit on hardware.
+    const MARK = "__RCI__";          // underscores can't appear in base64 output, so
+                                      // this can never collide with printed payload text
+
     let targetDirectory = null;
+    let serialLink = null;
     let payloadFiles = FALLBACK_PAYLOAD.slice();
     let appInfo = null;
     let busy = false;
@@ -641,8 +662,21 @@
       });
 
       selectTarget.addEventListener("click", selectInstallTarget);
+      connectSerial.addEventListener("click", connectSerialTarget);
       installButton.addEventListener("click", installApp);
       zipButton.addEventListener("click", downloadZip);
+
+      if ("serial" in navigator) {
+        navigator.serial.addEventListener("disconnect", (event) => {
+          if (serialLink && event.target === serialLink.port) {
+            addLog("USB device disconnected.", "warn");
+            serialLink = null;
+            targetLabel.textContent = "No target selected";
+            installStatus.textContent = "Waiting for target";
+            updateInstallState();
+          }
+        });
+      }
     }
 
     function cleanRef(value) {
@@ -732,10 +766,15 @@
       }
 
       try {
-        targetDirectory = await window.showDirectoryPicker({
+        const picked = await window.showDirectoryPicker({
           id: "robco-calculator-target",
           mode: "readwrite"
         });
+        if (serialLink) {
+          await serialLink.close();
+          serialLink = null;
+        }
+        targetDirectory = picked;
         targetLabel.textContent = targetDirectory.name || "Selected folder";
         installStatus.textContent = "Target selected";
         addLog("Selected target: " + targetLabel.textContent, "ok");
@@ -748,18 +787,61 @@
       }
     }
 
-    async function installApp() {
-      if (busy || !targetDirectory) {
+    async function connectSerialTarget() {
+      if (!("serial" in navigator)) {
+        addLog("USB install requires Chrome or Edge with the Web Serial API.", "error");
+        installStatus.textContent = "Browser unsupported";
         return;
       }
+
+      let link = null;
+      try {
+        setBusy(true);
+        const port = await navigator.serial.requestPort();
+        link = new SerialLink(port);
+        await link.open();
+        const board = await link.identify(PROBE_TIMEOUT_MS);
+
+        if (serialLink) {
+          await serialLink.close();
+        }
+        targetDirectory = null;
+        serialLink = link;
+        targetLabel.textContent = "USB: " + board;
+        installStatus.textContent = "Target selected";
+        addLog("Connected to " + board + " over USB serial.", "ok");
+      } catch (error) {
+        if (link) {
+          await link.close();
+        }
+        if (error.name !== "NotFoundError") {
+          addLog(describeError(error), "error");
+        }
+      } finally {
+        setBusy(false);
+        updateInstallState();
+      }
+    }
+
+    async function installApp() {
+      if (busy || !(targetDirectory || serialLink)) {
+        return;
+      }
+      const usingSerial = !!serialLink;
 
       try {
         setBusy(true);
         setProgress(0);
         logList.replaceChildren();
 
-        guardTargetDirectory(targetDirectory);
-        await ensureWritable(targetDirectory);
+        if (usingSerial) {
+          if (!serialLink._connected) {
+            throw new Error("USB device is not connected.");
+          }
+        } else {
+          guardTargetDirectory(targetDirectory);
+          await ensureWritable(targetDirectory);
+        }
 
         if (!appInfo) {
           try {
@@ -770,23 +852,23 @@
         }
 
         // 1) Download everything into memory first. If a download fails we
-        //    abort here, before touching the card -- so a network error can
+        //    abort here, before touching the device -- so a network error can
         //    never leave a half-wiped install.
-        const downloaded = [];
-        for (let index = 0; index < payloadFiles.length; index += 1) {
-          const path = payloadFiles[index];
-          addLog("Downloading " + path + "...");
-          downloaded.push({ path: path, bytes: await downloadFile(path) });
-          setProgress(((index + 1) / payloadFiles.length) * 50);
-        }
+        const downloaded = await downloadAll(payloadFiles, (done, total) => {
+          setProgress((done / total) * 50);
+        });
 
         // 2) Purge any previous install. Best-effort only: writing below
         //    overwrites every file anyway, so a purge problem must never
         //    abort the install.
         if (cleanInstall.checked) {
-          addLog("Scanning microSD for a previous install...");
+          addLog("Scanning for a previous install...");
           try {
-            await removeOldInstall(targetDirectory);
+            if (usingSerial) {
+              await removeOldInstallSerial(serialLink);
+            } else {
+              await removeOldInstall(targetDirectory);
+            }
           } catch (error) {
             addLog("Purge skipped: " + describeError(error), "warn");
           }
@@ -795,7 +877,11 @@
         // 3) Write the fresh copy from memory.
         for (let index = 0; index < downloaded.length; index += 1) {
           const item = downloaded[index];
-          await writeFile(targetDirectory, item.path, item.bytes);
+          if (usingSerial) {
+            await serialLink.writeFile(item.path, item.bytes);
+          } else {
+            await writeFile(targetDirectory, item.path, item.bytes);
+          }
           setProgress(50 + ((index + 1) / downloaded.length) * 50);
           addLog("Installed " + item.path + " (" + item.bytes.byteLength + " bytes).", "ok");
         }
@@ -877,6 +963,49 @@
       }
     }
 
+    // Serial counterparts of readExistingManifest/removeOldInstall above. Kept
+    // as parallel siblings rather than merged with the directory versions --
+    // those have several hardware-hardening commits behind them for real
+    // removable-media quirks that don't apply here, and vice versa.
+    async function readExistingManifestSerial(link) {
+      const list = [];
+      for (const infoPath of INFO_PATHS) {
+        const text = await link.readFileText(infoPath);
+        if (!text) continue;
+        try {
+          const data = JSON.parse(text);
+          String(data.files || "")
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean)
+            .forEach((item) => list.push(item));
+          if (data.src) list.push(data.src);
+          if (data.icon) list.push(data.icon);
+          list.push(infoPath);
+        } catch (error) { /* not valid JSON -- ignore */ }
+      }
+      return uniquePaths(list);
+    }
+
+    async function removeOldInstallSerial(link) {
+      const existing = await readExistingManifestSerial(link);
+      const targets = uniquePaths(existing.concat(payloadFiles));
+      let removed = 0;
+
+      for (const path of targets) {
+        if (await link.deleteFile(path)) {
+          removed += 1;
+          addLog("Removed old " + path, "warn");
+        }
+      }
+
+      if (removed) {
+        addLog("Cleared " + removed + " file(s) from a previous install.", "ok");
+      } else {
+        addLog("No previous install detected.", "ok");
+      }
+    }
+
     function guardTargetDirectory(directory) {
       const name = String(directory.name || "").toUpperCase();
       if (name === "APPS" || name === "APPINFO") {
@@ -905,6 +1034,19 @@
         throw new Error("Download failed for " + path + ": " + response.status + " " + response.statusText);
       }
       return new Uint8Array(await response.arrayBuffer());
+    }
+
+    async function downloadAll(paths, onProgress) {
+      const out = [];
+      for (let index = 0; index < paths.length; index += 1) {
+        const path = paths[index];
+        addLog("Downloading " + path + "...");
+        out.push({ path: path, bytes: await downloadFile(path) });
+        if (onProgress) {
+          onProgress(index + 1, paths.length);
+        }
+      }
+      return out;
     }
 
     async function writeFile(root, path, bytes) {
@@ -986,7 +1128,8 @@
     function setBusy(nextBusy) {
       busy = nextBusy;
       selectTarget.disabled = busy;
-      installButton.disabled = busy || !targetDirectory;
+      connectSerial.disabled = busy;
+      installButton.disabled = busy || !(targetDirectory || serialLink);
       zipButton.disabled = busy;
       refInput.disabled = busy;
       cleanInstall.disabled = busy;
@@ -996,7 +1139,7 @@
     }
 
     function updateInstallState() {
-      installButton.disabled = busy || !targetDirectory;
+      installButton.disabled = busy || !(targetDirectory || serialLink);
     }
 
     function setProgress(value) {
@@ -1023,13 +1166,9 @@
           }
         }
 
-        const entries = [];
-        for (let index = 0; index < payloadFiles.length; index += 1) {
-          const path = payloadFiles[index];
-          addLog("Downloading " + path + "...");
-          entries.push({ name: path, bytes: await downloadFile(path) });
-          setProgress(((index + 1) / payloadFiles.length) * 100);
-        }
+        const entries = await downloadAll(payloadFiles, (done, total) => {
+          setProgress((done / total) * 100);
+        });
 
         const blob = buildZip(entries);
         const url = URL.createObjectURL(blob);
@@ -1089,7 +1228,7 @@
       const dosDate = 0x21; // 1980-01-01
 
       entries.forEach((entry) => {
-        const nameBytes = asciiBytes(entry.name);
+        const nameBytes = asciiBytes(entry.path);
         const crc = crc32(entry.bytes);
         const size = entry.bytes.length;
 
@@ -1144,6 +1283,220 @@
       end.setUint16(20, 0, true);
 
       return new Blob(parts.concat(central, [new Uint8Array(end.buffer)]), { type: "application/zip" });
+    }
+
+    // --- USB-serial path: talk to the Espruino console on a USB-connected
+    //     Pip-Boy directly, so files land on the card's fs without ever
+    //     removing it. Protocol ported from a proven pyserial-based reference
+    //     that installs files on this same device class -- see the constants
+    //     block near the top of this script for chunk size / timeout notes.
+    //
+    //     Safety: every generated command below touches only require("fs")
+    //     (mkdir/writeFileSync/appendFileSync/readFileSync/unlinkSync) plus
+    //     session-only echo()/Ctrl-C housekeeping. Nothing here calls save()
+    //     or any other firmware/flash-touching API, so this cannot brick the
+    //     device the way an IDE "flash" action could. ---
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function q(value) {
+      return '"' + String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+    }
+
+    function toBase64(bytes) {
+      let binary = "";
+      const chunkSize = 8192;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+      }
+      return btoa(binary);
+    }
+
+    function base64ToText(b64) {
+      const binary = atob(b64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return new TextDecoder("utf-8").decode(bytes);
+    }
+
+    class SerialLink {
+      constructor(port) {
+        this.port = port;
+        this._connected = false;
+        this._buffer = "";
+        this._lastRxAt = 0;
+        this._reader = null;
+        this._writer = null;
+        this._readableClosed = null;
+        this._writableClosed = null;
+      }
+
+      async open() {
+        await this.port.open({ baudRate: SERIAL_BAUD });
+
+        const decoder = new TextDecoderStream();
+        this._readableClosed = this.port.readable.pipeTo(decoder.writable).catch(() => {});
+        this._reader = decoder.readable.getReader();
+
+        const encoder = new TextEncoderStream();
+        this._writableClosed = encoder.readable.pipeTo(this.port.writable).catch(() => {});
+        this._writer = encoder.writable.getWriter();
+
+        this._connected = true;
+        this._pump();
+        await sleep(250);
+        await this._prime();
+      }
+
+      async _pump() {
+        try {
+          while (this._connected) {
+            const { value, done } = await this._reader.read();
+            if (done) {
+              break;
+            }
+            if (value) {
+              this._buffer += value;
+              this._lastRxAt = Date.now();
+            }
+          }
+        } catch (error) {
+          /* stream broke, most likely the device was unplugged */
+        } finally {
+          this._connected = false;
+        }
+      }
+
+      async _prime() {
+        try {
+          await this._writer.write("\x03");
+          await sleep(150);
+          await this._writer.write("echo(0)\n");
+          await sleep(200);
+          this._buffer = "";
+        } catch (error) {
+          /* best effort */
+        }
+      }
+
+      async close() {
+        this._connected = false;
+        try { await this._writer.write("echo(1)\n"); } catch (error) {}
+        try { await this._writer.close(); } catch (error) {}
+        try { await this._writableClosed; } catch (error) {}
+        try { await this._reader.cancel(); } catch (error) {}
+        try { await this._readableClosed; } catch (error) {}
+        try { await this.port.close(); } catch (error) {}
+      }
+
+      async _converse(js, timeoutMs) {
+        if (!this._connected) {
+          throw new Error("USB device is not connected.");
+        }
+        timeoutMs = timeoutMs || CMD_TIMEOUT_MS;
+        this._buffer = "";
+        await this._writer.write(js + "\n");
+        const deadline = Date.now() + timeoutMs;
+        while (Date.now() < deadline) {
+          if (!this._connected) {
+            throw new Error("USB device disconnected mid-command.");
+          }
+          if (this._buffer.length > 0 && (Date.now() - this._lastRxAt) > IDLE_GAP_MS) {
+            break;
+          }
+          await sleep(4);
+        }
+        return this._buffer;
+      }
+
+      async _status(js, timeoutMs) {
+        const wrapped = "try{" + js + '}catch(e){print("' + MARK + 'ERR "+e)}';
+        const resp = await this._converse(wrapped, timeoutMs);
+        if (resp.indexOf(MARK) === -1) {
+          throw new Error("No response from device (timed out).");
+        }
+        const tail = resp.slice(resp.lastIndexOf(MARK) + MARK.length);
+        const line = tail.split(/\r?\n/)[0];
+        return line ? line.trim() : "";
+      }
+
+      async _run(js, timeoutMs) {
+        const status = await this._status(js + ';print("' + MARK + 'OK")', timeoutMs);
+        if (status.indexOf("ERR") === 0) {
+          throw new Error(status.slice(3).trim() || "device error");
+        }
+        if (status.indexOf("OK") !== 0) {
+          throw new Error("Unexpected device reply: " + status);
+        }
+      }
+
+      async identify(timeoutMs) {
+        const status = await this._status('print("' + MARK + 'B="+process.env.BOARD)', timeoutMs || PROBE_TIMEOUT_MS);
+        const board = status.indexOf("B=") === 0 ? status.slice(2).replace(/[^A-Za-z0-9_]/g, "") : "";
+        if (!board) {
+          throw new Error("Device did not answer like an Espruino console (is it a Pip-Boy plugged in with a data cable, and not already open in the Espruino IDE or the web updater?)");
+        }
+        return board;
+      }
+
+      async writeFile(sdRelPath, bytes, onProgress) {
+        const path = sdRelPath.replace(/\\/g, "/");
+        const total = bytes.length;
+
+        if (path.indexOf("/") !== -1) {
+          const folder = path.slice(0, path.lastIndexOf("/"));
+          await this._run('require("fs").mkdir(' + q(folder) + ')');
+        }
+
+        await this._run('require("fs").writeFileSync(' + q(path) + ',"")');
+
+        let done = 0;
+        for (let i = 0; i < total; i += 90) {
+          const chunk = bytes.subarray(i, Math.min(total, i + 90));
+          const b64 = toBase64(chunk);
+          await this._run('require("fs").appendFileSync(' + q(path) + ',atob("' + b64 + '"))');
+          done = Math.min(total, done + chunk.length);
+          if (onProgress) {
+            onProgress(sdRelPath, done, total);
+          }
+        }
+        if (onProgress) {
+          onProgress(sdRelPath, total, total);
+        }
+
+        const status = await this._status('print("' + MARK + 'L="+require("fs").readFileSync(' + q(path) + ').length)');
+        const match = /^L=(\d+)$/.exec(status);
+        const got = match ? parseInt(match[1], 10) : -1;
+        if (got !== total) {
+          throw new Error("Verify failed for " + sdRelPath + ": sent " + total + " bytes, device has " + (got >= 0 ? got : "?"));
+        }
+      }
+
+      async readFileText(sdRelPath) {
+        const path = sdRelPath.replace(/\\/g, "/");
+        const js = 'var __f=require("fs").readFileSync(' + q(path) + ');'
+          + 'if(__f===undefined)throw new Error("missing");'
+          + 'print("' + MARK + '"+btoa(__f))';
+        const status = await this._status(js);
+        if (status.indexOf("ERR") === 0) {
+          return null;
+        }
+        try {
+          return base64ToText(status);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      async deleteFile(sdRelPath) {
+        const path = sdRelPath.replace(/\\/g, "/");
+        const status = await this._status('print("' + MARK + '"+(require("fs").unlinkSync(' + q(path) + ')?"Y":"N"))');
+        return status === "Y";
+      }
     }
 
     function describeError(error) {
