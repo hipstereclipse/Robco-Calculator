@@ -3,6 +3,9 @@
   // ============================================================
   //  CIRCUIT CALCULATORS (data-driven)  -- standalone app. The IMPORT ANS
   //  action row pulls the shared Ans (set in the CALC app) into an input.
+  //  Each workbench derives four results; the READOUT block shows ONE at
+  //  full row size and is itself a field -- select it, push, and the wheel
+  //  cycles which result is displayed.
   // ============================================================
   var COLORS = ["blk","brn","red","org","yel","grn","blu","vio","gry","wht"];
   var MULTS = ["x.01","x.1","x1","x10","x100","x1k","x10k","x100k","x1M","x10M"];
@@ -40,6 +43,7 @@
       out: function(d1, d2, m, t) { return [["Resistance", (d1*10+d2)*MULTF[m], "ohm"], ["Tolerance", TOLV[t], "%"], ["Digit bands", COLORS[d1]+"-"+COLORS[d2], ""], ["Mult + tol", MULTS[m]+" "+TOLC[t], ""]]; } }
   ];
   var circTool = 0, lastInput = 0;          // lastInput: input the IMPORT ANS row fills
+  var circOut = 0;                          // which of the workbench's readouts is on show
   // EDIT stepping: option lists cycle; numbers nudge by +/-1 * magStep() (the
   // wheel's +/-1, magnified by the thumb); integers round and clamp.
   function stepInput(inp, dir) {
@@ -56,7 +60,7 @@
   function circOutputText(out) {
     var s = fmt(out[1]);
     if (out[2]) s += " " + out[2];
-    return fitLeft(s, 25);
+    return s;                               // readout() applies its own fit
   }
   function draw(field) {
     beginScreen("CIRCUIT");
@@ -69,30 +73,27 @@
     }
     if (field >= 2 && field <= n + 1) lastInput = field - 2;
     row("IMPORT ANS", "ANS=" + fmt(ST.ans), y, field === n + 2); y += 24;
-    section("READOUT", y);
     var outs = t.out.apply(null, vals);
-    smallFont();                                     // full-word labels need the compact font
-    var ry = y + 24;                                 // clear the legend; pitch matches the font
-    for (var j = 0; j < outs.length && j < 4; j++) {
-      outRow(outs[j][0], circOutputText(outs[j]), ry); ry += 18;
-    }
-    bigFont();
-    footer(ST.msg ? caps(ST.msg) : navHint());
+    var oi = wrap(circOut, outs.length), o = outs[oi];
+    readout("READOUT", oi, outs.length, o[0], circOutputText(o), y, field === n + 3);
+    footer(ST.msg ? caps(ST.msg) : (!editing && field === n + 3) ? "PUSH, THEN WHEEL = OTHER RESULTS" : navHint());
   }
 
-  // 1 WORKBENCH + the option inputs are lists; numeric inputs are "num"; the last
-  // field is the IMPORT ANS action.
+  // 1 WORKBENCH + the option inputs are lists; numeric inputs are "num"; then
+  // the IMPORT ANS action and the READOUT (an enum the wheel cycles).
   function kind(field) {
     var t = CIRC_TOOLS[circTool], n = t.in.length;
     if (field === 1) return "enum";
     if (field === n + 2) return "act";
+    if (field === n + 3) return "enum";
     var inp = t.in[field - 2];
     return inp && (inp.opts || inp.col) ? "enum" : "num";
   }
   function edit(field, dir) {
     var n = CIRC_TOOLS[circTool].in.length;
-    if (field === 1) circTool = wrap(circTool + dir, CIRC_TOOLS.length);
+    if (field === 1) { circTool = wrap(circTool + dir, CIRC_TOOLS.length); circOut = 0; }
     else if (field >= 2 && field <= n + 1) stepInput(CIRC_TOOLS[circTool].in[field - 2], dir);
+    else if (field === n + 3) circOut = wrap(circOut + dir, 4); // every workbench derives 4 results
   }
 
   function act(field) {
@@ -104,5 +105,5 @@
   }
 
   initState();
-  return bootMode({ mode: "CIRC", fieldCount: function() { return CIRC_TOOLS[circTool].in.length + 2; }, draw: draw, kind: kind, edit: edit, act: act });
+  return bootMode({ mode: "CIRC", fieldCount: function() { return CIRC_TOOLS[circTool].in.length + 3; }, draw: draw, kind: kind, edit: edit, act: act });
 })

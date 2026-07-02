@@ -8,6 +8,8 @@
   //          (the physical value is preserved, so it doubles as "show this
   //          in another unit"); PUSH enters EDIT (or opens the converter).
   //    EDIT  WHEEL nudges +/-1 step, THUMB dials the step magnitude, PUSH = done.
+  //  The READOUT block is a field too: one derived result shows at full row
+  //  size, and THUMB (or PUSH then WHEEL) cycles which of the five is shown.
   //  A built-in PRESSURE/LENGTH/TEMPERATURE converter is one push away on
   //  the CONVERTER row, so a value can be turned into the unit you know.
   //  Shared helpers are inlined from _LIB.JS at build time; Ans comes
@@ -31,6 +33,7 @@
   var vacP = 1, vacT = 293.15, vacD = 0.00000000037, vacL = 0.1;
   var uP = 0, uT = 0, uD = 0, uL = 0;
   var view = 0;                                           // 0 = main, 1 = converter
+  var vOut = 0, cOut = 0;                                 // which READOUT / RESULT entry shows
 
   // Converter state (its own quantity / from / to / value).
   var cQ = 0, cFrom = 1, cTo = 0, cVal = 760;
@@ -54,6 +57,17 @@
   function numberDensity() { return vacP / (KB * vacT); }
   function meanSpeed() { return Math.sqrt(8 * KB * vacT / (Math.PI * MN2)); }
 
+  // One READOUT entry at a time (see readout() in _LIB): only the entry on
+  // show is computed each redraw. The flow regime is its own entry now --
+  // sharing a line with the Knudsen number no longer fits at heading size.
+  function vacEntry(j) {
+    if (j === 0) return ["MEAN FREE PATH", lenAuto(meanFreePath())];
+    if (j === 1) return ["NUMBER DENSITY", fmt(numberDensity()) + " /m3"];
+    if (j === 2) return ["KNUDSEN No", fmt(meanFreePath() / vacL)];
+    if (j === 3) { var Kn = meanFreePath() / vacL; return ["FLOW REGIME", Kn < 0.01 ? "VISCOUS" : Kn < 1 ? "TRANSITIONAL" : "MOLECULAR"]; }
+    return ["MEAN SPEED", fmt(meanSpeed()) + " m/s"];
+  }
+
   // ---- converter helpers --------------------------------------------------
   function cUnits() { return cQ === 0 ? P_U : cQ === 1 ? L_U : T_U; }
   function cFactors() { return cQ === 0 ? P_F : L_F; }
@@ -61,6 +75,11 @@
     if (cQ === 2) return fromK(toK(cVal, cFrom), cTo);
     var f = cFactors();
     return cVal * f[cFrom] / f[cTo];
+  }
+  function convEntry(j, out, U) {
+    if (j === 0) return [fmt(cVal) + " " + U[cFrom] + " =", fmt(out) + " " + U[cTo]];
+    if (j === 1) return ["SCI", sci(out, 8) + " " + U[cTo]];
+    return ["ENG", eng(out, 8) + " " + U[cTo]];
   }
 
   // ---- drawing ------------------------------------------------------------
@@ -71,18 +90,14 @@
     row("MOL DIAM", fmt(vacD / D_F[uD]) + " " + D_U[uD], 96, sel === 3);
     row("CHAR LEN", fmt(vacL / L_F[uL]) + " " + L_U[uL], 124, sel === 4);
     row("CONVERTER", "OPEN >", 152, sel === 5);
-    var mfp = meanFreePath(), Kn = mfp / vacL;
-    var reg = Kn < 0.01 ? "VISCOUS" : Kn < 1 ? "TRANSITIONAL" : "MOLECULAR";
-    section("READOUT", 176);
-    smallFont();
-    outRow("MEAN FREE PATH", lenAuto(mfp), 210);
-    outRow("NUMBER DENSITY", fmt(numberDensity()) + " /m3", 228);
-    outRow("KNUDSEN No", fmt(Kn) + "  " + reg, 246);
-    outRow("MEAN SPEED", fmt(meanSpeed()) + " m/s", 264);
-    bigFont();
+    var e = vacEntry(vOut);
+    readout("READOUT", vOut, 5, e[0], e[1], 176, sel === 6);
     // In NAV the thumb cycles the selected row's display unit (the value stays
-    // physically the same); push enters EDIT, where wheel = +/-1 step, thumb = magnitude.
-    footer(ST.msg ? caps(ST.msg) : (editing ? navHint() : "WHEEL PICK   THUMB UNIT   PUSH EDIT/OPEN"));
+    // physically the same) -- or, on the READOUT row, which result is shown;
+    // push enters EDIT, where wheel = +/-1 step, thumb = magnitude.
+    footer(ST.msg ? caps(ST.msg) : editing ? navHint()
+      : sel === 6 ? "WHEEL PICK   THUMB NEXT RESULT   PUSH EDIT"
+      : "WHEEL PICK   THUMB UNIT   PUSH EDIT/OPEN");
   }
 
   function drawConv(sel) {
@@ -94,33 +109,30 @@
     row("VALUE", fmt(cVal) + " " + U[cFrom], 112, sel === 4);
     row("IMPORT ANS", "ANS=" + fmt(ST.ans), 136, sel === 5);
     row("BACK", "MAIN >", 160, sel === 6);
-    var out = convOut();
-    section("RESULT", 182);
-    smallFont();
-    outRow(fmt(cVal) + " " + U[cFrom] + " =", fmt(out) + " " + U[cTo], 206);
-    outRow("SCI", sci(out, 8) + " " + U[cTo], 226);
-    outRow("ENG", eng(out, 8) + " " + U[cTo], 244);
-    bigFont();
+    var e = convEntry(cOut, convOut(), U);
+    readout("RESULT", cOut, 3, e[0], e[1], 182, sel === 7);
     footer(ST.msg ? caps(ST.msg) : navHint());
   }
 
   function draw(sel) { if (view === 0) drawMain(sel); else drawConv(sel); }
 
-  // Field kinds. Main: 1-4 numeric, 5 CONVERTER action. Converter: 1-3 option
-  // lists, 4 numeric value, 5 IMPORT ANS + 6 BACK actions.
+  // Field kinds. Main: 1-4 numeric, 5 CONVERTER action, 6 READOUT enum.
+  // Converter: 1-3 option lists, 4 numeric value, 5 IMPORT ANS + 6 BACK
+  // actions, 7 RESULT enum.
   function kind(sel) {
-    if (view === 0) return sel === 5 ? "act" : "num";
-    return sel <= 3 ? "enum" : sel === 4 ? "num" : "act";
+    if (view === 0) return sel === 5 ? "act" : sel === 6 ? "enum" : "num";
+    return sel <= 3 ? "enum" : sel === 4 ? "num" : sel === 7 ? "enum" : "act";
   }
 
-  // THUMB during NAV: cycle the selected main-view field's display unit. (The
-  // converter sub-view has no per-field unit, so the thumb is idle there.)
+  // THUMB during NAV: cycle the selected main-view field's display unit, or
+  // which entry the READOUT / converter RESULT block shows.
   function navThumb(sel, dir) {
-    if (view !== 0) return;
+    if (view !== 0) { if (sel === 7) cOut = wrap(cOut + dir, 3); return; }
     if (sel === 1) uP = wrap(uP + dir, P_U.length);
     else if (sel === 2) uT = wrap(uT + dir, T_U.length);
     else if (sel === 3) uD = wrap(uD + dir, D_U.length);
     else if (sel === 4) uL = wrap(uL + dir, L_U.length);
+    else if (sel === 6) vOut = wrap(vOut + dir, 5);
   }
 
   // EDIT: wheel nudges +/-1 * magStep() in the shown unit, thumb dials the step's
@@ -132,12 +144,14 @@
       else if (sel === 2) { vacT = toK(fromK(vacT, uT) + dir * s, uT); if (vacT < 1) vacT = 1; }
       else if (sel === 3) vacD = (vacD / D_F[uD] + dir * s) * D_F[uD];
       else if (sel === 4) vacL = (vacL / L_F[uL] + dir * s) * L_F[uL];
+      else if (sel === 6) vOut = wrap(vOut + dir, 5);
     } else {
       var L = cUnits().length;
       if (sel === 1) { cQ = wrap(cQ + dir, 3); var L2 = cUnits().length; if (cFrom >= L2) cFrom = L2 - 1; if (cTo >= L2) cTo = L2 - 1; }
       else if (sel === 2) cFrom = wrap(cFrom + dir, L);
       else if (sel === 3) cTo = wrap(cTo + dir, L);
       else if (sel === 4) cVal += dir * s;
+      else if (sel === 7) cOut = wrap(cOut + dir, 3);
     }
   }
 
@@ -151,5 +165,5 @@
   }
 
   initState();
-  return bootMode({ mode: "VAC", fieldCount: function () { return view === 0 ? 5 : 6; }, draw: draw, kind: kind, edit: edit, act: act, navThumb: navThumb });
+  return bootMode({ mode: "VAC", fieldCount: function () { return view === 0 ? 6 : 7; }, draw: draw, kind: kind, edit: edit, act: act, navThumb: navThumb });
 })

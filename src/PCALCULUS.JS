@@ -11,8 +11,12 @@
   //  selects it (F(X)/TASK cycle, A/B edit, SOLVE writes Ans). EDIT (A/B):
   //  WHEEL nudges +/-1 at the current step, THUMB dials that step's
   //  magnitude. The numeric routines evaluate f(x) via fAt (inlined evaluator).
+  //  The READOUT block shows ONE of the task's four derived results at full
+  //  row size and is itself a field: select it, push, and the wheel cycles
+  //  which result is displayed.
   // ============================================================
   var calcuOp = 0, calcuA = 0, calcuB = 1, calcuMsg = "";
+  var outIdx = 0;                           // which of the 4 readout entries is on show
   // Preset library for the F(X) row -- expressions the inlined evaluator
   // understands, so the app is usable without first visiting CALC.
   var FXP = ["x^2", "x^3-3*x", "sin(x)", "cos(x)", "exp(x)", "ln(x)", "sqrt(x)", "1/x", "x^2-2", "abs(x)"];
@@ -75,6 +79,38 @@
     return { label: "X*", value: critical(calcuA) };
   }
 
+  // One readout entry per task (label, value). Only the entry on show is
+  // computed each redraw -- pr (the already-computed primaryResult) covers
+  // entry 0 of every task, so cycling AREA's readouts costs one integ() per
+  // paint, not four sets of derived values.
+  function outEntry(j, pr) {
+    if (calcuOp === 0) {
+      if (j === 0) return ["f(A)", fmt(pr.value)];
+      if (j === 1) return ["SLOPE f'(A)", fmt(deriv(calcuA))];
+      if (j === 2) return ["f(B)", fmt(fAt(calcuB))];
+      var dx = calcuB - calcuA;
+      return ["SECANT A..B", dx === 0 ? "ERR" : fmt((fAt(calcuB) - pr.value) / dx)];
+    }
+    if (calcuOp === 1) {
+      if (j === 0) return ["AREA (INTEGRAL)", fmt(pr.value)];
+      var w = calcuB - calcuA;
+      if (j === 1) return ["WIDTH B-A", fmt(w)];
+      if (j === 2) return ["AVERAGE VALUE", w === 0 ? "ERR" : fmt(pr.value / w)];
+      return ["MID f((A+B)/2)", fmt(fAt((calcuA + calcuB) / 2))];
+    }
+    if (calcuOp === 2) {
+      if (j === 0) return ["ROOT x0", fmt(pr.value)];
+      if (j === 1) return ["f(x0)", fmt(fAt(pr.value))];
+      if (j === 2) return ["SLOPE f'(x0)", fmt(deriv(pr.value))];
+      return ["SCAN WINDOW", "+/- " + fmt(Math.abs(calcuB))];
+    }
+    if (j === 0) return ["X* (CRITICAL)", fmt(pr.value)];
+    if (j === 1) return ["f(X*)", fmt(fAt(pr.value))];
+    if (j === 2) return ["SLOPE f'(X*)", fmt(deriv(pr.value))];
+    var d1 = deriv(pr.value), d2 = secondDeriv(pr.value);
+    return ["TYPE", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT"];
+  }
+
   // Per-task labels AND a one-line plain-English hint for the A/B rows: the
   // same two rows mean very different things across tasks (an eval point, an
   // integration bound, a root guess, a search window) and earlier builds gave
@@ -104,34 +140,8 @@
     row(aLabs[calcuOp], fmt(calcuA), 92, sel === 3);
     row(bLabs[calcuOp], fmt(calcuB), 118, sel === 4);
     row("SOLVE >ANS", fmt(pr.value), 144, sel === 5);
-    section("READOUT", 176);
-    smallFont();
-    if (calcuOp === 0) {
-      var fa = pr.value, fb = fAt(calcuB), dx = calcuB - calcuA;
-      outRow("f(A)", fmt(fa), 210);
-      outRow("SLOPE f'(A)", fmt(deriv(calcuA)), 228);
-      outRow("f(B)", fmt(fb), 246);
-      outRow("SECANT A..B", dx === 0 ? "ERR" : fmt((fb - fa) / dx), 264);
-    } else if (calcuOp === 1) {
-      var area = pr.value, w = calcuB - calcuA;
-      outRow("AREA (INTEGRAL)", fmt(area), 210);
-      outRow("WIDTH B-A", fmt(w), 228);
-      outRow("AVERAGE VALUE", w === 0 ? "ERR" : fmt(area / w), 246);
-      outRow("MID f((A+B)/2)", fmt(fAt((calcuA + calcuB) / 2)), 264);
-    } else if (calcuOp === 2) {
-      var rz = pr.value, fr = fAt(rz);
-      outRow("ROOT x0", fmt(rz), 210);
-      outRow("f(x0)", fmt(fr), 228);
-      outRow("SLOPE f'(x0)", fmt(deriv(rz)), 246);
-      outRow("SCAN WINDOW", "+/- " + fmt(Math.abs(calcuB)), 264);
-    } else {
-      var cx = pr.value, cy = fAt(cx), d1 = deriv(cx), d2 = secondDeriv(cx);
-      outRow("X* (CRITICAL)", fmt(cx), 210);
-      outRow("f(X*)", fmt(cy), 228);
-      outRow("SLOPE f'(X*)", fmt(d1), 246);
-      outRow("TYPE", Math.abs(d1) > 1e-5 ? "CHECK GUESS" : d2 > 0 ? "LOCAL MIN" : d2 < 0 ? "LOCAL MAX" : "FLAT", 264);
-    }
-    bigFont();
+    var e = outEntry(outIdx, pr);
+    readout("READOUT", outIdx, 4, e[0], e[1], 176, sel === 6);
     // While just browsing to the A/B row (not yet editing it), show what that
     // field means for the current task instead of the generic "WHEEL PICK"
     // hint -- the same two rows mean a different thing per task, so this is
@@ -140,19 +150,22 @@
       : (!editing && sel === 3) ? aHints[calcuOp]
       : (!editing && sel === 4) ? bHints[calcuOp]
       : (!editing && sel === 5) ? "LIVE PREVIEW -- PUSH TO SAVE INTO ANS"
+      : (!editing && sel === 6) ? "PUSH, THEN WHEEL = OTHER RESULTS"
       : navHint();
     footer(hint);
   }
 
   // 1 F(X) / 2 TASK are option lists; 3 A / 4 B are numbers (wheel +/-1, thumb
-  // dials the step magnitude); 5 SOLVE is the action that writes Ans.
-  function kind(sel) { return sel <= 2 ? "enum" : sel === 5 ? "act" : "num"; }
+  // dials the step magnitude); 5 SOLVE is the action that writes Ans; 6 is the
+  // READOUT (an enum the wheel cycles).
+  function kind(sel) { return sel <= 2 || sel === 6 ? "enum" : sel === 5 ? "act" : "num"; }
   function edit(sel, dir) {
     calcuMsg = ""; ST.msg = "";
     if (sel === 1) { fxi = wrap(fxi + dir, FXP.length); setF(FXP[fxi]); }
-    else if (sel === 2) calcuOp = wrap(calcuOp + dir, 4);
+    else if (sel === 2) { calcuOp = wrap(calcuOp + dir, 4); outIdx = 0; } // new task, new readouts
     else if (sel === 3) calcuA += dir * magStep();
     else if (sel === 4) calcuB += dir * magStep();
+    else if (sel === 6) outIdx = wrap(outIdx + dir, 4);
     syncCalcState();
   }
 
@@ -170,5 +183,5 @@
   loadCalcState();
   syncCalcState();
   setF(ST.fx);
-  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 5; }, draw: draw, kind: kind, edit: edit, act: act });
+  return bootMode({ mode: "CALCULUS", fieldCount: function() { return 6; }, draw: draw, kind: kind, edit: edit, act: act });
 })

@@ -280,9 +280,10 @@ function drawHardware() {
 function drawGlassWear() {
 }
 // Font helpers. Monofonto23 is the only font we rely on for headings/rows;
-// the footer and compact readouts drop to a small font so they stop colliding
-// with the rounded bezel. setFont is wrapped on device (installRenderCompat),
-// so an unavailable name degrades gracefully instead of throwing.
+// the footer (and GRAPH's window caption under the plot) drop to a small font
+// so they stop colliding with the rounded bezel. setFont is wrapped on device
+// (installRenderCompat), so an unavailable name degrades gracefully instead
+// of throwing.
 function bigFont() { h.setFont("Monofonto23"); }
 function smallFont() { h.setFont("6x8"); }
 function beginScreen(title, status) {
@@ -356,10 +357,37 @@ function miniRow(label, val, y) {
 // share one line without the 8-char truncation miniRow needs at heading size.
 // Both halves are drawn bright -- the readout label is the only context for the
 // number on the right, so dimming it (as older builds did) left the value
-// looking unlabelled on the device.
+// looking unlabelled on the device. Only GRAPH's window caption still uses
+// this; the tool apps' READOUT blocks moved to readout() below.
 function outRow(label, val, y) {
   h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 22), TEXT_L, y);
   h.setFontAlign(1, -1).drawString(fitLeft(val, 30), TEXT_R, y);
+}
+// Selectable READOUT: one derived result at heading size. Earlier builds
+// printed the whole block as four small-font lines, which read as fine print
+// next to the Monofonto23 input rows; now a single entry shows at full row
+// size and the block is itself a field -- select it, push, and the wheel
+// (kind "enum") cycles which entry is on show. The section legend carries an
+// idx+1/n counter so it is obvious there is more behind the visible line.
+// Blink rules match row(); the label gets a wider fit than row() gives it
+// (16 vs 13) because readout labels are full words while values stay short.
+function readout(title, idx, n, label, val, y, sel) {
+  section(title + "  " + (idx + 1) + "/" + n, y);
+  y += 30;                                 // clear the section legend (see section())
+  if (sel) {
+    h.setColor(DIM).drawLine(CONTENT_L, y + 21, CONTENT_R, y + 21);
+    var litLabel = editing || blinkOn;     // NAV: blink label; EDIT: keep it lit
+    var litVal = editing ? blinkOn : true; // EDIT: blink value; NAV: keep it lit
+    if (litLabel) {
+      h.setColor(FG).setFontAlign(-1, -1).drawString(">", TEXT_L - 4, y);
+      h.drawString(fitRight(caps(label), 15), TEXT_L + 16, y);
+    }
+    if (litVal) h.setColor(FG).setFontAlign(1, -1).drawString(fitLeft(val, 18), TEXT_R, y);
+  } else {
+    h.setColor(FG).setFontAlign(-1, -1).drawString(fitRight(caps(label), 16), TEXT_L, y);
+    h.setFontAlign(1, -1).drawString(fitLeft(val, 18), TEXT_R, y);
+  }
+  h.setColor(FG);
 }
 
 // ============================================================

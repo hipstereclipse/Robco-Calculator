@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/ (standalone apps)",
-  "generatedAt": "2026-07-01T23:18:40.099Z",
+  "generatedAt": "2026-07-02T16:56:23.965Z",
   "appIds": [
     "pipcalc",
     "pipgraph",
@@ -2943,7 +2943,7 @@
         },
         {
           "type": "text",
-          "text": "> READOUT",
+          "text": "> READOUT  1/4",
           "x": 38,
           "y": 182,
           "color": 15,
@@ -2955,81 +2955,21 @@
           "type": "text",
           "text": "F(A)",
           "x": 38,
-          "y": 210,
+          "y": 206,
           "color": 15,
           "alignX": -1,
           "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "0",
           "x": 442,
-          "y": 210,
+          "y": 206,
           "color": 15,
           "alignX": 1,
           "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "SLOPE F'(A)",
-          "x": 38,
-          "y": 228,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "1",
-          "x": 442,
-          "y": 228,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "F(B)",
-          "x": 38,
-          "y": 246,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "0.84147098",
-          "x": 442,
-          "y": 246,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "SECANT A..B",
-          "x": 38,
-          "y": 264,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "0.84147098",
-          "x": 442,
-          "y": 264,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "drawLine",
@@ -3333,7 +3273,7 @@
         },
         {
           "type": "text",
-          "text": "> READOUT",
+          "text": "> READOUT  1/4",
           "x": 38,
           "y": 192,
           "color": 15,
@@ -3345,81 +3285,21 @@
           "type": "text",
           "text": "UNLOADED VOUT",
           "x": 38,
-          "y": 210,
+          "y": 216,
           "color": 15,
           "alignX": -1,
           "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "2.5 V",
           "x": 442,
-          "y": 210,
+          "y": 216,
           "color": 15,
           "alignX": 1,
           "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "LOADED VOUT",
-          "x": 38,
-          "y": 228,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "2.38095238 V",
-          "x": 442,
-          "y": 228,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "LOAD CURRENT",
-          "x": 38,
-          "y": 246,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "2.38095e-5 A",
-          "x": 442,
-          "y": 246,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "OUTPUT SAG",
-          "x": 38,
-          "y": 264,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "4.76190476 %",
-          "x": 442,
-          "y": 264,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "drawLine",
@@ -4709,7 +4589,7 @@
         },
         {
           "type": "text",
-          "text": "> READOUT",
+          "text": "> READOUT  1/5",
           "x": 38,
           "y": 182,
           "color": 15,
@@ -4721,81 +4601,21 @@
           "type": "text",
           "text": "MEAN FREE PATH",
           "x": 38,
-          "y": 210,
+          "y": 206,
           "color": 15,
           "alignX": -1,
           "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "text",
           "text": "6.65433809 mm",
           "x": 442,
-          "y": 210,
+          "y": 206,
           "color": 15,
           "alignX": 1,
           "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "NUMBER DENSITY",
-          "x": 38,
-          "y": 228,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "2.47074e20 /m3",
-          "x": 442,
-          "y": 228,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "KNUDSEN NO",
-          "x": 38,
-          "y": 246,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "0.06654338  TRANSITIONAL",
-          "x": 442,
-          "y": 246,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "MEAN SPEED",
-          "x": 38,
-          "y": 264,
-          "color": 15,
-          "alignX": -1,
-          "alignY": -1,
-          "font": "6x8"
-        },
-        {
-          "type": "text",
-          "text": "470.70715368 m/s",
-          "x": 442,
-          "y": 264,
-          "color": 15,
-          "alignX": 1,
-          "alignY": -1,
-          "font": "6x8"
+          "font": "Monofonto23"
         },
         {
           "type": "drawLine",
